@@ -3,6 +3,9 @@ import sys
 import os
 import matplotlib
 
+
+#sdfjsidkghlidfjhgoiusdfhgliujsdfhglksdfjglksriutpged
+
 pygame.init()
 width, height = size = 960, 540
 screen = pygame.display.set_mode(size)
