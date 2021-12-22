@@ -1,10 +1,6 @@
 import pygame
 import sys
 import os
-import matplotlib
-
-
-#sdfjsidkghlidfjhgoiusdfhgliujsdfhglksdfjglksriutpged
 
 pygame.init()
 width, height = size = 960, 540
