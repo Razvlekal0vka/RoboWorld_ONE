@@ -1,5 +1,4 @@
 import sys
-
 import pygame
 import os
 
@@ -8,6 +7,10 @@ width, height = size = 900, 900
 screen = pygame.display.set_mode(size)
 screen.fill("black")
 clock = pygame.time.Clock()
+FPS = 60
+vek_x, vek_y = 0, 0
+flag_vek_x, flag_vek_y = False, False
+V_MAX, A_ACCEL, A_DECELER = 50, 5, 5
 
 
 def load_image(name, colorkey=None):
@@ -26,9 +29,6 @@ def load_image(name, colorkey=None):
     return image
 
 
-FPS = 50
-
-
 def terminate():
     pygame.quit()
     sys.exit()
@@ -36,14 +36,9 @@ def terminate():
 
 def load_level(filename):
     filename = "data/" + filename
-    # читаем уровень, убирая символы перевода строки
     with open(filename, 'r') as mapFile:
         level_map = [line.strip() for line in mapFile]
-
-    # и подсчитываем максимальную длину
     max_width = max(map(len, level_map))
-
-    # дополняем каждую строку пустыми клетками ('.')
     return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
 
@@ -67,8 +62,13 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
         self.image = player_image
-        self.rect = self.image.get_rect().move(
-            tile_width * pos_x, tile_height * pos_y)
+        self.pos_x, self.pos_y = tile_width * pos_x, tile_height * pos_y
+        self.rect = self.image.get_rect().move(self.pos_x, self.pos_y)
+
+    def go(self, vx, vy):
+        self.pos_x, self.pos_y = self.pos_x + vx, self.pos_y + vy
+        self.rect.x += vx
+        self.rect.y += vy
 
 
 all_sprites = pygame.sprite.Group()
@@ -112,22 +112,47 @@ if __name__ == '__main__':
     running = True
 
     while running:
+        keys = pygame.key.get_pressed()
+        flag_vek_x, flag_vek_y = True, True
+
+        if keys[pygame.K_UP] and abs(vek_y) < V_MAX:
+            vek_y, flag_vek_y = vek_y - A_ACCEL, False
+        elif keys[pygame.K_DOWN] and abs(vek_y) < V_MAX:
+            vek_y, flag_vek_y = vek_y + A_ACCEL, False
+        if keys[pygame.K_RIGHT] and abs(vek_x) < V_MAX:
+            vek_x, flag_vek_x = vek_x + A_ACCEL, False
+        elif keys[pygame.K_LEFT] and abs(vek_x) < V_MAX:
+            vek_x, flag_vek_x = vek_x - A_ACCEL, False
+
+        if flag_vek_y and vek_y < 0:
+            vek_y, flag_vek_y = vek_y + A_DECELER, True
+        elif flag_vek_y and vek_y > 0:
+            vek_y, flag_vek_y = vek_y - A_DECELER, True
+        if flag_vek_x and vek_x > 0:
+            vek_x, flag_vek_x = vek_x - A_DECELER, True
+        elif flag_vek_x and vek_x < 0:
+            vek_x, flag_vek_x = vek_x + A_DECELER, True
+
+        player.go(vek_x, vek_y)
+
+        clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
-                    player.rect.x += STEP
-                if event.key == pygame.K_LEFT:
-                    player.rect.x -= STEP
-                if event.key == pygame.K_UP:
-                    player.rect.y -= STEP
-                if event.key == pygame.K_DOWN:
-                    player.rect.y += STEP
             camera.update(player)
             for sprite in all_sprites:
                 camera.apply(sprite)
             screen.fill(pygame.Color(0, 0, 0))
             tiles_group.draw(screen)
             player_group.draw(screen)
+            clock.tick(FPS)
             pygame.display.flip()
+
+        camera.update(player)
+        for sprite in all_sprites:
+            camera.apply(sprite)
+        screen.fill(pygame.Color(0, 0, 0))
+        tiles_group.draw(screen)
+        player_group.draw(screen)
+        clock.tick(FPS)
+        pygame.display.flip()
