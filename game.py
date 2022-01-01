@@ -67,6 +67,7 @@ class Player(pygame.sprite.Sprite):
 
     def go(self, vx, vy, lm, plcrd, hw):
         movement = True
+        place_rd = plcrd
         """Тут есть баг, надеюсь, что он будет исправлен"""
         """-----"""
         bag1 = 0.5 * hw  # самое оптимальное значение
@@ -193,8 +194,8 @@ if __name__ == '__main__':
             vek_x, flag_vek_x = vek_x + A_DECELER, True
 
         player.go(vek_x, vek_y, level_map, player_coord, tile_height)
-
         clock.tick(FPS)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -210,6 +211,7 @@ if __name__ == '__main__':
         camera.update(player)
         for sprite in all_sprites:
             camera.apply(sprite)
+
         screen.fill(pygame.Color(0, 0, 0))
         tiles_group.draw(screen)
         player_group.draw(screen)

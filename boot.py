@@ -39,7 +39,6 @@ class Boot(pygame.sprite.Sprite):
         self.fon_image = pygame.transform.scale(load_image('boot.png'), (width, height))
         self.name_image = pygame.transform.scale(load_image('RBWOF.png'), (width, height))
         self.click_image = pygame.transform.scale(load_image('CIYWETG2.png'), (width, height))
-
         self.click_image_alf = self.name_image_alf = 255
 
     def start_screen_fon(self):
@@ -58,6 +57,7 @@ class Boot(pygame.sprite.Sprite):
 
 all_sprites = pygame.sprite.Group()
 boot = Boot()
+
 if __name__ == '__main__':
     boot.start_screen_fon()
     boot.start_screen_click()
