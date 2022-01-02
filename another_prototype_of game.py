@@ -84,6 +84,20 @@ def generate_level(level):
     return new_player, x, y
 
 
+class Camera:
+    def __init__(self):
+        self.dx = 0
+        self.dy = 0
+
+    def apply(self, obj):
+        obj.rect.x += self.dx
+        obj.rect.y += self.dy
+
+    def update(self, target):
+        self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
+        self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
+
+
 tile_images = {'wall': load_image('box.png'), 'empty': load_image('grass.png')}
 player_image = load_image('mario.png')
 tile_width = tile_height = 50
@@ -129,6 +143,7 @@ class Player(pygame.sprite.Sprite):
 
 if __name__ == '__main__':
     start_screen()
+    camera = Camera()
     player = None
     level = load_level('level1.txt')
     player, level_x, level_y = generate_level(level)
@@ -136,6 +151,8 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
+            camera.update(player)
+            camera.apply(player)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     move_hero(player, 'right')
@@ -146,6 +163,8 @@ if __name__ == '__main__':
                 if event.key == pygame.K_DOWN:
                     move_hero(player, 'down')
                 screen.fill(pygame.Color('white'))
+        camera.update(player)
+        camera.apply(player)
         tiles_group.draw(screen)
         player_group.draw(screen)
         pygame.display.flip()
