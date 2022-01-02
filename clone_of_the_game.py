@@ -58,42 +58,14 @@ class Player(pygame.sprite.Sprite):
 
     def go(self, vx, vy, lm, plcrd, hw):
         movement = True
-        place_rd = plcrd
         bag1 = 0.5 * hw  # самое оптимальное значение
-        bag2 = hw  # самое оптимальное значение
         pos_x, pos_y = self.pos_x + vx + bag1, self.pos_y + vy + bag1  # тут задействован баг-1
         x11, y11, a1, b1 = pos_x, pos_y, hw, hw
-        for crd in lm:
-            """Алгоритм столкновения"""
-            x21, y21, a2, b2 = crd[1], crd[2], hw, hw
-            x12, y12 = x11 + a1 - bag2, y11 + b1 - bag2  # тут задействован баг-2
-            x22, y22 = x21 + a2, y21 + b2
-            ys1, xs1 = (y11 + y12) * 0.5, (x11 + x12) * 0.5
-            ys2, xs2 = (y21 + y22) * 0.5, (x21 + x22) * 0.5
-            rx1, ry1 = x12 - xs1, y11 - ys1
-            rx2, ry2 = x22 - xs2, y21 - ys2
-            delx = abs(xs1 - xs2)
-            dely = abs(ys1 - ys2)
-            r1 = (delx ** 2 + dely ** 2) ** 0.5
-            r2 = (abs(rx1 + rx2) ** 2 + abs(ry1 + ry2) ** 2) ** 0.5
-
-            '''if r2 >= r1:
-                movement = False
-                # Основные значения для нахождения столкновения
-                # x11;y11;x12;y12 - координаты движущегося тела
-                # x21;y21;x22;y22 - координаты рассматриваемого тела
-                # r1;r2 - вычисление расстояний между объектами
-                # print('----------------------------------')
-                # print(x11, y11, x12, y12, r1)
-                # print(x21, y21, x22, y22, r2)
-                # print(pos_x, pos_y)
-                # print('----------------------------------')'''
 
         if movement:
             self.pos_x, self.pos_y = self.pos_x + vx, self.pos_y + vy
-
-            self.rect.x += vx
-            self.rect.y += vy
+            self.rect.x += vx * 0.25
+            self.rect.y += vy * 0.25
 
 
 def generate_level(level):
@@ -195,6 +167,7 @@ if __name__ == '__main__':
             for sprite in all_sprites:
                 camera.apply(sprite)
             screen.fill(pygame.Color(0, 0, 0))
+
             tiles_group.draw(screen)
             player_group.draw(screen)
             clock.tick(FPS)
@@ -207,5 +180,5 @@ if __name__ == '__main__':
         screen.fill(pygame.Color(0, 0, 0))
         tiles_group.draw(screen)
         player_group.draw(screen)
-        clock.tick(FPS)
         pygame.display.flip()
+        clock.tick(FPS)
