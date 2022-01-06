@@ -3,7 +3,7 @@ import sys
 import pygame
 
 pygame.init()
-size = WIDTH, HEIGHT = 800, 600
+size = WIDTH, HEIGHT = 1000, 640
 screen = pygame.display.set_mode(size)
 FPS = 50
 clock = pygame.time.Clock()
@@ -120,31 +120,40 @@ tile_width = tile_height = STEP = 50
 if __name__ == '__main__':
     start_screen()
     camera = Camera()
-    running = True
+    running, t = True, 0
     level = load_level('level1.txt')
     player, level_x, level_y = generate_level(level)
+    POS = player.rect.y, player.rect.x
+    MINUS_X, MINUS_Y = 0, 0
     while running:
 
         keys = pygame.key.get_pressed()
         x, y = player.pos
 
-        print(player.rect.y, player.rect.x)
+        '''print(player.rect.y, player.rect.x)'''
 
         if keys[pygame.K_RIGHT]:
-            if x < level_x - 1 and level[player.rect.y // STEP][player.rect.x + 1] == ".":
+            if x < level_x - 1 and level[(player.rect.y - MINUS_Y) // STEP][(player.rect.x - MINUS_X) + 1] == ".":
                 player.rect.x += STEP
         elif keys[pygame.K_LEFT]:
-            if x > 0 and level[player.rect.y // STEP][player.rect.x // STEP - 1] == ".":
+            if x > 0 and level[(player.rect.y - MINUS_Y) // STEP][(player.rect.x - MINUS_X) // STEP - 1] == ".":
                 player.rect.x -= STEP
         clock.tick(FPS // 3)
         x, y = player.pos
         if keys[pygame.K_UP]:
-            if y > 0 and level[player.rect.y // STEP - 1][player.rect.x // STEP] == ".":
-                player.rect.y += STEP
-        elif keys[pygame.K_DOWN]:
-            if y < level_y - 1 and level[player.rect.y // STEP + 1][player.rect.x // STEP] == ".":
+            if y > 0 and level[(player.rect.y - MINUS_Y) // STEP - 1][(player.rect.x - MINUS_X) // STEP] == ".":
                 player.rect.y -= STEP
+        elif keys[pygame.K_DOWN]:
+            if y < level_y - 1 and level[(player.rect.y - MINUS_Y) // STEP + 1][(player.rect.x - MINUS_X)
+                                                                                // STEP] == ".":
+                player.rect.y += STEP
         clock.tick(FPS // 3)
+
+        if t == 0:
+            MINUS_X = player.rect.x - POS[1]
+            MINUS_Y = player.rect.y - POS[0]
+            print(MINUS_X, MINUS_Y)
+            t = 1
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -168,5 +177,11 @@ if __name__ == '__main__':
         player_group.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
+
+        if t == 0:
+            MINUS_X = player.rect.x - POS[1]
+            MINUS_Y = player.rect.y - POS[0]
+            print(MINUS_X, MINUS_Y)
+            t = 1
 
     terminate()
