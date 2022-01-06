@@ -92,14 +92,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
         self.image = player_image
-        self.rect = self.image.get_rect().move(
-            tile_width * pos_x + 15, tile_height * pos_y + 5)
+        self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
         self.pos = pos_x, pos_y
-
-    def move(self, x, y):
-        self.pos = (x, y)
-        self.rect = self.image.get_rect().move(
-            tile_width * self.pos[0] + 15, tile_height * self.pos[1] + 5)
 
 
 class Camera:
@@ -121,7 +115,7 @@ tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 tile_images = {'wall': load_image('box.png'), 'empty': load_image('grass.png')}
 player_image = load_image('mario.png')
-tile_width = tile_height = 50
+tile_width = tile_height = STEP = 50
 
 if __name__ == '__main__':
     start_screen()
@@ -132,30 +126,32 @@ if __name__ == '__main__':
     while running:
 
         keys = pygame.key.get_pressed()
-
         x, y = player.pos
+
+        print(player.rect.y, player.rect.x)
+
         if keys[pygame.K_RIGHT]:
-            if x < level_x - 1 and level[y][x + 1] == ".":
-                player.move(x + 1, y)
+            if x < level_x - 1 and level[player.rect.y // STEP][player.rect.x + 1] == ".":
+                player.rect.x += STEP
         elif keys[pygame.K_LEFT]:
-            if x > 0 and level[y][x - 1] == ".":
-                player.move(x - 1, y)
+            if x > 0 and level[player.rect.y // STEP][player.rect.x // STEP - 1] == ".":
+                player.rect.x -= STEP
         clock.tick(FPS // 3)
         x, y = player.pos
         if keys[pygame.K_UP]:
-            if y > 0 and level[y - 1][x] == ".":
-                player.move(x, y - 1)
+            if y > 0 and level[player.rect.y // STEP - 1][player.rect.x // STEP] == ".":
+                player.rect.y += STEP
         elif keys[pygame.K_DOWN]:
-            if y < level_y - 1 and level[y + 1][x] == ".":
-                player.move(x, y + 1)
+            if y < level_y - 1 and level[player.rect.y // STEP + 1][player.rect.x // STEP] == ".":
+                player.rect.y -= STEP
         clock.tick(FPS // 3)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            # camera.update(player)
-            # for sprite in all_sprites:
-                # camera.apply(sprite)
+            camera.update(player)
+            for sprite in all_sprites:
+                camera.apply(sprite)
             screen.fill(pygame.Color(0, 0, 0))
 
             tiles_group.draw(screen)
@@ -163,9 +159,9 @@ if __name__ == '__main__':
             clock.tick(FPS)
             pygame.display.flip()
 
-        #camera.update(player)
-        #for sprite in all_sprites:
-            #camera.apply(sprite)
+        camera.update(player)
+        for sprite in all_sprites:
+            camera.apply(sprite)
 
         screen.fill(pygame.Color(0, 0, 0))
         tiles_group.draw(screen)
