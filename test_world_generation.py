@@ -25,7 +25,7 @@ length_of_corridors = ['r', 20, 40]
 # length_of_corridors = ['o', 10, 0] определённая длина (10)
 
 # Настройка размеров игровой комнаты
-room_sizes = ['r', 30, 50, 2]
+room_sizes = ['r', 100, 200, 2]
 # из игровых сооброжений не следует ставить менее чем 30*30
 # room_sizes = ['r', 30, 50, 2] рандомная длина стенок, включает написанные значения
 # последнюю цифру желательно не трогать, тк она обеспечивает четные значения
@@ -47,7 +47,7 @@ maximum_division_of_a_branch = 3
 
 
 class Map_generation:
-    def __init__(self, size_map, size_room, direc, loc, max_len_br, max_div_br):
+    def __init__(self, size_map, size_room, direc, loc, max_len_br, max_div_br, rs):
         self.WIDTH = self.HEIGHT = self.SIZE = size_map  # размеры карты
         self.generation = True
         self.MAP = []  # слайс карты
@@ -58,6 +58,7 @@ class Map_generation:
         self.max_len_br = max_len_br  # Настройка длины веток
         self.max_div_br = max_div_br  # Настройка количества веток
         self.dir = []
+        self.room_size = rs
 
         self.Filling_the_map_with_emptiness()
 
@@ -140,6 +141,8 @@ class Map_generation:
                 if east == 1:
                     if y >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or y < self.SIZE / 2 - self.SIZE_room * 0.1:
                         self.MAP[y - 1][x2 - 1][0], f = '#', 0
+                else:
+                    self.MAP[y - 1][x2 - 1][0], f = '#', 0
                 if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
                     z = 1
                 elif f == 0 and f1 == 1:
@@ -158,6 +161,8 @@ class Map_generation:
                 if south == 1:
                     if x >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or x < self.SIZE / 2 - self.SIZE_room * 0.1:
                         self.MAP[y2 - 1][x - 1][0], f = '#', 0
+                else:
+                    self.MAP[y2 - 1][x - 1][0], f = '#', 0
                 if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
                     z = 1
                 elif f == 0 and f1 == 1:
@@ -176,6 +181,8 @@ class Map_generation:
                 if west == 1:
                     if y >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or y < self.SIZE / 2 - self.SIZE_room * 0.1:
                         self.MAP[y - 1][x1 - 1][0], f = '#', 0
+                else:
+                    self.MAP[y - 1][x1 - 1][0], f = '#', 0
                 if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
                     z = 1
                 elif f == 0 and f1 == 1:
@@ -194,6 +201,8 @@ class Map_generation:
                 if north == 1:
                     if x >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or x < self.SIZE / 2 - self.SIZE_room * 0.1:
                         self.MAP[y1 - 1][x - 1][0], f = '#', 0
+                else:
+                    self.MAP[y1 - 1][x - 1][0], f = '#', 0
                 if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
                     z = 1
                 elif f == 0 and f1 == 1:
@@ -224,7 +233,136 @@ class Map_generation:
     def Creating_leveled_branches(self, direction):
         """Здесь происходит генирация ветвей"""
         # сначала создае  проход к новой локации
-        self.Create_passages(direction, self.root_ends[direction - 1])
+        end_coord = self.Create_passages(direction, self.root_ends[direction - 1])
+        # создаем комнату в конце коридора
+        self.Creating_rooms(end_coord, direction)
+
+    def Creating_rooms(self, end_coord, direction):
+        """Здесь происходит генирация комнат"""
+        # определение типа генирации комнаты
+        if self.room_size[0] == 'r':
+            a = random.randrange(self.room_size[1], self.room_size[2], self.room_size[3])
+            b = random.randrange(self.room_size[1], self.room_size[2], self.room_size[3])
+        elif self.room_size[0] == 'o':
+            a, b = self.room_size[1], self.room_size[2]
+
+        # находим смещение относительно прохода
+        r = abs(end_coord[0][0] - end_coord[1][0]) + abs(end_coord[0][1] - end_coord[1][1])
+        r = 0.5 * (max(a, b) - r)
+        r = random.randint(1, r)  # смещение относительно прохода
+        s = random.randint(0, 1)  # вправо или влево
+
+        # устанавливаем координаты комнаты
+        print(end_coord, direction)
+        if direction == 1:
+            if s == 0:
+                x1, y1 = end_coord[0][0], end_coord[0][1] - r
+                x2, y2 = x1 + a, y1 + b
+            else:
+                x1, y1 = end_coord[0][0], end_coord[0][1] + r
+                x2, y2 = x1 + a, y1 + b
+
+        if direction == 2:
+            x1, y1 = x1, y1 = int(coord[0][0]), int(coord[0][1])
+            x2, y2 = int(coord[1][0]), int(coord[1][1] + len_cor)
+            east, south, west, north = 1, 0, 1, 0
+
+        if direction == 3:
+            if s == 0:
+                x1, y1 = end_coord[0][0] - a, end_coord[0][1] - r - b
+                x2, y2 = x1 + a, y1 + b
+            else:
+                x1, y1 = end_coord[0][0], end_coord[0][1] + r
+                x2, y2 = x1 + a, y1 + b
+
+        if direction == 4:
+            x1, y1 = x1, y1 = int(coord[0][0]), int(coord[0][1] - len_cor)
+            x2, y2 = int(coord[1][0]), int(coord[1][1])
+            east, south, west, north = 1, 0, 1, 0
+
+        # создаем стены по данным нам координатам и пропиливаем проходы
+        if True:
+            pc, z = [], 0  # |
+            n, n1 = 0, 0  # |
+            f, f1 = 1, 1  # | отвечают за определение крайних точек прохода (нужны для генирации проходов)
+            for y in range(y1, y2 + 1):  # |
+                n = y
+                f = 1
+                if east == 1:
+                    if y >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or y < self.SIZE / 2 - self.SIZE_room * 0.1:
+                        self.MAP[y - 1][x2 - 1][0], f = '#', 0
+                else:
+                    self.MAP[y - 1][x2 - 1][0], f = '#', 0
+                if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
+                    z = 1
+                elif f == 0 and f1 == 1:
+                    pc.append([x2 - 1, n1])
+                elif f == 1 and f1 == 0:
+                    pc.append([x2 - 1, n])
+                f1, n1 = f, n
+            self.root_ends.append(pc)
+
+            pc, z = [], 0  # |
+            n, n1 = 0, 0  # |
+            f, f1 = 1, 1  # | отвечают за определение крайних точек прохода (нужны для генирации проходов)
+            for x in range(x1, x2 + 1):
+                n = x
+                f = 1
+                if south == 1:
+                    if x >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or x < self.SIZE / 2 - self.SIZE_room * 0.1:
+                        self.MAP[y2 - 1][x - 1][0], f = '#', 0
+                else:
+                    self.MAP[y2 - 1][x - 1][0], f = '#', 0
+                if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
+                    z = 1
+                elif f == 0 and f1 == 1:
+                    pc.append([n1, y2 - 1])
+                elif f == 1 and f1 == 0:
+                    pc.append([n, y2 - 1])
+                f1, n1 = f, n
+            self.root_ends.append(pc)
+
+            pc, z = [], 0  # |
+            n, n1 = 0, 0  # |
+            f, f1 = 1, 1  # | отвечают за определение крайних точек прохода (нужны для генирации проходов)
+            for y in range(y1, y2 + 1):  # |
+                n = y
+                f = 1
+                if west == 1:
+                    if y >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or y < self.SIZE / 2 - self.SIZE_room * 0.1:
+                        self.MAP[y - 1][x1 - 1][0], f = '#', 0
+                else:
+                    self.MAP[y - 1][x1 - 1][0], f = '#', 0
+                if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
+                    z = 1
+                elif f == 0 and f1 == 1:
+                    pc.append([x1 - 1, n1])
+                elif f == 1 and f1 == 0:
+                    pc.append([x1 - 1, n])
+                f1, n1 = f, n
+            self.root_ends.append(pc)
+
+            pc, z = [], 0  # |
+            n, n1 = 0, 0  # |
+            f, f1 = 1, 1  # | отвечают за определение крайних точек прохода (нужны для генирации проходов)
+            for x in range(x1, x2 + 1):
+                n = x
+                f = 1
+                if north == 1:
+                    if x >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or x < self.SIZE / 2 - self.SIZE_room * 0.1:
+                        self.MAP[y1 - 1][x - 1][0], f = '#', 0
+                else:
+                    self.MAP[y1 - 1][x - 1][0], f = '#', 0
+                if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
+                    z = 1
+                elif f == 0 and f1 == 1:
+                    pc.append([n1, y1 - 1])
+                elif f == 1 and f1 == 0:
+                    pc.append([n, y1 - 1])
+                f1, n1 = f, n
+            self.root_ends.append(pc)
+
+        self.write_in_txt()
 
     def Create_passages(self, direction, coord):
         """Здесь создаются проходы"""
@@ -236,7 +374,6 @@ class Map_generation:
         elif self.length_of_corridors[0] == 'o':
             len_cor = self.length_of_corridors[1]
 
-        print(direction, len_cor)
         # устанавливаем координаты прохода, определяем создаваемые стенки
         if direction == 1:
             x1, y1 = int(coord[0][0]), int(coord[0][1])
@@ -277,6 +414,15 @@ class Map_generation:
                     self.MAP[y1 - 1][x][0], f = '#', 0
                     print('d')
 
+            # Возвращаем координаты крайних точек
+            if direction == 1:
+                return [[x2, y1], [x2, y2]]
+            if direction == 2:
+                return [[x1, y2], [x2, y2]]
+            if direction == 3:
+                return [[x1, y1], [x1, y2]]
+            if direction == 4:
+                return [[x1, y1], [x2, y1]]
 
     def write_in_txt(self):
         with open('data/Test_map.txt', 'w') as writing_file:
@@ -284,4 +430,4 @@ class Map_generation:
                 print(*element, file=writing_file)
 
 
-a = Map_generation(map_size, starting_room_sizes, directions, length_of_corridors, maximum_branch_length, maximum_division_of_a_branch)
+a = Map_generation(map_size, starting_room_sizes, directions, length_of_corridors, maximum_branch_length, maximum_division_of_a_branch, room_sizes)
