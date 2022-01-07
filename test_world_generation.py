@@ -20,15 +20,44 @@ directions = [[1, 2, 3, 4], ['x']]
 # directions = [[d1, ...], ['x']], где d1, ... это номера направлений, кодировку смотрите выше, в обозначениях
 
 # Настройка длины коридоров
+length_of_corridors = ['r', 20, 40]
+# length_of_corridors = ['r', 10, 15] рандомная длина, включает написанные значения
+# length_of_corridors = ['o', 10, 0] определённая длина (10)
+
+# Настройка размеров игровой комнаты
+room_sizes = ['r', 30, 50, 2]
+# из игровых сооброжений не следует ставить менее чем 30*30
+# room_sizes = ['r', 30, 50, 2] рандомная длина стенок, включает написанные значения
+# последнюю цифру желательно не трогать, тк она обеспечивает четные значения
+# room_sizes = ['o', 40, 46] определённая длина стенок, включает написанные
+# не следует писать не четные значения
+
+# Настройка размеров комнаты, желательно не трогать
+starting_room_sizes = 50
+
+# Настройка размеров комнаты, желательно не трогать
+map_size = 1000
+
+# Максимальная длина ветки
+maximum_branch_length = 5
+
+# Максимальное деление ветки, не превышает длину ветки
+maximum_division_of_a_branch = 3
+
+
 
 class Map_generation:
-    def __init__(self, size_map, size_room, direc):
+    def __init__(self, size_map, size_room, direc, loc, max_len_br, max_div_br):
         self.WIDTH = self.HEIGHT = self.SIZE = size_map  # размеры карты
         self.generation = True
         self.MAP = []  # слайс карты
         self.SIZE_room = size_room  # размеры начальной комнаты
         self.ends, self.root_ends = [], []
         self.directions = direc  # Настройка стартовых направлений
+        self.length_of_corridors = loc  # Настройка длнины коридоров
+        self.max_len_br = max_len_br  # Настройка длины веток
+        self.max_div_br = max_div_br  # Настройка количества веток
+        self.dir = []
 
         self.Filling_the_map_with_emptiness()
 
@@ -91,7 +120,16 @@ class Map_generation:
             else:
                 north = 1
 
-        # создаем стены по данным нам координатам и пропиливаем в низ 4 прохода
+        if east == 1:
+            self.dir.append(1)
+        if south == 1:
+            self.dir.append(2)
+        if west == 1:
+            self.dir.append(3)
+        if north == 1:
+            self.dir.append(4)
+
+        # создаем стены по данным нам координатам и пропиливаем проходы
         if True:
             pc, z = [], 0  # |
             n, n1 = 0, 0  # |
@@ -165,28 +203,85 @@ class Map_generation:
                 f1, n1 = f, n
             self.root_ends.append(pc)
 
-        """Теперь необходимо создавать отдельные локации в четырёх направлениях и проходы до них"""
-        for i in self.root_ends:
-            print(i)  # крайние точки коридора с одной из четырёх сторон
-            # pass
-        # self.Leveled_branch_root()
+        """Теперь необходимо создавать отдельные локации в определённых направлениях, и проходы до них"""
+        self.Leveled_branch_root()
 
     def Leveled_branch_root(self):
         """Здесь рассматривается направление ветвей"""
-        for i in range(4):
-            self.Creating_leveled_branches(i + 1)
+        d = []
+        for n in range(len(self.dir)):
+            dir = random.choice(self.dir)
+            if dir not in d:
+                d.append(dir)
+                self.Creating_leveled_branches(dir)
+            else:
+                while dir in d:
+                    dir = random.choice(self.dir)
+                d.append(dir)
+                self.Creating_leveled_branches(dir)
+
 
     def Creating_leveled_branches(self, direction):
         """Здесь происходит генирация ветвей"""
-        pass
+        # сначала создае  проход к новой локации
+        self.Create_passages(direction, self.root_ends[direction - 1])
 
-    def Create_passages(self):
-        """Здесь создаются проходы к следующеё ,,комнате,,"""
-        pass
+    def Create_passages(self, direction, coord):
+        """Здесь создаются проходы"""
+        # Определяем длину коридора
+        if self.length_of_corridors[0] != 'r' and self.length_of_corridors[0] != 'o':
+            len_cor = random.randint(20, 40)
+        elif self.length_of_corridors[0] == 'r':
+            len_cor = random.randint(int(self.length_of_corridors[1]), int(self.length_of_corridors[2]) + 1)
+        elif self.length_of_corridors[0] == 'o':
+            len_cor = self.length_of_corridors[1]
 
-    def pr(self):
-        for i in self.MAP:
-            print(i)
+        print(direction, len_cor)
+        # устанавливаем координаты прохода, определяем создаваемые стенки
+        if direction == 1:
+            x1, y1 = int(coord[0][0]), int(coord[0][1])
+            x2, y2 = int(coord[1][0]) + len_cor, int(coord[1][1])
+            east, south, west, north = 0, 1, 0, 1
+        if direction == 2:
+            x1, y1 = x1, y1 = int(coord[0][0]), int(coord[0][1])
+            x2, y2 = int(coord[1][0]), int(coord[1][1] + len_cor)
+            east, south, west, north = 1, 0, 1, 0
+        if direction == 3:
+            x1, y1 = int(coord[0][0]) - len_cor, int(coord[0][1])
+            x2, y2 = int(coord[1][0]), int(coord[1][1])
+            east, south, west, north = 0, 1, 0, 1
+        if direction == 4:
+            x1, y1 = x1, y1 = int(coord[0][0]), int(coord[0][1] - len_cor)
+            x2, y2 = int(coord[1][0]), int(coord[1][1])
+            east, south, west, north = 1, 0, 1, 0
+
+        # создаем стены по данным нам координатам
+        if True:
+            if east == 1:
+                for y in range(y1, y2 + 1):  # |
+                    self.MAP[y][x2 - 1][0], f = '#', 0
+                    print('a')
+
+            if south == 1:
+                for x in range(x1, x2 + 1):
+                    self.MAP[y2 - 1][x][0], f = '#', 0
+                    print('b')
+
+            if west == 1:
+                for y in range(y1, y2 + 1):  # |
+                    self.MAP[y][x1 - 1][0], f = '#', 0
+                    print('c')
+
+            if north == 1:
+                for x in range(x1, x2 + 1):
+                    self.MAP[y1 - 1][x][0], f = '#', 0
+                    print('d')
 
 
-a = Map_generation(100, 10, directions)
+    def write_in_txt(self):
+        with open('data/Test_map.txt', 'w') as writing_file:
+            for element in self.MAP:
+                print(*element, file=writing_file)
+
+
+a = Map_generation(map_size, starting_room_sizes, directions, length_of_corridors, maximum_branch_length, maximum_division_of_a_branch)
