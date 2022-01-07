@@ -129,21 +129,21 @@ if __name__ == '__main__':
         keys = pygame.key.get_pressed()
         print(y, x)
 
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_d]:
             if x < level_x - 1 and level[y][x + 1] == '.':
                 x += 1
                 player.rect.x += STEP
-        elif keys[pygame.K_LEFT]:
+        elif keys[pygame.K_a]:
             if x > 0 and level[y][x - 1] == '.':
                 x -= 1
                 player.rect.x -= STEP
         clock.tick(FPS // 3)
 
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_w]:
             if y > 0 and level[y - 1][x] == '.':
                 y -= 1
                 player.rect.y -= STEP
-        elif keys[pygame.K_DOWN]:
+        elif keys[pygame.K_s]:
             if y < level_y - 1 and level[y + 1][x] == '.':
                 y += 1
                 player.rect.y += STEP
