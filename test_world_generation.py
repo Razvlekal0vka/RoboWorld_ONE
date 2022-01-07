@@ -45,7 +45,6 @@ maximum_branch_length = 5
 maximum_division_of_a_branch = 3
 
 
-
 class Map_generation:
     def __init__(self, size_map, size_room, direc, loc, max_len_br, max_div_br, rs):
         self.WIDTH = self.HEIGHT = self.SIZE = size_map  # размеры карты
@@ -59,6 +58,7 @@ class Map_generation:
         self.max_div_br = max_div_br  # Настройка количества веток
         self.dir = []
         self.room_size = rs
+        self.room_coordinates = []  # Координаты всех комнат
 
         self.Filling_the_map_with_emptiness()
 
@@ -69,6 +69,7 @@ class Map_generation:
             for x in range(self.SIZE):
                 line.append([' '])
             self.MAP.append(line)
+        print('Создание и заполнение списка')
 
         self.Setting_the_starting_location()
 
@@ -76,8 +77,11 @@ class Map_generation:
         """Установка стартовой локации"""
         # стартовая локация имеет размеры self.SIZE_room и находится в центре карты
         # устанавливаем координаты комнаты
+        print('Генирация начальной локации')
         x1, y1 = int(self.SIZE / 2 - self.SIZE_room / 2), int(self.SIZE / 2 - self.SIZE_room / 2)
         x2, y2 = int(self.SIZE / 2 + self.SIZE_room / 2), int(self.SIZE / 2 + self.SIZE_room / 2)
+
+        self.room_coordinates.append([x1, y1, self.SIZE_room, self.SIZE_room])
 
         # Проверка параметров создаваймой начальной локации
         if self.directions == ['r'] or not self.directions[0] or not self.directions[1]:
@@ -229,9 +233,9 @@ class Map_generation:
                 d.append(dir)
                 self.Creating_leveled_branches(dir)
 
-
     def Creating_leveled_branches(self, direction):
         """Здесь происходит генирация ветвей"""
+        print(f'Начало создания ветки {direction}')
         # сначала создае  проход к новой локации
         end_coord = self.Create_passages(direction, self.root_ends[direction - 1])
         # создаем комнату в конце коридора
@@ -239,180 +243,214 @@ class Map_generation:
 
     def Creating_rooms(self, end_coord, direction):
         """Здесь происходит генирация комнат"""
+        print('Создание комнаты')
         # определение типа генирации комнаты
-        if self.room_size[0] == 'r':
-            a = random.randrange(self.room_size[1], self.room_size[2], self.room_size[3])
-            b = random.randrange(self.room_size[1], self.room_size[2], self.room_size[3])
-        elif self.room_size[0] == 'o':
-            a, b = self.room_size[1], self.room_size[2]
 
-        # находим смещение относительно прохода
-        r = abs(end_coord[0][0] - end_coord[1][0]) + abs(end_coord[0][1] - end_coord[1][1])
-        r = 0.5 * (max(a, b) - r)
-        r = random.randint(1, r)  # смещение относительно прохода
-        s = random.randint(0, 1)  # вправо или влево
+        k1, k2 = 0, 0
+        while k1 == 0 and k2 < 100:
+            k2 += 1
 
-        # устанавливаем координаты комнаты
-        print(end_coord, direction)
-        if direction == 1:
-            if s == 0:
-                x1, y1 = end_coord[0][0], end_coord[0][1] - r
-                x2, y2 = x1 + a, y1 + b
-            else:
-                x1, y1 = end_coord[0][0], end_coord[0][1] + r
-                x2, y2 = x1 + a, y1 + b
+            if self.room_size[0] == 'r':
+                a = random.randrange(self.room_size[1], self.room_size[2], self.room_size[3])
+                b = random.randrange(self.room_size[1], self.room_size[2], self.room_size[3])
+            elif self.room_size[0] == 'o':
+                a, b = self.room_size[1], self.room_size[2]
 
-        if direction == 2:
-            x1, y1 = x1, y1 = int(coord[0][0]), int(coord[0][1])
-            x2, y2 = int(coord[1][0]), int(coord[1][1] + len_cor)
-            east, south, west, north = 1, 0, 1, 0
+            # находим смещение относительно прохода
+            r = abs(end_coord[0][0] - end_coord[1][0]) + abs(end_coord[0][1] - end_coord[1][1])
+            r = 0.5 * (min(a, b) - r)
+            r = random.randint(1, r)  # смещение относительно прохода
+            s = random.randint(0, 1)  # вправо или влево
 
-        if direction == 3:
-            if s == 0:
-                x1, y1 = end_coord[0][0] - a, end_coord[0][1] - r - b
-                x2, y2 = x1 + a, y1 + b
-            else:
-                x1, y1 = end_coord[0][0], end_coord[0][1] + r
-                x2, y2 = x1 + a, y1 + b
+            # устанавливаем координаты комнаты
+            if direction == 1:
+                if s == 0:
+                    x1, y1 = end_coord[0][0] + 1, end_coord[0][1] - r
+                    x2, y2 = x1 + a + 1, y1 + b
+                else:
+                    x1, y1 = end_coord[0][0] + 1, end_coord[0][1] + r - b
+                    x2, y2 = x1 + a + 1, y1 + b
 
-        if direction == 4:
-            x1, y1 = x1, y1 = int(coord[0][0]), int(coord[0][1] - len_cor)
-            x2, y2 = int(coord[1][0]), int(coord[1][1])
-            east, south, west, north = 1, 0, 1, 0
+            if direction == 2:
+                if s == 1:
+                    x1, y1 = end_coord[0][0] - r, end_coord[0][1] + 1
+                    x2, y2 = x1 + a, y1 + b + 1
+                else:
+                    x1, y1 = end_coord[0][0] + r - a, end_coord[0][1] + 1
+                    x2, y2 = x1 + a, y1 + b + 1
 
-        # создаем стены по данным нам координатам и пропиливаем проходы
-        if True:
-            pc, z = [], 0  # |
-            n, n1 = 0, 0  # |
-            f, f1 = 1, 1  # | отвечают за определение крайних точек прохода (нужны для генирации проходов)
-            for y in range(y1, y2 + 1):  # |
-                n = y
-                f = 1
-                if east == 1:
-                    if y >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or y < self.SIZE / 2 - self.SIZE_room * 0.1:
+            if direction == 3:
+                if s == 0:
+                    x1, y1 = end_coord[0][0] - a, end_coord[0][1] - r
+                    x2, y2 = x1 + a, y1 + b
+                else:
+                    x1, y1 = end_coord[0][0] - a, end_coord[0][1] + r - b
+                    x2, y2 = x1 + a, y1 + b
+
+            if direction == 4:
+                if s == 1:
+                    x1, y1 = end_coord[0][0] - r, end_coord[0][1] - b
+                    x2, y2 = x1 + a, y1 + b
+                else:
+                    x1, y1 = end_coord[0][0] + r - a, end_coord[0][1] - b
+                    x2, y2 = x1 + a, y1 + b
+
+            east, south, west, north = 0, 0, 0, 0
+
+            print(f'Код генирации - {s}')
+
+            time_data = [x1, y1, x2 - x1, y2 - y1]
+            k1 = self.Compatibility_check(time_data)
+            k2 += 1
+
+        if k1 == 1:
+            self.room_coordinates.append(time_data)
+
+            # создаем стены по данным нам координатам и пропиливаем проходы
+            if True:
+                pc, z = [], 0  # |
+                n, n1 = 0, 0  # |
+                f, f1 = 1, 1  # | отвечают за определение крайних точек прохода (нужны для генирации проходов)
+                for y in range(y1, y2 + 1):  # |
+                    n = y
+                    f = 1
+                    if east == 1:
+                        if y >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or y < self.SIZE / 2 - self.SIZE_room * 0.1:
+                            self.MAP[y - 1][x2 - 1][0], f = '#', 0
+                    else:
                         self.MAP[y - 1][x2 - 1][0], f = '#', 0
-                else:
-                    self.MAP[y - 1][x2 - 1][0], f = '#', 0
-                if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
-                    z = 1
-                elif f == 0 and f1 == 1:
-                    pc.append([x2 - 1, n1])
-                elif f == 1 and f1 == 0:
-                    pc.append([x2 - 1, n])
-                f1, n1 = f, n
-            self.root_ends.append(pc)
+                    if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
+                        z = 1
+                    elif f == 0 and f1 == 1:
+                        pc.append([x2 - 1, n1])
+                    elif f == 1 and f1 == 0:
+                        pc.append([x2 - 1, n])
+                    f1, n1 = f, n
+                self.root_ends.append(pc)
 
-            pc, z = [], 0  # |
-            n, n1 = 0, 0  # |
-            f, f1 = 1, 1  # | отвечают за определение крайних точек прохода (нужны для генирации проходов)
-            for x in range(x1, x2 + 1):
-                n = x
-                f = 1
-                if south == 1:
-                    if x >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or x < self.SIZE / 2 - self.SIZE_room * 0.1:
+                pc, z = [], 0  # |
+                n, n1 = 0, 0  # |
+                f, f1 = 1, 1  # | отвечают за определение крайних точек прохода (нужны для генирации проходов)
+                for x in range(x1, x2 + 1):
+                    n = x
+                    f = 1
+                    if south == 1:
+                        if x >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or x < self.SIZE / 2 - self.SIZE_room * 0.1:
+                            self.MAP[y2 - 1][x - 1][0], f = '#', 0
+                    else:
                         self.MAP[y2 - 1][x - 1][0], f = '#', 0
-                else:
-                    self.MAP[y2 - 1][x - 1][0], f = '#', 0
-                if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
-                    z = 1
-                elif f == 0 and f1 == 1:
-                    pc.append([n1, y2 - 1])
-                elif f == 1 and f1 == 0:
-                    pc.append([n, y2 - 1])
-                f1, n1 = f, n
-            self.root_ends.append(pc)
+                    if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
+                        z = 1
+                    elif f == 0 and f1 == 1:
+                        pc.append([n1, y2 - 1])
+                    elif f == 1 and f1 == 0:
+                        pc.append([n, y2 - 1])
+                    f1, n1 = f, n
+                self.root_ends.append(pc)
 
-            pc, z = [], 0  # |
-            n, n1 = 0, 0  # |
-            f, f1 = 1, 1  # | отвечают за определение крайних точек прохода (нужны для генирации проходов)
-            for y in range(y1, y2 + 1):  # |
-                n = y
-                f = 1
-                if west == 1:
-                    if y >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or y < self.SIZE / 2 - self.SIZE_room * 0.1:
+                pc, z = [], 0  # |
+                n, n1 = 0, 0  # |
+                f, f1 = 1, 1  # | отвечают за определение крайних точек прохода (нужны для генирации проходов)
+                for y in range(y1, y2 + 1):  # |
+                    n = y
+                    f = 1
+                    if west == 1:
+                        if y >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or y < self.SIZE / 2 - self.SIZE_room * 0.1:
+                            self.MAP[y - 1][x1 - 1][0], f = '#', 0
+                    else:
                         self.MAP[y - 1][x1 - 1][0], f = '#', 0
-                else:
-                    self.MAP[y - 1][x1 - 1][0], f = '#', 0
-                if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
-                    z = 1
-                elif f == 0 and f1 == 1:
-                    pc.append([x1 - 1, n1])
-                elif f == 1 and f1 == 0:
-                    pc.append([x1 - 1, n])
-                f1, n1 = f, n
-            self.root_ends.append(pc)
+                    if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
+                        z = 1
+                    elif f == 0 and f1 == 1:
+                        pc.append([x1 - 1, n1])
+                    elif f == 1 and f1 == 0:
+                        pc.append([x1 - 1, n])
+                    f1, n1 = f, n
+                self.root_ends.append(pc)
 
-            pc, z = [], 0  # |
-            n, n1 = 0, 0  # |
-            f, f1 = 1, 1  # | отвечают за определение крайних точек прохода (нужны для генирации проходов)
-            for x in range(x1, x2 + 1):
-                n = x
-                f = 1
-                if north == 1:
-                    if x >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or x < self.SIZE / 2 - self.SIZE_room * 0.1:
+                pc, z = [], 0  # |
+                n, n1 = 0, 0  # |
+                f, f1 = 1, 1  # | отвечают за определение крайних точек прохода (нужны для генирации проходов)
+                for x in range(x1, x2 + 1):
+                    n = x
+                    f = 1
+                    if north == 1:
+                        if x >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or x < self.SIZE / 2 - self.SIZE_room * 0.1:
+                            self.MAP[y1 - 1][x - 1][0], f = '#', 0
+                    else:
                         self.MAP[y1 - 1][x - 1][0], f = '#', 0
-                else:
-                    self.MAP[y1 - 1][x - 1][0], f = '#', 0
-                if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
-                    z = 1
-                elif f == 0 and f1 == 1:
-                    pc.append([n1, y1 - 1])
-                elif f == 1 and f1 == 0:
-                    pc.append([n, y1 - 1])
-                f1, n1 = f, n
-            self.root_ends.append(pc)
+                    if ((f == 0 and f1 == 1) or (f == 1 and f1 == 0)) and z == 0:
+                        z = 1
+                    elif f == 0 and f1 == 1:
+                        pc.append([n1, y1 - 1])
+                    elif f == 1 and f1 == 0:
+                        pc.append([n, y1 - 1])
+                    f1, n1 = f, n
+                self.root_ends.append(pc)
 
+            print('Комната создана')
         self.write_in_txt()
 
     def Create_passages(self, direction, coord):
         """Здесь создаются проходы"""
+        print('Создание прохода')
         # Определяем длину коридора
-        if self.length_of_corridors[0] != 'r' and self.length_of_corridors[0] != 'o':
-            len_cor = random.randint(20, 40)
-        elif self.length_of_corridors[0] == 'r':
-            len_cor = random.randint(int(self.length_of_corridors[1]), int(self.length_of_corridors[2]) + 1)
-        elif self.length_of_corridors[0] == 'o':
-            len_cor = self.length_of_corridors[1]
 
-        # устанавливаем координаты прохода, определяем создаваемые стенки
-        if direction == 1:
-            x1, y1 = int(coord[0][0]), int(coord[0][1])
-            x2, y2 = int(coord[1][0]) + len_cor, int(coord[1][1])
-            east, south, west, north = 0, 1, 0, 1
-        if direction == 2:
-            x1, y1 = x1, y1 = int(coord[0][0]), int(coord[0][1])
-            x2, y2 = int(coord[1][0]), int(coord[1][1] + len_cor)
-            east, south, west, north = 1, 0, 1, 0
-        if direction == 3:
-            x1, y1 = int(coord[0][0]) - len_cor, int(coord[0][1])
-            x2, y2 = int(coord[1][0]), int(coord[1][1])
-            east, south, west, north = 0, 1, 0, 1
-        if direction == 4:
-            x1, y1 = x1, y1 = int(coord[0][0]), int(coord[0][1] - len_cor)
-            x2, y2 = int(coord[1][0]), int(coord[1][1])
-            east, south, west, north = 1, 0, 1, 0
+        k1, k2 = 0, 0
+        while k1 == 0 and k2 < 100:
+            k2 += 1
 
-        # создаем стены по данным нам координатам
+            if self.length_of_corridors[0] != 'r' and self.length_of_corridors[0] != 'o':
+                len_cor = random.randint(20, 40)
+            elif self.length_of_corridors[0] == 'r':
+                len_cor = random.randint(int(self.length_of_corridors[1]), int(self.length_of_corridors[2]) + 1)
+            elif self.length_of_corridors[0] == 'o':
+                len_cor = self.length_of_corridors[1]
+
+            # устанавливаем координаты прохода, определяем создаваемые стенки
+            if direction == 1:
+                x1, y1 = int(coord[0][0]), int(coord[0][1])
+                x2, y2 = int(coord[1][0]) + len_cor, int(coord[1][1])
+                east, south, west, north = 0, 1, 0, 1
+            if direction == 2:
+                x1, y1 = x1, y1 = int(coord[0][0]), int(coord[0][1])
+                x2, y2 = int(coord[1][0]), int(coord[1][1] + len_cor)
+                east, south, west, north = 1, 0, 1, 0
+            if direction == 3:
+                x1, y1 = int(coord[0][0]) - len_cor, int(coord[0][1])
+                x2, y2 = int(coord[1][0]), int(coord[1][1])
+                east, south, west, north = 0, 1, 0, 1
+            if direction == 4:
+                x1, y1 = x1, y1 = int(coord[0][0]), int(coord[0][1] - len_cor)
+                x2, y2 = int(coord[1][0]), int(coord[1][1])
+                east, south, west, north = 1, 0, 1, 0
+
+            time_data = [x1, y1, x2 - x1, y2 - y1]
+            k1 = self.Compatibility_check(time_data)
+            k2 += 1
+
+        if k1 == 1:
+            self.room_coordinates.append(time_data)
+
+            # создаем стены по данным нам координатам
         if True:
             if east == 1:
                 for y in range(y1, y2 + 1):  # |
                     self.MAP[y][x2 - 1][0], f = '#', 0
-                    print('a')
 
             if south == 1:
                 for x in range(x1, x2 + 1):
                     self.MAP[y2 - 1][x][0], f = '#', 0
-                    print('b')
 
             if west == 1:
                 for y in range(y1, y2 + 1):  # |
                     self.MAP[y][x1 - 1][0], f = '#', 0
-                    print('c')
 
             if north == 1:
                 for x in range(x1, x2 + 1):
                     self.MAP[y1 - 1][x][0], f = '#', 0
-                    print('d')
+
+            print('Проход создан')
 
             # Возвращаем координаты крайних точек
             if direction == 1:
@@ -429,5 +467,38 @@ class Map_generation:
             for element in self.MAP:
                 print(*element, file=writing_file)
 
+    def Compatibility_check(self, data):
+        """Алгоритм столкновения"""
+        x11, y11, a1, b1 = data[0], data[1], data[2], data[3]
 
-a = Map_generation(map_size, starting_room_sizes, directions, length_of_corridors, maximum_branch_length, maximum_division_of_a_branch, room_sizes)
+        for d in self.room_coordinates:
+            print(1, x11, y11, a1, b1)
+            x21, y21, a2, b2 = d[0], d[1], d[2], d[3]
+            print(2, x21, y21, a2, b2)
+            x12, y12 = x11 + a1, y11 + b1
+            x22, y22 = x21 + a2, y21 + b2
+            ys1, xs1 = (y11 + y12) * 0.5, (x11 + x12) * 0.5
+            ys2, xs2 = (y21 + y22) * 0.5, (x21 + x22) * 0.5
+            rx1, ry1 = x12 - xs1, y11 - ys1
+            rx2, ry2 = x22 - xs2, y21 - ys2
+            delx = abs(xs1 - xs2)
+            dely = abs(ys1 - ys2)
+            r1 = (delx ** 2 + dely ** 2) ** 0.5
+            r2 = (abs(rx1 + rx2) ** 2 + abs(ry1 + ry2) ** 2) ** 0.5
+
+            if r2 > r1:
+                # Основные значения для нахождения столкновения
+                # x11;y11;x12;y12 - координаты движущегося тела
+                # x21;y21;x22;y22 - координаты рассматриваемогок тела
+                # r1;r2 - вычисление расстояний между объектами
+                # print('----------------------------------')
+                # print(x11, y11, x12, y12, r1)
+                # print(x21, y21, x22, y22, r2)
+                # print(pos_x, pos_y)
+                # print('----------------------------------')
+                return 0
+        return 1
+
+
+a = Map_generation(map_size, starting_room_sizes, directions, length_of_corridors, maximum_branch_length,
+                   maximum_division_of_a_branch, room_sizes)
