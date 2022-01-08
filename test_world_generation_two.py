@@ -1,6 +1,118 @@
 import random
-
+from enum import Enum
 from PIL import Image
+
+
+class MAP_ENTRY_TYPE(Enum):
+    """Необходим для генирации лабиринтов"""
+    MAP_EMPTY = 0,
+    MAP_BLOCK = 1,
+
+
+class WALL_DIRECTION(Enum):
+    """Необходим для генирации лабиринтов"""
+    WALL_LEFT = 0,
+    WALL_UP = 1,
+    WALL_RIGHT = 2,
+    WALL_DOWN = 3,
+
+
+class Map:
+    def __init__(self):
+        self.width = 25
+        self.height = 25
+        self.map = [[0 for x in range(self.width)] for y in range(self.height)]
+
+    def setMap(self, x, y, value):
+        if value == MAP_ENTRY_TYPE.MAP_EMPTY:
+            self.map[y][x] = 0
+        elif value == MAP_ENTRY_TYPE.MAP_BLOCK:
+            self.map[y][x] = 1
+
+    def isMovable(self, x, y):
+        return self.map[y][x] != 1
+
+    def isValid(self, x, y):
+        if x < 0 or x >= self.width or y < 0 or y >= self.height:
+            return False
+        return True
+
+    def showMap(self):
+        map = []
+        for row in self.map:
+            s = ''
+            for entry in row:
+                if entry == 0:
+                    s += ' '
+                elif entry == 1:
+                    s += '#'
+                else:
+                    s += ' X'
+            map.append(s)
+        maze_map = []
+        for i in map:
+            line = []
+            for j in range(len(i)):
+                line.append(i[j])
+            maze_map.append(line)
+        return maze_map
+
+
+def recursiveDivision(map, x, y, width, height, wall_value):
+    def getWallIndex(start, length):
+        assert length >= 3
+        wall_index = random.randint(start + 1, start + length - 2)
+        if wall_index % 2 == 1:
+            wall_index -= 1
+        return wall_index
+
+    def generateHoles(map, x, y, width, height, wall_x, wall_y):
+        holes = []
+
+        hole_entrys = [(random.randint(x, wall_x - 1), wall_y), (random.randint(wall_x + 1, x + width - 1), wall_y),
+                       (wall_x, random.randint(y, wall_y - 1)), (wall_x, random.randint(wall_y + 1, y + height - 1))]
+        margin_entrys = [(x, wall_y), (x + width - 1, wall_y), (wall_x, y), (wall_x, y + height - 1)]
+        adjacent_entrys = [(x - 1, wall_y), (x + width, wall_y), (wall_x, y - 1), (wall_x, y + height)]
+        for i in range(4):
+            adj_x, adj_y = (adjacent_entrys[i][0], adjacent_entrys[i][1])
+            if map.isValid(adj_x, adj_y) and map.isMovable(adj_x, adj_y):
+                map.setMap(margin_entrys[i][0], margin_entrys[i][1], MAP_ENTRY_TYPE.MAP_EMPTY)
+            else:
+                holes.append(hole_entrys[i])
+
+        ignore_hole = random.randint(0, len(holes) - 1)
+        for i in range(0, len(holes)):
+            if i != ignore_hole:
+                map.setMap(holes[i][0], holes[i][1], MAP_ENTRY_TYPE.MAP_EMPTY)
+
+    if width <= 1 or height <= 1:
+        return
+
+    wall_x, wall_y = (getWallIndex(x, width), getWallIndex(y, height))
+
+    for i in range(x, x + width):
+        map.setMap(i, wall_y, wall_value)
+    for i in range(y, y + height):
+        map.setMap(wall_x, i, wall_value)
+
+    generateHoles(map, x, y, width, height, wall_x, wall_y)
+
+    recursiveDivision(map, x, y, wall_x - x, wall_y - y, wall_value)
+    recursiveDivision(map, x, wall_y + 1, wall_x - x, y + height - wall_y - 1, wall_value)
+    recursiveDivision(map, wall_x + 1, y, x + width - wall_x - 1, wall_y - y, wall_value)
+    recursiveDivision(map, wall_x + 1, wall_y + 1, x + width - wall_x - 1, y + height - wall_y - 1, wall_value)
+
+
+def doRecursiveDivision(map):
+    for x in range(0, map.width):
+        map.setMap(x, 0, MAP_ENTRY_TYPE.MAP_BLOCK)
+        map.setMap(x, map.height - 1, MAP_ENTRY_TYPE.MAP_BLOCK)
+
+    for y in range(0, map.height):
+        map.setMap(0, y, MAP_ENTRY_TYPE.MAP_BLOCK)
+        map.setMap(map.width - 1, y, MAP_ENTRY_TYPE.MAP_BLOCK)
+
+    recursiveDivision(map, 1, 1, map.width - 2, map.height - 2, MAP_ENTRY_TYPE.MAP_BLOCK)
 
 
 class Map_generation:
@@ -50,7 +162,15 @@ class Map_generation:
         for _ in range(21):
             street = []
             for __ in range(21):
-                color = random.randint(0, 3)
+                color = random.randint(0, 12)
+                if 0 <= color <= 3:
+                    color = 3
+                elif 4 <= color <= 7:
+                    color = 2
+                elif 8 <= color <= 11:
+                    color = 1
+                elif color == 12:
+                    color = 0
                 street.append(colors[color])
             facades.append(street)
             street = []
@@ -120,9 +240,7 @@ class Map_generation:
             for __ in range(21):
                 for yy in range(50):
                     for xx in range(50):
-                        if facades[_][__] == 'brown':
-                            self.map_city[y + yy][x + xx] = ['bh', '#']
-                        elif facades[_][__] == 'purple':
+                        if facades[_][__] == 'purple':
                             self.map_city[y + yy][x + xx] = ['ph', '#']
                         elif facades[_][__] == 'green':
                             self.map_city[y + yy][x + xx] = ['gh', '#']
@@ -137,13 +255,58 @@ class Map_generation:
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
                             elif xx == 49 and (yy < 24 or yy > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
-                            elif (yy == 0 and (24 <= xx <= 27)) or (yy == 49 and (24 <= xx <= 27)) or (xx == 0 and (24 <= yy <= 27)) or (xx == 49 and (24 <= yy <= 27)):
-                                self.map_city[y + yy][x + xx] = ['passage', '.']
+                            elif (yy == 0 and (24 <= xx <= 27)) or (yy == 49 and (24 <= xx <= 27)) or (
+                                    xx == 0 and (24 <= yy <= 27)) or (xx == 49 and (24 <= yy <= 27)):
+                                self.map_city[y + yy][x + xx] = ['start_passage', '.']
                             else:
                                 self.map_city[y + yy][x + xx] = ['start_floor', '.']
                 x += 55
             y += 55
             x = 6
+
+        print('Строительство зданий c лабиринтом')
+        x, y = 6, 6
+        for _ in range(21):
+            for __ in range(21):
+                map_m = Map()
+                doRecursiveDivision(map_m)
+                maze = map_m.showMap()
+                for yy in range(50):
+                    for xx in range(50):
+                        if facades[_][__] == 'brown':
+                            if yy <= 1 and xx <= 1:
+                                self.map_city[y + yy][x + xx] = ['brown_house', '#']
+                            else:
+                                if xx <= 49 and yy <= 49:
+                                    if maze[yy // 2][xx // 2] == '#':
+                                        self.map_city[y + yy][x + xx] = ['brown_house', '#']
+                                    else:
+                                        self.map_city[y + yy][x + xx] = ['brown_house_floor', '.']
+                np = random.randint(1, 4)
+                rp = random.randint(2, 43)
+                if np == 1:
+                    self.map_city[x + rp][y + 49] = ['passage', '.']
+                    self.map_city[x + rp + 1][y + 49] = ['passage', '.']
+                    self.map_city[x + rp + 2][y + 49] = ['passage', '.']
+                    self.map_city[x + rp + 3][y + 49] = ['passage', '.']
+                elif np == 2:
+                    self.map_city[y + 49][x + rp] = ['passage', '.']
+                    self.map_city[y + 49][x + rp + 1] = ['passage', '.']
+                    self.map_city[y + 49][x + rp + 2] = ['passage', '.']
+                    self.map_city[y + 49][x + rp + 3] = ['passage', '.']
+                elif np == 3:
+                    self.map_city[x + rp][y + 0] = ['passage', '.']
+                    self.map_city[x + rp + 1][y + 0] = ['passage', '.']
+                    self.map_city[x + rp + 2][y + 0] = ['passage', '.']
+                    self.map_city[x + rp + 3][y + 0] = ['passage', '.']
+                elif np == 2:
+                    self.map_city[y + 0][x + rp] = ['passage', '.']
+                    self.map_city[y + 0][x + rp + 1] = ['passage', '.']
+                    self.map_city[y + 0][x + rp + 2] = ['passage', '.']
+                    self.map_city[y + 0][x + rp + 3] = ['passage', '.']
+                x += 55
+            x = 6
+            y += 55
 
     def rendering(self):
         print('Создание изображения карты')
@@ -185,8 +348,10 @@ class Map_generation:
                     r, g, b = 115, 141, 63
                 elif self.map_city[y][x][0] == 'ph':
                     r, g, b = 138, 81, 117
-                elif self.map_city[y][x][0] == 'bh':
+                elif self.map_city[y][x][0] == 'brown_house':
                     r, g, b = 141, 99, 63
+                elif self.map_city[y][x][0] == 'brown_house_floor':
+                    r, g, b = 201, 159, 123
                 elif self.map_city[y][x][0] == 'sh':
                     r, g, b = 79, 79, 79
                 elif self.map_city[y][x][0] == 'passage':
@@ -199,5 +364,5 @@ class Map_generation:
         image.save('test_data/' + 'map.png')
 
 
-Map = Map_generation()
-Map.rendering()
+level = Map_generation()
+level.rendering()
