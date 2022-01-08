@@ -260,13 +260,18 @@ class Map_generation:
         s = random.randint(0, 1)  # вправо или влево
 
         # устанавливаем координаты комнаты
+        # east, south, west, north = 0, 0, 0, 0
+        # 0 Простая стена
+        # 1 Будущий проход (НЕ РАБОТАЕТ)
+        # 2 Вход в комнату
         if direction == 1:
             if s == 0:
-                x1, y1 = end_coord[0][0] + 1, end_coord[0][1] - r
-                x2, y2 = x1 + a + 1, y1 + b
+                x1, y1 = end_coord[0][0] + 1, end_coord[0][1] + r - b
+                x2, y2 = x1 + a + 1, y1 + b + r + 5
             else:
                 x1, y1 = end_coord[0][0] + 1, end_coord[0][1] + r - b
-                x2, y2 = x1 + a + 1, y1 + b
+                x2, y2 = x1 + a + 1, y1 + b + 5
+            east, south, west, north = 0, 0, 2, 0
 
         if direction == 2:
             if s == 1:
@@ -275,25 +280,25 @@ class Map_generation:
             else:
                 x1, y1 = end_coord[0][0] + r - a, end_coord[0][1] + 1
                 x2, y2 = x1 + a, y1 + b + 1
+            east, south, west, north = 0, 0, 0, 2
 
         if direction == 3:
             if s == 0:
                 x1, y1 = end_coord[0][0] - a, end_coord[0][1] - r
-                x2, y2 = x1 + a, y1 + b
+                x2, y2 = x1 + a + 1, y1 + b
             else:
                 x1, y1 = end_coord[0][0] - a, end_coord[0][1] + r - b
-                x2, y2 = x1 + a, y1 + b
+                x2, y2 = x1 + a + 1, y1 + b
+            east, south, west, north = 2, 0, 0, 0
 
         if direction == 4:
             if s == 1:
                 x1, y1 = end_coord[0][0] - r, end_coord[0][1] - b
-                x2, y2 = x1 + a, y1 + b
+                x2, y2 = x1 + a, y1 + b + 1
             else:
                 x1, y1 = end_coord[0][0] + r - a, end_coord[0][1] - b
-                x2, y2 = x1 + a, y1 + b
-
-        east, south, west, north = 0, 0, 0, 0
-
+                x2, y2 = x1 + a, y1 + b + 1
+            east, south, west, north = 0, 2, 0, 0
         print(f'Код генирации - {s}')
 
         # создаем стены по данным нам координатам и пропиливаем проходы
@@ -304,8 +309,8 @@ class Map_generation:
             for y in range(y1, y2 + 1):  # |
                 n = y
                 f = 1
-                if east == 1:
-                    if y >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or y < self.SIZE / 2 - self.SIZE_room * 0.1:
+                if east == 2:
+                    if y > max(end_coord[0][1], end_coord[1][1]) or y < min(end_coord[0][1], end_coord[1][1]):
                         self.MAP[y - 1][x2 - 1][0], f = '#', 0
                 else:
                     self.MAP[y - 1][x2 - 1][0], f = '#', 0
@@ -324,8 +329,8 @@ class Map_generation:
             for x in range(x1, x2 + 1):
                 n = x
                 f = 1
-                if south == 1:
-                    if x >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or x < self.SIZE / 2 - self.SIZE_room * 0.1:
+                if south == 2:
+                    if x > max(end_coord[0][0], end_coord[1][0]) or x < min(end_coord[0][0], end_coord[1][0]):
                         self.MAP[y2 - 1][x - 1][0], f = '#', 0
                 else:
                     self.MAP[y2 - 1][x - 1][0], f = '#', 0
@@ -344,8 +349,8 @@ class Map_generation:
             for y in range(y1, y2 + 1):  # |
                 n = y
                 f = 1
-                if west == 1:
-                    if y >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or y < self.SIZE / 2 - self.SIZE_room * 0.1:
+                if west == 2:
+                    if y > max(end_coord[0][1], end_coord[1][1]) or y < min(end_coord[0][1], end_coord[1][1]):
                         self.MAP[y - 1][x1 - 1][0], f = '#', 0
                 else:
                     self.MAP[y - 1][x1 - 1][0], f = '#', 0
@@ -364,8 +369,8 @@ class Map_generation:
             for x in range(x1, x2 + 1):
                 n = x
                 f = 1
-                if north == 1:
-                    if x >= self.SIZE / 2 + self.SIZE_room * 0.1 + 1 or x < self.SIZE / 2 - self.SIZE_room * 0.1:
+                if north == 2:
+                    if x > max(end_coord[0][0], end_coord[1][0]) or x < min(end_coord[0][0], end_coord[1][0]):
                         self.MAP[y1 - 1][x - 1][0], f = '#', 0
                 else:
                     self.MAP[y1 - 1][x - 1][0], f = '#', 0
