@@ -449,6 +449,11 @@ class Map_generation:
             for element in self.MAP:
                 print(*element, file=writing_file)
 
+    def Map(self):
+        return self.MAP
+
 
 a = Map_generation(map_size, starting_room_sizes, directions, length_of_corridors, maximum_branch_length,
                    maximum_division_of_a_branch, room_sizes)
+map_coords = a.Map()
+print(map_coords)
