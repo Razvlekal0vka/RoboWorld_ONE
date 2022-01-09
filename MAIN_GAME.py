@@ -114,6 +114,7 @@ class Camera:
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
+
 tile_images = {'b': load_image('b.png'),
                'c': load_image('c.png'),
                'c12': load_image('c12.png'),
@@ -141,6 +142,7 @@ tile_images = {'b': load_image('b.png'),
                'start_passage': load_image('passage.png'),
                'start_floor': load_image('start_floor.png')}
 player_image = load_image('mario.png')
+
 tile_width = tile_height = STEP = 50
 
 if __name__ == '__main__':
@@ -155,21 +157,21 @@ if __name__ == '__main__':
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_d]:
-            if x < level_x - 1 and level[y][x + 1] == '.':
+            if x < level_x - 1 and level[y][2:-2].split('], [')[x + 1][1:-1].split("', '")[1] == '.':
                 x += 1
                 player.rect.x += STEP
         elif keys[pygame.K_a]:
-            if x > 0 and level[y][x - 1] == '.':
+            if x > 0 and level[y][2:-2].split('], [')[x - 1][1:-1].split("', '")[1] == '.':
                 x -= 1
                 player.rect.x -= STEP
         clock.tick(FPS // 3)
 
         if keys[pygame.K_w]:
-            if y > 0 and level[y - 1][x] == '.':
+            if y > 0 and level[y - 1][2:-2].split('], [')[x + 1][1:-1].split("', '")[1] == '.':
                 y -= 1
                 player.rect.y -= STEP
         elif keys[pygame.K_s]:
-            if y < level_y - 1 and level[y + 1][x] == '.':
+            if y < level_y - 1 and level[y + 1][2:-2].split('], [')[x + 1][1:-1].split("', '")[1] == '.':
                 y += 1
                 player.rect.y += STEP
         clock.tick(FPS // 3)
