@@ -601,6 +601,9 @@ if __name__ == '__main__':
     player, level_x, level_y = generate_level(level)
     y, x = player.pos[1], player.pos[0]
     last_x, last_y = x, y
+    camera.update(player)
+    for sprite in all_sprites:
+        camera.apply(sprite)
     while running:
 
         keys = pygame.key.get_pressed()
@@ -615,29 +618,31 @@ if __name__ == '__main__':
                 x += 1
                 for step in [15, 20, 15]:
                     player.rect.x += step
+            clock.tick(FPS // 6)
         elif keys[pygame.K_a]:
             if level[y][x - 1][1] == '.':
                 x -= 1
                 for step in [15, 20, 15]:
                     player.rect.x -= step
-        clock.tick(FPS // 4)
+            clock.tick(FPS // 6)
 
         if keys[pygame.K_w]:
             if level[y - 1][x][1] == '.':
                 y -= 1
                 for step in [15, 20, 15]:
                     player.rect.y -= step
+            clock.tick(FPS // 6)
         elif keys[pygame.K_s]:
             if level[y + 1][x][1] == '.':
                 y += 1
                 for step in [15, 20, 15]:
                     player.rect.y += step
-        clock.tick(FPS // 4)
+            clock.tick(FPS // 6)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if (last_x < x < last_x + 5 or last_x - 5 < x < last_x) and (last_y < y < last_y + 5 or last_y - 5 < x < last_y):
+            if abs(x - last_x) < 5 and abs(y - last_y) < 5:
                 pass
             else:
                 camera.update(player)
@@ -651,8 +656,7 @@ if __name__ == '__main__':
             clock.tick(FPS)
             pygame.display.flip()
 
-        if (last_x < x < last_x + 5 or last_x - 5 < x < last_x) and (
-                last_y < y < last_y + 5 or last_y - 5 < x < last_y):
+        if abs(x - last_x) < 5 and abs(y - last_y) < 5:
             pass
         else:
             camera.update(player)
