@@ -7,7 +7,7 @@ import pygame
 from PIL import Image
 
 pygame.init()
-size = WIDTH, HEIGHT = 1200, 600
+size = WIDTH, HEIGHT = 1000, 640
 screen = pygame.display.set_mode(size)
 FPS = 50
 clock = pygame.time.Clock()
@@ -238,13 +238,13 @@ class Map_generation:
                 for yy in range(5):
                     for xx in range(5):
                         if yy == 0 and xx == 0:
-                            self.map_city[y + yy][x + xx] = ['c1011', '.']
-                        elif yy == 0 and xx == 4:
-                            self.map_city[y + yy][x + xx] = ['c12', '.']
-                        elif yy == 4 and xx == 4:
                             self.map_city[y + yy][x + xx] = ['c45', '.']
-                        elif yy == 4 and xx == 0:
+                        elif yy == 0 and xx == 4:
                             self.map_city[y + yy][x + xx] = ['c78', '.']
+                        elif yy == 4 and xx == 4:
+                            self.map_city[y + yy][x + xx] = ['c1011', '.']
+                        elif yy == 4 and xx == 0:
+                            self.map_city[y + yy][x + xx] = ['c12', '.']
                         else:
                             self.map_city[y + yy][x + xx] = ['c', '.']
                 x += 55
@@ -275,7 +275,7 @@ class Map_generation:
                         elif facades[_][__] == 'grey':
                             if yy == 0 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
-                            elif yy == 3 and xx == 3:
+                            elif yy == 25 and xx == 25:
                                 self.map_city[y + yy][x + xx] = ['start_floor', '@']
                             elif yy == 49 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
