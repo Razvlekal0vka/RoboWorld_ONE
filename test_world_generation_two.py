@@ -241,11 +241,20 @@ class Map_generation:
                 for yy in range(50):
                     for xx in range(50):
                         if facades[_][__] == 'purple':
-                            self.map_city[y + yy][x + xx] = ['ph', '#']
+                            if yy == 0 or xx == 0 or yy == 49 or xx == 49:
+                                self.map_city[y + yy][x + xx] = ['purple_house', '#']
+                            else:
+                                self.map_city[y + yy][x + xx] = ['purple_house_floor', '.']
                         elif facades[_][__] == 'green':
-                            self.map_city[y + yy][x + xx] = ['gh', '#']
+                            if yy == 0 or xx == 0 or yy == 49 or xx == 49:
+                                self.map_city[y + yy][x + xx] = ['green_house', '#']
+                            else:
+                                self.map_city[y + yy][x + xx] = ['green_house_floor', '.']
                         elif facades[_][__] == 'yellow':
-                            self.map_city[y + yy][x + xx] = ['yh', '#']
+                            if yy == 0 or xx == 0 or yy == 49 or xx == 49:
+                                self.map_city[y + yy][x + xx] = ['yellow_house', '#']
+                            else:
+                                self.map_city[y + yy][x + xx] = ['yellow_house_floor', '.']
                         elif facades[_][__] == 'grey':
                             if yy == 0 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
@@ -282,28 +291,57 @@ class Map_generation:
                                         self.map_city[y + yy][x + xx] = ['brown_house', '#']
                                     else:
                                         self.map_city[y + yy][x + xx] = ['brown_house_floor', '.']
-                np = random.randint(1, 4)
-                rp = random.randint(2, 43)
-                if np == 1:
-                    self.map_city[x + rp][y + 49] = ['passage', '.']
-                    self.map_city[x + rp + 1][y + 49] = ['passage', '.']
-                    self.map_city[x + rp + 2][y + 49] = ['passage', '.']
-                    self.map_city[x + rp + 3][y + 49] = ['passage', '.']
-                elif np == 2:
-                    self.map_city[y + 49][x + rp] = ['passage', '.']
-                    self.map_city[y + 49][x + rp + 1] = ['passage', '.']
-                    self.map_city[y + 49][x + rp + 2] = ['passage', '.']
-                    self.map_city[y + 49][x + rp + 3] = ['passage', '.']
-                elif np == 3:
-                    self.map_city[x + rp][y + 0] = ['passage', '.']
-                    self.map_city[x + rp + 1][y + 0] = ['passage', '.']
-                    self.map_city[x + rp + 2][y + 0] = ['passage', '.']
-                    self.map_city[x + rp + 3][y + 0] = ['passage', '.']
-                elif np == 2:
-                    self.map_city[y + 0][x + rp] = ['passage', '.']
-                    self.map_city[y + 0][x + rp + 1] = ['passage', '.']
-                    self.map_city[y + 0][x + rp + 2] = ['passage', '.']
-                    self.map_city[y + 0][x + rp + 3] = ['passage', '.']
+                if facades[_][__] != 'grey':
+                    if facades[_][__] == 'brown':
+                        np = random.randint(1, 4)
+                        rp = random.randint(2, 43)
+                        if np == 1:
+                            for i in range(4):
+                                self.map_city[y + rp][x + 46 + i] = ['passage', '.']
+                                self.map_city[y + rp + 1][x + 46 + i] = ['passage', '.']
+                                self.map_city[y + rp + 2][x + 46 + i] = ['passage', '.']
+                                self.map_city[y + rp + 3][x + 46 + i] = ['passage', '.']
+                        elif np == 2:
+                            for i in range(4):
+                                self.map_city[y + 46 + i][x + rp] = ['passage', '.']
+                                self.map_city[y + 46 + i][x + rp + 1] = ['passage', '.']
+                                self.map_city[y + 46 + i][x + rp + 2] = ['passage', '.']
+                                self.map_city[y + 46 + i][x + rp + 3] = ['passage', '.']
+                        elif np == 3:
+                            for i in range(4):
+                                self.map_city[y + rp][x + 0 + i] = ['passage', '.']
+                                self.map_city[y + rp + 1][x + 0 + i] = ['passage', '.']
+                                self.map_city[y + rp + 2][x + 0 + i] = ['passage', '.']
+                                self.map_city[y + rp + 3][x + 0 + i] = ['passage', '.']
+                        elif np == 4:
+                            for i in range(4):
+                                self.map_city[y + 0 + i][x + rp] = ['passage', '.']
+                                self.map_city[y + 0 + i][x + rp + 1] = ['passage', '.']
+                                self.map_city[y + 0 + i][x + rp + 2] = ['passage', '.']
+                                self.map_city[y + 0 + i][x + rp + 3] = ['passage', '.']
+                    else:
+                        np = random.randint(1, 4)
+                        rp = random.randint(2, 43)
+                        if np == 1:
+                            self.map_city[y + rp][x + 49] = ['passage', '.']
+                            self.map_city[y + rp + 1][x + 49] = ['passage', '.']
+                            self.map_city[y + rp + 2][x + 49] = ['passage', '.']
+                            self.map_city[y + rp + 3][x + 49] = ['passage', '.']
+                        elif np == 2:
+                            self.map_city[y + 49][x + rp] = ['passage', '.']
+                            self.map_city[y + 49][x + rp + 1] = ['passage', '.']
+                            self.map_city[y + 49][x + rp + 2] = ['passage', '.']
+                            self.map_city[y + 49][x + rp + 3] = ['passage', '.']
+                        elif np == 3:
+                            self.map_city[y + rp][x + 0] = ['passage', '.']
+                            self.map_city[y + rp + 1][x + 0] = ['passage', '.']
+                            self.map_city[y + rp + 2][x + 0] = ['passage', '.']
+                            self.map_city[y + rp + 3][x + 0] = ['passage', '.']
+                        elif np == 4:
+                            self.map_city[y + 0][x + rp] = ['passage', '.']
+                            self.map_city[y + 0][x + rp + 1] = ['passage', '.']
+                            self.map_city[y + 0][x + rp + 2] = ['passage', '.']
+                            self.map_city[y + 0][x + rp + 3] = ['passage', '.']
                 x += 55
             x = 6
             y += 55
@@ -342,12 +380,18 @@ class Map_generation:
                     r, g, b = 63, 138, 141
                 elif self.map_city[y][x][0] == 'transition_v':
                     r, g, b = 63, 138, 141
-                elif self.map_city[y][x][0] == 'yh':
+                elif self.map_city[y][x][0] == 'yellow_house':
                     r, g, b = 141, 76, 63
-                elif self.map_city[y][x][0] == 'gh':
+                elif self.map_city[y][x][0] == 'yellow_house_floor':
+                    r, g, b = 201, 136, 123
+                elif self.map_city[y][x][0] == 'green_house':
                     r, g, b = 115, 141, 63
-                elif self.map_city[y][x][0] == 'ph':
+                elif self.map_city[y][x][0] == 'green_house_floor':
+                    r, g, b = 175, 201, 123
+                elif self.map_city[y][x][0] == 'purple_house':
                     r, g, b = 138, 81, 117
+                elif self.map_city[y][x][0] == 'purple_house_floor':
+                    r, g, b = 198, 141, 177
                 elif self.map_city[y][x][0] == 'brown_house':
                     r, g, b = 141, 99, 63
                 elif self.map_city[y][x][0] == 'brown_house_floor':
@@ -363,6 +407,18 @@ class Map_generation:
                 image.putpixel(coords, (r, g, b))
         image.save('test_data/' + 'map.png')
 
+    def write_in_txt(self):
+        print('Сохранение карты')
+        with open('test_data/Test_map.txt', 'w') as writing_file:
+            for element in self.map_city:
+                print(*element, file=writing_file)
+
+    def map_level(self):
+        return self.map_city
+
 
 level = Map_generation()
-level.rendering()
+level.rendering()  # Сохраняем изображение карты
+level.write_in_txt()  # Сохраняем список в текстовый файл
+map_lev = level.map_level()  # Считываем список
+
