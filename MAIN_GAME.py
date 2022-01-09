@@ -436,7 +436,7 @@ class Map_generation:
         image.save('test_data/' + 'map.png')
 
     def write_in_txt(self):
-        print('Сохранение карты')`
+        print('Сохранение карты')
         with open('test_data/Test_map.txt', 'w') as writing_file:
             for element in self.map_city:
                 print(element, file=writing_file)
@@ -504,18 +504,16 @@ def load_level(filename):
 
 
 def generate_level(level):
-    level = Map_generation()
-    map_lev = level.map_level()
     new_player, x, y = None, None, None
-    for y in range(len(map_lev)):
-        for x in range(len(map_lev[y])):
-            if map_lev[y][x][1] == '@':
-                Tile(map_lev[y][x][0], x, y)
+    for y in range(len(level)):
+        for x in range(len(level[y])):
+            if level[y][x][1] == '@':
+                Tile(level[y][x][0], x, y)
                 new_player = Player(x, y)
-                print(x, abs(len(map_lev) - y))
+                print(x,  y)
             else:
-                Tile(map_lev[y][x][0], x, y)
-    return new_player, x, y
+                Tile(level[y][x][0], x, y)
+    return new_player, len(level[0]), len(level)
 
 
 class Tile(pygame.sprite.Sprite):
@@ -611,11 +609,11 @@ if __name__ == '__main__':
         clock.tick(FPS // 3)
 
         if keys[pygame.K_w]:
-            if level[y + 1][x][1] == '.':
+            if level[y - 1][x][1] == '.':
                 y -= 1
                 player.rect.y -= STEP
         elif keys[pygame.K_s]:
-            if level[y - 1][x][1] == '.':
+            if level[y + 1][x][1] == '.':
                 y += 1
                 player.rect.y += STEP
         clock.tick(FPS // 3)
