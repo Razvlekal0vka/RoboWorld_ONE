@@ -178,7 +178,7 @@ class Map_generation:
             n = random.randint(1, 2)
             if n == 1:
                 self.map_city[self.size_of_the_city - 1][x] = ['wall_1', '#']
-            elif n == 1:
+            elif n == 2:
                 self.map_city[self.size_of_the_city - 1][x] = ['wall_2', '#']
 
         for y in range(self.size_of_the_city):
