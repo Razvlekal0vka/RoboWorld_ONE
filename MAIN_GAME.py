@@ -3,9 +3,14 @@ import random
 import sys
 from enum import Enum
 from random import randint
-
 import pygame
 from PIL import Image
+
+pygame.init()
+size = WIDTH, HEIGHT = 1200, 600
+screen = pygame.display.set_mode(size)
+FPS = 50
+clock = pygame.time.Clock()
 
 
 class MAP_ENTRY_TYPE(Enum):
@@ -270,7 +275,7 @@ class Map_generation:
                         elif facades[_][__] == 'grey':
                             if yy == 0 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
-                            elif yy == 1 and xx == 1:
+                            elif yy == 3 and xx == 3:
                                 self.map_city[y + yy][x + xx] = ['start_floor', '@']
                             elif yy == 49 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
@@ -440,13 +445,6 @@ class Map_generation:
         return self.map_city
 
 
-pygame.init()
-size = WIDTH, HEIGHT = 1500, 750
-screen = pygame.display.set_mode(size)
-FPS = 50
-clock = pygame.time.Clock()
-
-
 def terminate():
     pygame.quit()
     sys.exit()
@@ -514,7 +512,7 @@ def generate_level(level):
             if map_lev[y][x][1] == '@':
                 Tile(map_lev[y][x][0], x, y)
                 new_player = Player(x, y)
-                print(x, y)
+                print(x, abs(len(map_lev) - y))
             else:
                 Tile(map_lev[y][x][0], x, y)
     return new_player, x, y
@@ -592,7 +590,7 @@ if __name__ == '__main__':
     camera = Camera()
     running = True
     player, level_x, level_y = generate_level(level)
-    y, x = player.pos[0], player.pos[1]
+    y, x = player.pos[1], player.pos[0]
     while running:
 
         keys = pygame.key.get_pressed()
@@ -603,21 +601,21 @@ if __name__ == '__main__':
         print(level[y + 1][x - 1][1], level[y + 1][x][1], level[y + 1][x + 1][1])
 
         if keys[pygame.K_d]:
-            if x < level_x - 1 and level[y][x + 1][1] == '.':
+            if level[y][x + 1][1] == '.':
                 x += 1
                 player.rect.x += STEP
         elif keys[pygame.K_a]:
-            if x > 0 and level[y][x - 1] == '.':
+            if level[y][x - 1][1] == '.':
                 x -= 1
                 player.rect.x -= STEP
         clock.tick(FPS // 3)
 
         if keys[pygame.K_w]:
-            if y > 0 and level[y + 1][x] == '.':
+            if level[y + 1][x][1] == '.':
                 y -= 1
                 player.rect.y -= STEP
         elif keys[pygame.K_s]:
-            if y < level_y - 1 and level[y - 1][x] == '.':
+            if level[y - 1][x][1] == '.':
                 y += 1
                 player.rect.y += STEP
         clock.tick(FPS // 3)
