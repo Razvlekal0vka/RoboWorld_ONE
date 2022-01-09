@@ -259,6 +259,8 @@ class Map_generation:
                         elif facades[_][__] == 'grey':
                             if yy == 0 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
+                            if yy == 25 and xx == 25:
+                                self.map_city[y + yy][x + xx] = ['player', '@']
                             elif yy == 49 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
                             elif xx == 0 and (yy < 24 or yy > 27):
@@ -403,6 +405,8 @@ class Map_generation:
                     r, g, b = 120, 120, 120
                 elif self.map_city[y][x][0] == 'start_floor':
                     r, g, b = 200, 200, 200
+                elif self.map_city[y][x][0] == 'player':
+                    r, g, b = 255, 0, 0
                 else:
                     r, g, b = 0, 0, 0
                 image.putpixel(coords, (r, g, b))
