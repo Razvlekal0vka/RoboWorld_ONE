@@ -1,5 +1,6 @@
 import random
 from enum import Enum
+
 from PIL import Image
 
 
@@ -421,4 +422,3 @@ level = Map_generation()
 level.rendering()  # Сохраняем изображение карты
 level.write_in_txt()  # Сохраняем список в текстовый файл
 map_lev = level.map_level()  # Считываем список
-
