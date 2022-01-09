@@ -1,7 +1,6 @@
 import random
 from enum import Enum
 from random import randint
-
 from PIL import Image
 
 
