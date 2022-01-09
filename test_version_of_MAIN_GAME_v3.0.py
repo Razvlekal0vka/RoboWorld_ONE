@@ -631,7 +631,7 @@ if __name__ == '__main__':
 
             weight_map[y][x] = 4
 
-            weight_map[y - 1][x - 1], weight_map[y - 1][x], weight_map[y - 1][x + 1],\
+            '''weight_map[y - 1][x - 1], weight_map[y - 1][x], weight_map[y - 1][x + 1],\
             weight_map[y][x - 1], weight_map[y][x + 1], weight_map[y + 1][x - 1], \
             weight_map[y + 1][x], weight_map[y + 1][x + 1] = 3, 3, 3, 3, 3, 3, 3, 3
 
@@ -648,7 +648,7 @@ if __name__ == '__main__':
             weight_map[y + 3][x + 2], weight_map[y + 3][x + 3], weight_map[y - 2][x - 3], weight_map[y - 1][x - 3],\
             weight_map[y][x - 3], weight_map[y + 1][x - 3], weight_map[y + 2][x - 3], weight_map[y - 2][x + 3],\
             weight_map[y - 1][x + 3], weight_map[y][x + 3], weight_map[y + 1][x + 3], \
-            weight_map[y + 2][x + 3] = 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+            weight_map[y + 2][x + 3] = 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1'''
 
         pprint(weight_map)
 
