@@ -9,7 +9,7 @@ from PIL import Image
 pygame.init()
 size = WIDTH, HEIGHT = 1000, 640
 screen = pygame.display.set_mode(size)
-FPS = 50
+FPS = 60
 clock = pygame.time.Clock()
 
 
@@ -307,13 +307,21 @@ class Map_generation:
                     for xx in range(50):
                         if facades[_][__] == 'brown':
                             if yy <= 1 and xx <= 1:
-                                self.map_city[y + yy][x + xx] = ['brown_house', '#']
+                                self.map_city[y + yy][x + xx] = ['maze_house', '#']
                             else:
                                 if xx <= 49 and yy <= 49:
                                     if maze[yy // 2][xx // 2] == '#':
-                                        self.map_city[y + yy][x + xx] = ['brown_house', '#']
+                                        self.map_city[y + yy][x + xx] = ['maze_house', '#']
                                     else:
-                                        self.map_city[y + yy][x + xx] = ['brown_house_floor', '.']
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + yy][x + xx] = ['maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + yy][x + xx] = ['maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + yy][x + xx] = ['maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + yy][x + xx] = ['maze_floor_4', '.']
                 if facades[_][__] != 'grey':
                     if facades[_][__] == 'brown':
                         np = random.randint(1, 4)
@@ -415,9 +423,9 @@ class Map_generation:
                     r, g, b = 138, 81, 117
                 elif self.map_city[y][x][0] == 'purple_house_floor':
                     r, g, b = 198, 141, 177
-                elif self.map_city[y][x][0] == 'brown_house':
+                elif self.map_city[y][x][0] == 'maze_house':
                     r, g, b = 141, 99, 63
-                elif self.map_city[y][x][0] == 'brown_house_floor':
+                elif self.map_city[y][x][0] == 'maze_floor_1' or self.map_city[y][x][0] == 'maze_floor_2' or self.map_city[y][x][0] == 'maze_floor_3' or self.map_city[y][x][0] == 'maze_floor_4':
                     r, g, b = 201, 159, 123
                 elif self.map_city[y][x][0] == 'sh':
                     r, g, b = 79, 79, 79
@@ -569,8 +577,11 @@ tile_images = {'b': load_image('b.png'),
                'green_house_floor': load_image('green_house_floor.png'),
                'purple_house': load_image('purple_house.png'),
                'purple_house_floor': load_image('purple_house_floor.png'),
-               'brown_house': load_image('brown_house.png'),
-               'brown_house_floor': load_image('brown_house_floor.png'),
+               'maze_house': load_image('maze_house.png'),
+               'maze_floor_1': load_image('maze_floor_1.png'),
+               'maze_floor_2': load_image('maze_floor_2.png'),
+               'maze_floor_3': load_image('maze_floor_3.png'),
+               'maze_floor_4': load_image('maze_floor_4.png'),
                'sh': load_image('sh.png'),
                'passage': load_image('passage.png'),
                'start_passage': load_image('passage.png'),
