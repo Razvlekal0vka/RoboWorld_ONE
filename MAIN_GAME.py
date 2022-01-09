@@ -138,7 +138,7 @@ class Map_generation:
 
     def __init__(self):
         print('Инициализация')
-        self.number_of_buildings = 3
+        self.number_of_buildings = 5
         self.number_of_streets = self.number_of_buildings + 1
         self.house = 50
         self.street = 5
@@ -169,9 +169,30 @@ class Map_generation:
     def filling(self):
         print('Генерация границ карты')
         for x in range(self.size_of_the_city):
-            self.map_city[0][x], self.map_city[self.size_of_the_city - 1][x] = ['b', '#'], ['b', '#']
+            n = random.randint(1, 2)
+            if n == 1:
+                self.map_city[0][x] = ['wall_1', '#']
+            elif n == 2:
+                self.map_city[0][x] = ['wall_2', '#']
+
+            n = random.randint(1, 2)
+            if n == 1:
+                self.map_city[self.size_of_the_city - 1][x] = ['wall_1', '#']
+            elif n == 1:
+                self.map_city[self.size_of_the_city - 1][x] = ['wall_2', '#']
+
         for y in range(self.size_of_the_city):
-            self.map_city[y][0], self.map_city[y][self.size_of_the_city - 1] = ['b', '#'], ['b', '#']
+            n = random.randint(1, 2)
+            if n == 1:
+                self.map_city[y][0] = ['wall_1', '#']
+            elif n == 2:
+                self.map_city[y][0] = ['wall_2', '#']
+
+            n = random.randint(1, 2)
+            if n == 1:
+                self.map_city[y][self.size_of_the_city - 1] = ['wall_1', '#']
+            if n == 2:
+                self.map_city[y][self.size_of_the_city - 1] = ['wall_2', '#']
 
         print('Создание ген. плана застройки и его согласование')
         facades = []
@@ -204,13 +225,45 @@ class Map_generation:
                 for yy in range(5):
                     for xx in range(50):
                         if yy == 0:
-                            self.map_city[y + yy][x + xx] = ['border12', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[y + yy][x + xx] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[y + yy][x + xx] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[y + yy][x + xx] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[y + yy][x + xx] = ['foor_4', '.']
                         elif yy == 4:
-                            self.map_city[y + yy][x + xx] = ['border6', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[y + yy][x + xx] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[y + yy][x + xx] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[y + yy][x + xx] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[y + yy][x + xx] = ['foor_4', '.']
                         elif (0 < yy < 4 and 0 <= xx <= 2) or (0 < yy < 4 and 47 <= xx <= 49):
-                            self.map_city[y + yy][x + xx] = ['transition_g', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[y + yy][x + xx] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[y + yy][x + xx] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[y + yy][x + xx] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[y + yy][x + xx] = ['foor_4', '.']
                         else:
-                            self.map_city[y + yy][x + xx] = ['road_g', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[y + yy][x + xx] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[y + yy][x + xx] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[y + yy][x + xx] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[y + yy][x + xx] = ['foor_4', '.']
                 x += 55
             y += 55
             x = 6
@@ -221,13 +274,45 @@ class Map_generation:
                 for yy in range(5):
                     for xx in range(50):
                         if yy == 0:
-                            self.map_city[x + xx][y + yy] = ['border9', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[x + xx][y + yy] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[x + xx][y + yy] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[x + xx][y + yy] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[x + xx][y + yy] = ['foor_4', '.']
                         elif yy == 4:
-                            self.map_city[x + xx][y + yy] = ['border3', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[x + xx][y + yy] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[x + xx][y + yy] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[x + xx][y + yy] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[x + xx][y + yy] = ['foor_4', '.']
                         elif (0 < yy < 4 and 0 <= xx <= 2) or (0 < yy < 4 and 47 <= xx <= 49):
-                            self.map_city[x + xx][y + yy] = ['transition_v', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[x + xx][y + yy] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[x + xx][y + yy] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[x + xx][y + yy] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[x + xx][y + yy] = ['foor_4', '.']
                         else:
-                            self.map_city[x + xx][y + yy] = ['road_v', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[x + xx][y + yy] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[x + xx][y + yy] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[x + xx][y + yy] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[x + xx][y + yy] = ['foor_4', '.']
                 x += 55
             y += 55
             x = 6
@@ -239,15 +324,55 @@ class Map_generation:
                 for yy in range(5):
                     for xx in range(5):
                         if yy == 0 and xx == 0:
-                            self.map_city[y + yy][x + xx] = ['c45', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[y + yy][x + xx] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[y + yy][x + xx] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[y + yy][x + xx] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[y + yy][x + xx] = ['foor_4', '.']
                         elif yy == 0 and xx == 4:
-                            self.map_city[y + yy][x + xx] = ['c78', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[y + yy][x + xx] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[y + yy][x + xx] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[y + yy][x + xx] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[y + yy][x + xx] = ['foor_4', '.']
                         elif yy == 4 and xx == 4:
-                            self.map_city[y + yy][x + xx] = ['c1011', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[y + yy][x + xx] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[y + yy][x + xx] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[y + yy][x + xx] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[y + yy][x + xx] = ['foor_4', '.']
                         elif yy == 4 and xx == 0:
-                            self.map_city[y + yy][x + xx] = ['c12', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[y + yy][x + xx] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[y + yy][x + xx] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[y + yy][x + xx] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[y + yy][x + xx] = ['foor_4', '.']
                         else:
-                            self.map_city[y + yy][x + xx] = ['c', '.']
+                            n = random.randint(1, 4)
+                            if n == 1:
+                                self.map_city[y + yy][x + xx] = ['foor_1', '.']
+                            elif n == 2:
+                                self.map_city[y + yy][x + xx] = ['foor_2', '.']
+                            elif n == 3:
+                                self.map_city[y + yy][x + xx] = ['foor_3', '.']
+                            elif n == 4:
+                                self.map_city[y + yy][x + xx] = ['foor_4', '.']
                 x += 55
             y += 55
             x = 1
@@ -470,34 +595,18 @@ class Map_generation:
         for y in range(self.size_of_the_city):
             for x in range(self.size_of_the_city):
                 coords = (x, y)
-                if self.map_city[y][x][0] == 'b':
-                    r, g, b = 190, 65, 0
-                elif self.map_city[y][x][0] == 'c':
-                    r, g, b = 63, 89, 141
-                elif self.map_city[y][x][0] == 'c12':
-                    r, g, b = 63, 89, 191
-                elif self.map_city[y][x][0] == 'c45':
-                    r, g, b = 63, 89, 191
-                elif self.map_city[y][x][0] == 'c78':
-                    r, g, b = 63, 89, 191
-                elif self.map_city[y][x][0] == 'c1011':
-                    r, g, b = 63, 89, 191
-                elif self.map_city[y][x][0] == 'road_v':
-                    r, g, b = 43, 88, 101
-                elif self.map_city[y][x][0] == 'road_g':
-                    r, g, b = 43, 88, 101
-                elif self.map_city[y][x][0] == 'border12':
-                    r, g, b = 93, 108, 141
-                elif self.map_city[y][x][0] == 'border6':
-                    r, g, b = 93, 108, 141
-                elif self.map_city[y][x][0] == 'border9':
-                    r, g, b = 93, 108, 141
-                elif self.map_city[y][x][0] == 'border3':
-                    r, g, b = 93, 108, 141
-                elif self.map_city[y][x][0] == 'transition_g':
-                    r, g, b = 63, 138, 141
-                elif self.map_city[y][x][0] == 'transition_v':
-                    r, g, b = 63, 138, 141
+                if self.map_city[y][x][0] == 'wall_1':
+                    r, g, b = 190, 55, 0
+                elif self.map_city[y][x][0] == 'wall_2':
+                    r, g, b = 190, 75, 0
+                elif self.map_city[y][x][0] == 'foor_1':
+                    r, g, b = 96, 130, 90
+                elif self.map_city[y][x][0] == 'foor_2':
+                    r, g, b = 96, 140, 90
+                elif self.map_city[y][x][0] == 'foor_3':
+                    r, g, b = 96, 150, 90
+                elif self.map_city[y][x][0] == 'foor_4':
+                    r, g, b = 96, 160, 90
                 elif self.map_city[y][x][0] == 'yellow_house':
                     r, g, b = 141, 76, 63
                 elif self.map_city[y][x][0] == 'yellow_house_floor':
@@ -508,8 +617,7 @@ class Map_generation:
                     r, g, b = 175, 201, 123
                 elif self.map_city[y][x][0] == 'maze_house':
                     r, g, b = 141, 99, 63
-                elif self.map_city[y][x][0] == 'maze_floor_1' or self.map_city[y][x][0] == 'maze_floor_2' or \
-                        self.map_city[y][x][0] == 'maze_floor_3' or self.map_city[y][x][0] == 'maze_floor_4':
+                elif self.map_city[y][x][0] == 'maze_floor_1' or self.map_city[y][x][0] == 'maze_floor_2' or self.map_city[y][x][0] == 'maze_floor_3' or self.map_city[y][x][0] == 'maze_floor_4':
                     r, g, b = 201, 159, 123
                 elif self.map_city[y][x][0] == 'dark_maze_house_1' or self.map_city[y][x][0] == 'dark_maze_house_2':
                     r, g, b = 84, 0, 138
@@ -527,7 +635,7 @@ class Map_generation:
                 elif self.map_city[y][x][0] == 'player':
                     r, g, b = 255, 0, 0
                 else:
-                    r, g, b = 1, 1, 1
+                    r, g, b = 0, 0, 0
                 image.putpixel(coords, (r, g, b))
         image.save('test_data/' + 'map.png')
 
@@ -645,20 +753,12 @@ all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 
-tile_images = {'b': load_image('b.png'),
-               'c': load_image('c.png'),
-               'c12': load_image('c12.png'),
-               'c45': load_image('c45.png'),
-               'c78': load_image('c78.png'),
-               'c1011': load_image('c1011.png'),
-               'road_v': load_image('road_v.png'),
-               'road_g': load_image('road_g.png'),
-               'border3': load_image('border3.png'),
-               'border6': load_image('border6.png'),
-               'border9': load_image('border9.png'),
-               'border12': load_image('border12.png'),
-               'transition_g': load_image('transition_g.png'),
-               'transition_v': load_image('transition_v.png'),
+tile_images = {'wall_1': load_image('wall_1.png'),
+               'wall_2': load_image('wall_2.png'),
+               'foor_1': load_image('foor_1.png'),
+               'foor_2': load_image('foor_2.png'),
+               'foor_3': load_image('foor_3.png'),
+               'foor_4': load_image('foor_4.png'),
                'yellow_house': load_image('yellow_house.png'),
                'yellow_house_floor': load_image('yellow_house_floor.png'),
                'green_house': load_image('green_house.png'),
