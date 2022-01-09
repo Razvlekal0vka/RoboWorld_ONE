@@ -527,7 +527,7 @@ class Map_generation:
                 elif self.map_city[y][x][0] == 'player':
                     r, g, b = 255, 0, 0
                 else:
-                    r, g, b = 0, 0, 0
+                    r, g, b = 1, 1, 1
                 image.putpixel(coords, (r, g, b))
         image.save('test_data/' + 'map.png')
 
