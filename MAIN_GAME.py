@@ -584,7 +584,7 @@ player_image = load_image('mario.png')
 tile_width = tile_height = STEP = 50
 
 if __name__ == '__main__':
-    # start_screen()
+    start_screen()
     camera = Camera()
     running = True
     level = load_level('Test_mini_map.txt')
@@ -593,6 +593,8 @@ if __name__ == '__main__':
     while running:
 
         keys = pygame.key.get_pressed()
+
+        print(y, x)
 
         if keys[pygame.K_d]:
             if x < level_x - 1 and level[y][x + 1][1] == '.':
