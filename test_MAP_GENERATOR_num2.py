@@ -152,9 +152,9 @@ class Map_generation:
     def filling(self):
         print('Генерация границ карты')
         for x in range(self.size_of_the_city):
-            self.map_city[0][x], self.map_city[self.size_of_the_city - 1][x] = ['b', '.'], ['b', '.']
+            self.map_city[0][x], self.map_city[self.size_of_the_city - 1][x] = ['b', '#'], ['b', '#']
         for y in range(self.size_of_the_city):
-            self.map_city[y][0], self.map_city[y][self.size_of_the_city - 1] = ['b', '.'], ['b', '.']
+            self.map_city[y][0], self.map_city[y][self.size_of_the_city - 1] = ['b', '#'], ['b', '#']
 
         print('Создание ген. плана застройки и его согласование')
         facades = []
@@ -285,43 +285,43 @@ class Map_generation:
                     doRecursiveDivision(map_m)
                     maze = map_m.showMap()
                 except Exception:
-                    print('error')
+                    print('error - 1')
                     try:
                         map_m = Map()
                         doRecursiveDivision(map_m)
                         maze = map_m.showMap()
                     except Exception:
-                        print('error')
+                        print('error - 2')
                         try:
                             map_m = Map()
                             doRecursiveDivision(map_m)
                             maze = map_m.showMap()
                         except Exception:
-                            print('error')
+                            print('error - 3')
                             try:
                                 map_m = Map()
                                 doRecursiveDivision(map_m)
                                 maze = map_m.showMap()
                             except Exception:
-                                print('error')
+                                print('error - 4')
                                 try:
                                     map_m = Map()
                                     doRecursiveDivision(map_m)
                                     maze = map_m.showMap()
                                 except Exception:
-                                    print('error')
+                                    print('error - 5')
                                     try:
                                         map_m = Map()
                                         doRecursiveDivision(map_m)
                                         maze = map_m.showMap()
                                     except Exception:
-                                        print('error')
+                                        print('error - 6')
                                         try:
                                             map_m = Map()
                                             doRecursiveDivision(map_m)
                                             maze = map_m.showMap()
                                         except Exception:
-                                            print('error')
+                                            print('error - 7')
                 for yy in range(50):
                     for xx in range(50):
                         if facades[_][__] == 'brown':
