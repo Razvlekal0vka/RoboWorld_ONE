@@ -277,7 +277,7 @@ class Map_generation:
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
                             elif (yy == 0 and (24 <= xx <= 27)) or (yy == 49 and (24 <= xx <= 27)) or (
                                     xx == 0 and (24 <= yy <= 27)) or (xx == 49 and (24 <= yy <= 27)):
-                                self.map_city[y + yy][x + xx] = ['start_passage', '.']
+                                self.map_city[y + yy][x + xx] = ['passage', '.']
                             else:
                                 self.map_city[y + yy][x + xx] = ['start_floor', '.']
                 x += 55
