@@ -128,7 +128,7 @@ class Map_generation:
 
     def __init__(self):
         print('Инициализация')
-        self.number_of_buildings = 21
+        self.number_of_buildings = 3
         self.number_of_streets = self.number_of_buildings + 1
         self.house = 50
         self.street = 5
@@ -167,30 +167,30 @@ class Map_generation:
         facades = []
         start_house = 0
         colors = ['brown', 'purple', 'green', 'yellow']
-        for _ in range(21):
+        for _ in range(self.number_of_buildings):
             street = []
-            for __ in range(21):
-                color = random.randint(0, 12)
+            for __ in range(self.number_of_buildings):
+                color = random.randint(0, 15)
                 if 0 <= color <= 3:
                     color = 3
                 elif 4 <= color <= 7:
                     color = 2
                 elif 8 <= color <= 11:
                     color = 1
-                elif color == 12:
+                elif color >= 12:
                     color = 0
                 street.append(colors[color])
             facades.append(street)
             street = []
 
-        x = random.randint(5, 15)
-        y = random.randint(5, 15)
+        x = random.randint(self.number_of_buildings // 2 - 1, self.number_of_buildings // 2 + 1)
+        y = random.randint(self.number_of_buildings // 2 - 1, self.number_of_buildings // 2 + 1)
         facades[y][x] = 'grey'
 
         print('Возведение улиц')
         x, y = 6, 1  # горизонтальные
-        for _ in range(22):
-            for __ in range(21):
+        for _ in range(self.number_of_streets):
+            for __ in range(self.number_of_buildings):
                 for yy in range(5):
                     for xx in range(50):
                         if yy == 0:
@@ -206,8 +206,8 @@ class Map_generation:
             x = 6
 
         x, y = 6, 1  # вертикальные
-        for _ in range(22):
-            for __ in range(21):
+        for _ in range(self.number_of_streets):
+            for __ in range(self.number_of_buildings):
                 for yy in range(5):
                     for xx in range(50):
                         if yy == 0:
@@ -224,8 +224,8 @@ class Map_generation:
 
         print('Создание перекрёстков')
         x, y = 1, 1
-        for _ in range(22):
-            for __ in range(22):
+        for _ in range(self.number_of_streets):
+            for __ in range(self.number_of_streets):
                 for yy in range(5):
                     for xx in range(5):
                         if yy == 0 and xx == 0:
@@ -244,8 +244,8 @@ class Map_generation:
 
         print('Строительство зданий')
         x, y = 6, 6
-        for _ in range(21):
-            for __ in range(21):
+        for _ in range(self.number_of_buildings):
+            for __ in range(self.number_of_buildings):
                 for yy in range(50):
                     for xx in range(50):
                         if facades[_][__] == 'purple':
@@ -285,8 +285,8 @@ class Map_generation:
 
         print('Строительство зданий c лабиринтом')
         x, y = 6, 6
-        for _ in range(21):
-            for __ in range(21):
+        for _ in range(self.number_of_buildings):
+            for __ in range(self.number_of_buildings):
                 try:
                     map_m = Map()
                     doRecursiveDivision(map_m)
