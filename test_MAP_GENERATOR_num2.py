@@ -458,7 +458,7 @@ class Map_generation:
         print('Сохранение карты')
         with open('test_data/Test_map.txt', 'w') as writing_file:
             for element in self.map_city:
-                print(*element, file=writing_file)
+                print(element, file=writing_file)
 
     def map_level(self):
         return self.map_city
