@@ -1,6 +1,6 @@
 import random
 from enum import Enum
-
+from random import randint
 from PIL import Image
 
 
@@ -62,7 +62,7 @@ class Map:
 def recursiveDivision(map, x, y, width, height, wall_value):
     def getWallIndex(start, length):
         assert length >= 3
-        wall_index = random.randint(start + 1, start + length - 2)
+        wall_index = randint(start + 1, start + length - 2)
         if wall_index % 2 == 1:
             wall_index -= 1
         return wall_index
@@ -70,8 +70,8 @@ def recursiveDivision(map, x, y, width, height, wall_value):
     def generateHoles(map, x, y, width, height, wall_x, wall_y):
         holes = []
 
-        hole_entrys = [(random.randint(x, wall_x - 1), wall_y), (random.randint(wall_x + 1, x + width - 1), wall_y),
-                       (wall_x, random.randint(y, wall_y - 1)), (wall_x, random.randint(wall_y + 1, y + height - 1))]
+        hole_entrys = [(randint(x, wall_x - 1), wall_y), (randint(wall_x + 1, x + width - 1), wall_y),
+                       (wall_x, randint(y, wall_y - 1)), (wall_x, randint(wall_y + 1, y + height - 1))]
         margin_entrys = [(x, wall_y), (x + width - 1, wall_y), (wall_x, y), (wall_x, y + height - 1)]
         adjacent_entrys = [(x - 1, wall_y), (x + width, wall_y), (wall_x, y - 1), (wall_x, y + height)]
         for i in range(4):
@@ -81,7 +81,7 @@ def recursiveDivision(map, x, y, width, height, wall_value):
             else:
                 holes.append(hole_entrys[i])
 
-        ignore_hole = random.randint(0, len(holes) - 1)
+        ignore_hole = randint(0, len(holes) - 1)
         for i in range(0, len(holes)):
             if i != ignore_hole:
                 map.setMap(holes[i][0], holes[i][1], MAP_ENTRY_TYPE.MAP_EMPTY)
@@ -152,9 +152,9 @@ class Map_generation:
     def filling(self):
         print('Генерация границ карты')
         for x in range(self.size_of_the_city):
-            self.map_city[0][x], self.map_city[self.size_of_the_city - 1][x] = ['b'], ['b']
+            self.map_city[0][x], self.map_city[self.size_of_the_city - 1][x] = ['b', '.'], ['b', '.']
         for y in range(self.size_of_the_city):
-            self.map_city[y][0], self.map_city[y][self.size_of_the_city - 1] = ['b'], ['b']
+            self.map_city[y][0], self.map_city[y][self.size_of_the_city - 1] = ['b', '.'], ['b', '.']
 
         print('Создание ген. плана застройки и его согласование')
         facades = []
@@ -280,9 +280,48 @@ class Map_generation:
         x, y = 6, 6
         for _ in range(21):
             for __ in range(21):
-                map_m = Map()
-                doRecursiveDivision(map_m)
-                maze = map_m.showMap()
+                try:
+                    map_m = Map()
+                    doRecursiveDivision(map_m)
+                    maze = map_m.showMap()
+                except Exception:
+                    print('error')
+                    try:
+                        map_m = Map()
+                        doRecursiveDivision(map_m)
+                        maze = map_m.showMap()
+                    except Exception:
+                        print('error')
+                        try:
+                            map_m = Map()
+                            doRecursiveDivision(map_m)
+                            maze = map_m.showMap()
+                        except Exception:
+                            print('error')
+                            try:
+                                map_m = Map()
+                                doRecursiveDivision(map_m)
+                                maze = map_m.showMap()
+                            except Exception:
+                                print('error')
+                                try:
+                                    map_m = Map()
+                                    doRecursiveDivision(map_m)
+                                    maze = map_m.showMap()
+                                except Exception:
+                                    print('error')
+                                    try:
+                                        map_m = Map()
+                                        doRecursiveDivision(map_m)
+                                        maze = map_m.showMap()
+                                    except Exception:
+                                        print('error')
+                                        try:
+                                            map_m = Map()
+                                            doRecursiveDivision(map_m)
+                                            maze = map_m.showMap()
+                                        except Exception:
+                                            print('error')
                 for yy in range(50):
                     for xx in range(50):
                         if facades[_][__] == 'brown':
@@ -404,7 +443,10 @@ class Map_generation:
                 elif self.map_city[y][x][0] == 'passage':
                     r, g, b = 120, 120, 120
                 elif self.map_city[y][x][0] == 'start_floor':
-                    r, g, b = 200, 200, 200
+                    if self.map_city[y][x][1] == '@':
+                        r, g, b = 250, 150, 150
+                    else:
+                        r, g, b = 200, 200, 200
                 elif self.map_city[y][x][0] == 'player':
                     r, g, b = 255, 0, 0
                 else:
