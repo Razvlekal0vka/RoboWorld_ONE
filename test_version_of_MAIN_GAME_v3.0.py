@@ -524,7 +524,6 @@ def generate_level(level):
             elif level[y][x][1] == '!':
                 Tile(level[y][x][0], x, y)
                 new_enemies.append(Enemy(x, y))
-                print(x, y)
             else:
                 Tile(level[y][x][0], x, y)
     return new_player, new_enemies, len(level[0]), len(level)
@@ -621,6 +620,8 @@ if __name__ == '__main__':
     y, x = player.pos[1], player.pos[0]
     last_x, last_y = x, y
     camera.update(player)
+    for enemy in enemies:
+        camera.update(enemy)
     for sprite in all_sprites:
         camera.apply(sprite)
     while running:
@@ -672,6 +673,7 @@ if __name__ == '__main__':
         '''Перемещение врагов'''
         for enemy in enemies:
             pass
+
         '''Обновление камеры'''
 
         for event in pygame.event.get():
@@ -681,6 +683,8 @@ if __name__ == '__main__':
                 pass
             else:
                 camera.update(player)
+                for enemy in enemies:
+                    camera.update(enemy)
                 for sprite in all_sprites:
                     camera.apply(sprite)
                 last_x, last_y = x, y
@@ -688,6 +692,7 @@ if __name__ == '__main__':
 
             tiles_group.draw(screen)
             player_group.draw(screen)
+            enemies_group.draw(screen)
             clock.tick(FPS)
             pygame.display.flip()
 
@@ -695,6 +700,8 @@ if __name__ == '__main__':
             pass
         else:
             camera.update(player)
+            for enemy in enemies:
+                camera.update(enemy)
             for sprite in all_sprites:
                 camera.apply(sprite)
             last_x, last_y = x, y
@@ -703,6 +710,7 @@ if __name__ == '__main__':
         screen.fill(pygame.Color(0, 0, 0))
         tiles_group.draw(screen)
         player_group.draw(screen)
+        enemies_group.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
 
