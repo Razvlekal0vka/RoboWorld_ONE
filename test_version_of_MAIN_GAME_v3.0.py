@@ -3,7 +3,7 @@ import random
 import sys
 from enum import Enum
 from random import randint
-
+from pprint import pprint
 import pygame
 from PIL import Image
 
@@ -627,22 +627,40 @@ if __name__ == '__main__':
     while running:
 
         with open('test_data/Test_weight_map.txt', 'w') as weight_map:
-            weight_map = [[[0] for j in range(level_x)] for i in range(level_y)]
-            weight_map[y][x] = 5
-            print(weight_map[y][x])
-        print(weight_map)
+            weight_map = [[0 for j in range(level_x)] for i in range(level_y)]
+
+            weight_map[y][x] = 4
+
+            weight_map[y - 1][x - 1], weight_map[y - 1][x], weight_map[y - 1][x + 1],\
+            weight_map[y][x - 1], weight_map[y][x + 1], weight_map[y + 1][x - 1], \
+            weight_map[y + 1][x], weight_map[y + 1][x + 1] = 3, 3, 3, 3, 3, 3, 3, 3
+
+            weight_map[y - 2][x - 2], weight_map[y - 2][x - 1], weight_map[y - 2][x],\
+            weight_map[y - 2][x + 1], weight_map[y - 2][x + 2], weight_map[y + 2][x - 2],\
+            weight_map[y + 2][x - 1], weight_map[y + 2][x], weight_map[y + 2][x + 1],\
+            weight_map[y + 2][x + 2], weight_map[y - 1][x - 2], weight_map[y][x - 2],\
+            weight_map[y + 1][x - 2], weight_map[y - 1][x + 2], weight_map[y][x + 2],\
+            weight_map[y + 1][x + 2] = 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+
+            weight_map[y - 3][x - 3], weight_map[y - 3][x - 2], weight_map[y - 3][x - 1], weight_map[y - 3][x], \
+            weight_map[y - 3][x + 1], weight_map[y - 3][x + 2], weight_map[y - 3][x + 3], weight_map[y + 3][x - 3],\
+            weight_map[y + 3][x - 2], weight_map[y + 3][x - 1], weight_map[y + 3][x], weight_map[y + 3][x + 1],\
+            weight_map[y + 3][x + 2], weight_map[y + 3][x + 3], weight_map[y - 2][x - 3], weight_map[y - 1][x - 3],\
+            weight_map[y][x - 3], weight_map[y + 1][x - 3], weight_map[y + 2][x - 3], weight_map[y - 2][x + 3],\
+            weight_map[y - 1][x + 3], weight_map[y][x + 3], weight_map[y + 1][x + 3], \
+            weight_map[y + 2][x + 3] = 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+
+        pprint(weight_map)
 
         keys = pygame.key.get_pressed()
 
         # Вывод окружения игрока в радиусе 1 клетки
-
         print(y, x)
         print(level[y - 1][x - 1][1], level[y - 1][x][1], level[y - 1][x + 1][1])
         print(level[y][x - 1][1], level[y][x][1], level[y][x + 1][1])
         print(level[y + 1][x - 1][1], level[y + 1][x][1], level[y + 1][x + 1][1])
 
         '''Перемещение игрока'''
-
         if keys[pygame.K_d]:
             if level[y][x + 1][1] == '.':
                 x += 1
@@ -675,7 +693,6 @@ if __name__ == '__main__':
             pass
 
         '''Обновление камеры'''
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
