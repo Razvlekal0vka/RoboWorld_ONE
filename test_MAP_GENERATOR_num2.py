@@ -229,13 +229,13 @@ class Map_generation:
                 for yy in range(5):
                     for xx in range(5):
                         if yy == 0 and xx == 0:
-                            self.map_city[y + yy][x + xx] = ['c1011', '.']
-                        elif yy == 0 and xx == 4:
-                            self.map_city[y + yy][x + xx] = ['c12', '.']
-                        elif yy == 4 and xx == 4:
                             self.map_city[y + yy][x + xx] = ['c45', '.']
-                        elif yy == 4 and xx == 0:
+                        elif yy == 0 and xx == 4:
                             self.map_city[y + yy][x + xx] = ['c78', '.']
+                        elif yy == 4 and xx == 4:
+                            self.map_city[y + yy][x + xx] = ['c1011', '.']
+                        elif yy == 4 and xx == 0:
+                            self.map_city[y + yy][x + xx] = ['c12', '.']
                         else:
                             self.map_city[y + yy][x + xx] = ['c', '.']
                 x += 55

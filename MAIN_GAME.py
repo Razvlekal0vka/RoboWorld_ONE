@@ -436,7 +436,7 @@ class Map_generation:
         image.save('test_data/' + 'map.png')
 
     def write_in_txt(self):
-        print('Сохранение карты')
+        print('Сохранение карты')`
         with open('test_data/Test_map.txt', 'w') as writing_file:
             for element in self.map_city:
                 print(element, file=writing_file)
