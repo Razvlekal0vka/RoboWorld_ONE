@@ -3,7 +3,7 @@ import random
 import sys
 from enum import Enum
 from random import randint
-
+from pprint import pprint
 import pygame
 from PIL import Image
 
@@ -524,7 +524,6 @@ def generate_level(level):
             elif level[y][x][1] == '!':
                 Tile(level[y][x][0], x, y)
                 new_enemies.append(Enemy(x, y))
-                print(x, y)
             else:
                 Tile(level[y][x][0], x, y)
     return new_player, new_enemies, len(level[0]), len(level)
@@ -610,11 +609,10 @@ if __name__ == '__main__':
     lev.rendering()  # Сохраняем изображение карты
     lev.write_in_txt()
     level = lev.map_level()  # Считываем список'''
-    with open('test_data/test_level.txt') as level:
-        level = [line.strip()[2:-2].split('], [') for line in level.readlines()]
-        print(level)
 
-    level = load_level('')
+    with open('test_data/new_mini_map.txt') as level:
+        level = [[i[1:-1].split("', '") for i in line.strip()[2:-2].split('], [')] for line in level.readlines()]
+
     start_screen()
     camera = Camera()
     running = True
@@ -622,27 +620,47 @@ if __name__ == '__main__':
     y, x = player.pos[1], player.pos[0]
     last_x, last_y = x, y
     camera.update(player)
+    for enemy in enemies:
+        camera.update(enemy)
     for sprite in all_sprites:
         camera.apply(sprite)
     while running:
 
         with open('test_data/Test_weight_map.txt', 'w') as weight_map:
-            weight_map = [[[0] for j in range(level_x)] for i in range(level_y)]
-            weight_map[y][x] = 5
-            print(weight_map[y][x])
-        print(weight_map)
+            weight_map = [[0 for j in range(level_x)] for i in range(level_y)]
+
+            weight_map[y][x] = 4
+
+            '''weight_map[y - 1][x - 1], weight_map[y - 1][x], weight_map[y - 1][x + 1],\
+            weight_map[y][x - 1], weight_map[y][x + 1], weight_map[y + 1][x - 1], \
+            weight_map[y + 1][x], weight_map[y + 1][x + 1] = 3, 3, 3, 3, 3, 3, 3, 3
+
+            weight_map[y - 2][x - 2], weight_map[y - 2][x - 1], weight_map[y - 2][x],\
+            weight_map[y - 2][x + 1], weight_map[y - 2][x + 2], weight_map[y + 2][x - 2],\
+            weight_map[y + 2][x - 1], weight_map[y + 2][x], weight_map[y + 2][x + 1],\
+            weight_map[y + 2][x + 2], weight_map[y - 1][x - 2], weight_map[y][x - 2],\
+            weight_map[y + 1][x - 2], weight_map[y - 1][x + 2], weight_map[y][x + 2],\
+            weight_map[y + 1][x + 2] = 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+
+            weight_map[y - 3][x - 3], weight_map[y - 3][x - 2], weight_map[y - 3][x - 1], weight_map[y - 3][x], \
+            weight_map[y - 3][x + 1], weight_map[y - 3][x + 2], weight_map[y - 3][x + 3], weight_map[y + 3][x - 3],\
+            weight_map[y + 3][x - 2], weight_map[y + 3][x - 1], weight_map[y + 3][x], weight_map[y + 3][x + 1],\
+            weight_map[y + 3][x + 2], weight_map[y + 3][x + 3], weight_map[y - 2][x - 3], weight_map[y - 1][x - 3],\
+            weight_map[y][x - 3], weight_map[y + 1][x - 3], weight_map[y + 2][x - 3], weight_map[y - 2][x + 3],\
+            weight_map[y - 1][x + 3], weight_map[y][x + 3], weight_map[y + 1][x + 3], \
+            weight_map[y + 2][x + 3] = 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1'''
+
+        pprint(weight_map)
 
         keys = pygame.key.get_pressed()
 
         # Вывод окружения игрока в радиусе 1 клетки
-
         print(y, x)
         print(level[y - 1][x - 1][1], level[y - 1][x][1], level[y - 1][x + 1][1])
         print(level[y][x - 1][1], level[y][x][1], level[y][x + 1][1])
         print(level[y + 1][x - 1][1], level[y + 1][x][1], level[y + 1][x + 1][1])
 
         '''Перемещение игрока'''
-
         if keys[pygame.K_d]:
             if level[y][x + 1][1] == '.':
                 x += 1
@@ -673,8 +691,8 @@ if __name__ == '__main__':
         '''Перемещение врагов'''
         for enemy in enemies:
             pass
-        '''Обновление камеры'''
 
+        '''Обновление камеры'''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -682,6 +700,8 @@ if __name__ == '__main__':
                 pass
             else:
                 camera.update(player)
+                for enemy in enemies:
+                    camera.update(enemy)
                 for sprite in all_sprites:
                     camera.apply(sprite)
                 last_x, last_y = x, y
@@ -689,6 +709,7 @@ if __name__ == '__main__':
 
             tiles_group.draw(screen)
             player_group.draw(screen)
+            enemies_group.draw(screen)
             clock.tick(FPS)
             pygame.display.flip()
 
@@ -696,6 +717,8 @@ if __name__ == '__main__':
             pass
         else:
             camera.update(player)
+            for enemy in enemies:
+                camera.update(enemy)
             for sprite in all_sprites:
                 camera.apply(sprite)
             last_x, last_y = x, y
@@ -704,6 +727,7 @@ if __name__ == '__main__':
         screen.fill(pygame.Color(0, 0, 0))
         tiles_group.draw(screen)
         player_group.draw(screen)
+        enemies_group.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
 
