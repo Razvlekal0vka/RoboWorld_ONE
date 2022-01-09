@@ -3,6 +3,7 @@ import random
 import sys
 from enum import Enum
 from random import randint
+
 import pygame
 from PIL import Image
 
@@ -507,7 +508,8 @@ class Map_generation:
                     r, g, b = 175, 201, 123
                 elif self.map_city[y][x][0] == 'maze_house':
                     r, g, b = 141, 99, 63
-                elif self.map_city[y][x][0] == 'maze_floor_1' or self.map_city[y][x][0] == 'maze_floor_2' or self.map_city[y][x][0] == 'maze_floor_3' or self.map_city[y][x][0] == 'maze_floor_4':
+                elif self.map_city[y][x][0] == 'maze_floor_1' or self.map_city[y][x][0] == 'maze_floor_2' or \
+                        self.map_city[y][x][0] == 'maze_floor_3' or self.map_city[y][x][0] == 'maze_floor_4':
                     r, g, b = 201, 159, 123
                 elif self.map_city[y][x][0] == 'dark_maze_house_1' or self.map_city[y][x][0] == 'dark_maze_house_2':
                     r, g, b = 84, 0, 138
@@ -604,7 +606,7 @@ def generate_level(level):
             if level[y][x][1] == '@':
                 Tile(level[y][x][0], x, y)
                 new_player = Player(x, y)
-                print(x,  y)
+                print(x, y)
             else:
                 Tile(level[y][x][0], x, y)
     return new_player, len(level[0]), len(level)
@@ -677,7 +679,6 @@ tile_images = {'b': load_image('b.png'),
                'start_passage': load_image('passage.png'),
                'start_floor': load_image('start_floor.png')}
 player_image = load_image('mario.png')
-
 tile_width = tile_height = STEP = 50
 
 if __name__ == '__main__':
@@ -690,6 +691,10 @@ if __name__ == '__main__':
     running = True
     player, level_x, level_y = generate_level(level)
     y, x = player.pos[1], player.pos[0]
+    last_x, last_y = x, y
+    camera.update(player)
+    for sprite in all_sprites:
+        camera.apply(sprite)
     while running:
 
         keys = pygame.key.get_pressed()
@@ -702,29 +707,39 @@ if __name__ == '__main__':
         if keys[pygame.K_d]:
             if level[y][x + 1][1] == '.':
                 x += 1
-                player.rect.x += STEP
+                for step in [15, 20, 15]:
+                    player.rect.x += step
+            clock.tick(FPS // 6)
         elif keys[pygame.K_a]:
             if level[y][x - 1][1] == '.':
                 x -= 1
-                player.rect.x -= STEP
-        clock.tick(FPS // 3)
+                for step in [15, 20, 15]:
+                    player.rect.x -= step
+            clock.tick(FPS // 6)
 
         if keys[pygame.K_w]:
             if level[y - 1][x][1] == '.':
                 y -= 1
-                player.rect.y -= STEP
+                for step in [15, 20, 15]:
+                    player.rect.y -= step
+            clock.tick(FPS // 6)
         elif keys[pygame.K_s]:
             if level[y + 1][x][1] == '.':
                 y += 1
-                player.rect.y += STEP
-        clock.tick(FPS // 3)
+                for step in [15, 20, 15]:
+                    player.rect.y += step
+            clock.tick(FPS // 6)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            camera.update(player)
-            for sprite in all_sprites:
-                camera.apply(sprite)
+            if abs(x - last_x) < 5 and abs(y - last_y) < 5:
+                pass
+            else:
+                camera.update(player)
+                for sprite in all_sprites:
+                    camera.apply(sprite)
+                last_x, last_y = x, y
             screen.fill(pygame.Color(0, 0, 0))
 
             tiles_group.draw(screen)
@@ -732,9 +747,13 @@ if __name__ == '__main__':
             clock.tick(FPS)
             pygame.display.flip()
 
-        camera.update(player)
-        for sprite in all_sprites:
-            camera.apply(sprite)
+        if abs(x - last_x) < 5 and abs(y - last_y) < 5:
+            pass
+        else:
+            camera.update(player)
+            for sprite in all_sprites:
+                camera.apply(sprite)
+            last_x, last_y = x, y
 
         screen.fill(pygame.Color(0, 0, 0))
         tiles_group.draw(screen)
