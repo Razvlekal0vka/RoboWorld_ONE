@@ -610,11 +610,10 @@ if __name__ == '__main__':
     lev.rendering()  # Сохраняем изображение карты
     lev.write_in_txt()
     level = lev.map_level()  # Считываем список'''
-    with open('test_data/test_level.txt') as level:
-        level = [line.strip()[2:-2].split('], [') for line in level.readlines()]
-        print(level)
 
-    level = load_level('')
+    with open('test_data/new_mini_map.txt') as level:
+        level = [[i[1:-1].split("', '") for i in line.strip()[2:-2].split('], [')] for line in level.readlines()]
+
     start_screen()
     camera = Camera()
     running = True
