@@ -175,7 +175,7 @@ class Map_generation:
         print('Создание ген. плана застройки и его согласование')
         facades = []
         start_house = 0
-        colors = ['brown', 'purple', 'green', 'yellow']
+        colors = ['brown_maze', 'purple_maze', 'green', 'yellow']
         for _ in range(self.number_of_buildings):
             street = []
             for __ in range(self.number_of_buildings):
@@ -257,12 +257,7 @@ class Map_generation:
             for __ in range(self.number_of_buildings):
                 for yy in range(50):
                     for xx in range(50):
-                        if facades[_][__] == 'purple':
-                            if yy == 0 or xx == 0 or yy == 49 or xx == 49:
-                                self.map_city[y + yy][x + xx] = ['purple_house', '#']
-                            else:
-                                self.map_city[y + yy][x + xx] = ['purple_house_floor', '.']
-                        elif facades[_][__] == 'green':
+                        if facades[_][__] == 'green':
                             if yy == 0 or xx == 0 or yy == 49 or xx == 49:
                                 self.map_city[y + yy][x + xx] = ['green_house', '#']
                             else:
@@ -305,51 +300,142 @@ class Map_generation:
                     Error_of_creating_maze()
                 for yy in range(50):
                     for xx in range(50):
-                        if facades[_][__] == 'brown':
-                            if yy <= 1 and xx <= 1:
-                                self.map_city[y + yy][x + xx] = ['maze_house', '#']
-                            else:
-                                if xx <= 49 and yy <= 49:
-                                    if maze[yy // 2][xx // 2] == '#':
-                                        self.map_city[y + yy][x + xx] = ['maze_house', '#']
-                                    else:
-                                        n = random.randint(1, 4)
-                                        if n == 1:
-                                            self.map_city[y + yy][x + xx] = ['maze_floor_1', '.']
-                                        elif n == 2:
-                                            self.map_city[y + yy][x + xx] = ['maze_floor_2', '.']
-                                        elif n == 3:
-                                            self.map_city[y + yy][x + xx] = ['maze_floor_3', '.']
-                                        elif n == 4:
-                                            self.map_city[y + yy][x + xx] = ['maze_floor_4', '.']
+                        if facades[_][__] == 'brown_maze':
+                            if True:
+                                if yy <= 1 and xx <= 1:
+                                    self.map_city[y + yy][x + xx] = ['maze_house', '#']
+                                else:
+                                    if xx <= 49 and yy <= 49:
+                                        if maze[yy // 2][xx // 2] == '#':
+                                            self.map_city[y + yy][x + xx] = ['maze_house', '#']
+                                        else:
+                                            n = random.randint(1, 4)
+                                            if n == 1:
+                                                self.map_city[y + yy][x + xx] = ['maze_floor_1', '.']
+                                            elif n == 2:
+                                                self.map_city[y + yy][x + xx] = ['maze_floor_2', '.']
+                                            elif n == 3:
+                                                self.map_city[y + yy][x + xx] = ['maze_floor_3', '.']
+                                            elif n == 4:
+                                                self.map_city[y + yy][x + xx] = ['maze_floor_4', '.']
+                        if facades[_][__] == 'purple_maze':
+                            if True:
+                                if yy <= 1 and xx <= 1:
+                                    self.map_city[y + yy][x + xx] = ['dark_maze_house_1', '#']
+                                else:
+                                    if xx <= 49 and yy <= 49:
+                                        if maze[yy // 2][xx // 2] == '#':
+                                            ___ = random.randint(1, 2)
+                                            if ___ == 1:
+                                                self.map_city[y + yy][x + xx] = ['dark_maze_house_1', '#']
+                                            elif ___ == 2:
+                                                self.map_city[y + yy][x + xx] = ['dark_maze_house_2', '#']
+                                        else:
+                                            n = random.randint(1, 4)
+                                            if n == 1:
+                                                self.map_city[y + yy][x + xx] = ['dark_maze_floor_1', '.']
+                                            elif n == 2:
+                                                self.map_city[y + yy][x + xx] = ['dark_maze_floor_2', '.']
+                                            elif n == 3:
+                                                self.map_city[y + yy][x + xx] = ['dark_maze_floor_3', '.']
+                                            elif n == 4:
+                                                self.map_city[y + yy][x + xx] = ['dark_maze_floor_4', '.']
                 if facades[_][__] != 'grey':
-                    if facades[_][__] == 'brown':
+                    if facades[_][__] == 'brown_maze' or facades[_][__] == 'purple_maze':
                         np = random.randint(1, 4)
                         rp = random.randint(2, 43)
                         if np == 1:
                             for i in range(4):
-                                self.map_city[y + rp][x + 46 + i] = ['passage', '.']
-                                self.map_city[y + rp + 1][x + 46 + i] = ['passage', '.']
-                                self.map_city[y + rp + 2][x + 46 + i] = ['passage', '.']
-                                self.map_city[y + rp + 3][x + 46 + i] = ['passage', '.']
+                                for j in range(4):
+                                    if facades[_][__] == 'brown_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['maze_floor_4', '.']
+                                    elif facades[_][__] == 'purple_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['dark_maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['dark_maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['dark_maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['dark_maze_floor_4', '.']
                         elif np == 2:
                             for i in range(4):
-                                self.map_city[y + 46 + i][x + rp] = ['passage', '.']
-                                self.map_city[y + 46 + i][x + rp + 1] = ['passage', '.']
-                                self.map_city[y + 46 + i][x + rp + 2] = ['passage', '.']
-                                self.map_city[y + 46 + i][x + rp + 3] = ['passage', '.']
+                                for j in range(4):
+                                    if facades[_][__] == 'brown_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['maze_floor_4', '.']
+                                    elif facades[_][__] == 'purple_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['dark_maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['dark_maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['dark_maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['dark_maze_floor_4', '.']
                         elif np == 3:
                             for i in range(4):
-                                self.map_city[y + rp][x + 0 + i] = ['passage', '.']
-                                self.map_city[y + rp + 1][x + 0 + i] = ['passage', '.']
-                                self.map_city[y + rp + 2][x + 0 + i] = ['passage', '.']
-                                self.map_city[y + rp + 3][x + 0 + i] = ['passage', '.']
+                                for j in range(4):
+                                    if facades[_][__] == 'brown_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['maze_floor_4', '.']
+                                    elif facades[_][__] == 'purple_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['dark_maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['dark_maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['dark_maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['dark_maze_floor_4', '.']
                         elif np == 4:
                             for i in range(4):
-                                self.map_city[y + 0 + i][x + rp] = ['passage', '.']
-                                self.map_city[y + 0 + i][x + rp + 1] = ['passage', '.']
-                                self.map_city[y + 0 + i][x + rp + 2] = ['passage', '.']
-                                self.map_city[y + 0 + i][x + rp + 3] = ['passage', '.']
+                                for j in range(4):
+                                    if facades[_][__] == 'brown_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['maze_floor_4', '.']
+                                    elif facades[_][__] == 'purple_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['dark_maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['dark_maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['dark_maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['dark_maze_floor_4', '.']
                     else:
                         np = random.randint(1, 4)
                         rp = random.randint(2, 43)
@@ -419,14 +505,14 @@ class Map_generation:
                     r, g, b = 115, 141, 63
                 elif self.map_city[y][x][0] == 'green_house_floor':
                     r, g, b = 175, 201, 123
-                elif self.map_city[y][x][0] == 'purple_house':
-                    r, g, b = 138, 81, 117
-                elif self.map_city[y][x][0] == 'purple_house_floor':
-                    r, g, b = 198, 141, 177
                 elif self.map_city[y][x][0] == 'maze_house':
                     r, g, b = 141, 99, 63
                 elif self.map_city[y][x][0] == 'maze_floor_1' or self.map_city[y][x][0] == 'maze_floor_2' or self.map_city[y][x][0] == 'maze_floor_3' or self.map_city[y][x][0] == 'maze_floor_4':
                     r, g, b = 201, 159, 123
+                elif self.map_city[y][x][0] == 'dark_maze_house_1' or self.map_city[y][x][0] == 'dark_maze_house_2':
+                    r, g, b = 84, 0, 138
+                elif self.map_city[y][x][0] == 'dark_maze_floor_1' or self.map_city[y][x][0] == 'dark_maze_floor_2' or self.map_city[y][x][0] == 'dark_maze_floor_3' or self.map_city[y][x][0] == 'dark_maze_floor_4':
+                    r, g, b = 155, 0, 255
                 elif self.map_city[y][x][0] == 'sh':
                     r, g, b = 79, 79, 79
                 elif self.map_city[y][x][0] == 'passage':
@@ -575,13 +661,17 @@ tile_images = {'b': load_image('b.png'),
                'yellow_house_floor': load_image('yellow_house_floor.png'),
                'green_house': load_image('green_house.png'),
                'green_house_floor': load_image('green_house_floor.png'),
-               'purple_house': load_image('purple_house.png'),
-               'purple_house_floor': load_image('purple_house_floor.png'),
                'maze_house': load_image('maze_house.png'),
                'maze_floor_1': load_image('maze_floor_1.png'),
                'maze_floor_2': load_image('maze_floor_2.png'),
                'maze_floor_3': load_image('maze_floor_3.png'),
                'maze_floor_4': load_image('maze_floor_4.png'),
+               'dark_maze_house_1': load_image('dark_maze_house_1.png'),
+               'dark_maze_house_2': load_image('dark_maze_house_2.png'),
+               'dark_maze_floor_1': load_image('dark_maze_floor_1.png'),
+               'dark_maze_floor_2': load_image('dark_maze_floor_2.png'),
+               'dark_maze_floor_3': load_image('dark_maze_floor_3.png'),
+               'dark_maze_floor_4': load_image('dark_maze_floor_4.png'),
                'sh': load_image('sh.png'),
                'passage': load_image('passage.png'),
                'start_passage': load_image('passage.png'),
