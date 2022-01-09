@@ -1,6 +1,7 @@
 import random
 from enum import Enum
 from random import randint
+
 from PIL import Image
 
 
@@ -114,6 +115,13 @@ def doRecursiveDivision(map):
         map.setMap(map.width - 1, y, MAP_ENTRY_TYPE.MAP_BLOCK)
 
     recursiveDivision(map, 1, 1, map.width - 2, map.height - 2, MAP_ENTRY_TYPE.MAP_BLOCK)
+
+
+def Error_of_creating_maze():
+    map_m = Map()
+    doRecursiveDivision(map_m)
+    maze = map_m.showMap()
+    return maze
 
 
 class Map_generation:
@@ -285,43 +293,8 @@ class Map_generation:
                     doRecursiveDivision(map_m)
                     maze = map_m.showMap()
                 except Exception:
-                    print('error - 1')
-                    try:
-                        map_m = Map()
-                        doRecursiveDivision(map_m)
-                        maze = map_m.showMap()
-                    except Exception:
-                        print('error - 2')
-                        try:
-                            map_m = Map()
-                            doRecursiveDivision(map_m)
-                            maze = map_m.showMap()
-                        except Exception:
-                            print('error - 3')
-                            try:
-                                map_m = Map()
-                                doRecursiveDivision(map_m)
-                                maze = map_m.showMap()
-                            except Exception:
-                                print('error - 4')
-                                try:
-                                    map_m = Map()
-                                    doRecursiveDivision(map_m)
-                                    maze = map_m.showMap()
-                                except Exception:
-                                    print('error - 5')
-                                    try:
-                                        map_m = Map()
-                                        doRecursiveDivision(map_m)
-                                        maze = map_m.showMap()
-                                    except Exception:
-                                        print('error - 6')
-                                        try:
-                                            map_m = Map()
-                                            doRecursiveDivision(map_m)
-                                            maze = map_m.showMap()
-                                        except Exception:
-                                            print('error - 7')
+                    print('<ERROR>')
+                    Error_of_creating_maze()
                 for yy in range(50):
                     for xx in range(50):
                         if facades[_][__] == 'brown':
