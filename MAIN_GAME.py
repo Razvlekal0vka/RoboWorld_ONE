@@ -589,6 +589,7 @@ if __name__ == '__main__':
     running = True
     player, level_x, level_y = generate_level(level)
     y, x = player.pos[1], player.pos[0]
+    last_x, last_y = x, y
     while running:
 
         keys = pygame.key.get_pressed()
@@ -601,29 +602,37 @@ if __name__ == '__main__':
         if keys[pygame.K_d]:
             if level[y][x + 1][1] == '.':
                 x += 1
-                player.rect.x += STEP
+                for step in [15, 20, 15]:
+                    player.rect.x += step
         elif keys[pygame.K_a]:
             if level[y][x - 1][1] == '.':
                 x -= 1
-                player.rect.x -= STEP
-        clock.tick(FPS // 3)
+                for step in [15, 20, 15]:
+                    player.rect.x -= step
+        clock.tick(FPS // 4)
 
         if keys[pygame.K_w]:
             if level[y - 1][x][1] == '.':
                 y -= 1
-                player.rect.y -= STEP
+                for step in [15, 20, 15]:
+                    player.rect.y -= step
         elif keys[pygame.K_s]:
             if level[y + 1][x][1] == '.':
                 y += 1
-                player.rect.y += STEP
-        clock.tick(FPS // 3)
+                for step in [15, 20, 15]:
+                    player.rect.y += step
+        clock.tick(FPS // 4)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            camera.update(player)
-            for sprite in all_sprites:
-                camera.apply(sprite)
+            if (last_x < x < last_x + 5 or last_x - 5 < x < last_x) and (last_y < y < last_y + 5 or last_y - 5 < x < last_y):
+                pass
+            else:
+                camera.update(player)
+                for sprite in all_sprites:
+                    camera.apply(sprite)
+                last_x, last_y = x, y
             screen.fill(pygame.Color(0, 0, 0))
 
             tiles_group.draw(screen)
@@ -631,9 +640,14 @@ if __name__ == '__main__':
             clock.tick(FPS)
             pygame.display.flip()
 
-        camera.update(player)
-        for sprite in all_sprites:
-            camera.apply(sprite)
+        if (last_x < x < last_x + 5 or last_x - 5 < x < last_x) and (
+                last_y < y < last_y + 5 or last_y - 5 < x < last_y):
+            pass
+        else:
+            camera.update(player)
+            for sprite in all_sprites:
+                camera.apply(sprite)
+            last_x, last_y = x, y
 
         screen.fill(pygame.Color(0, 0, 0))
         tiles_group.draw(screen)
