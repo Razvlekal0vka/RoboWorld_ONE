@@ -1,5 +1,6 @@
 import os
 import sys
+
 import pygame
 
 pygame.init()
@@ -44,7 +45,7 @@ def start_screen():
 
 
 def load_image(name, color_key=None):
-    fullname = os.path.join('test_data', name)
+    fullname = os.path.join('test_data/', name)
     if not os.path.isfile(fullname):
         print(f'Файл с изображением \'{fullname}\' не найден')
         sys.exit()
@@ -70,12 +71,14 @@ def load_level(filename):
 def generate_level(level):
     new_player, x, y = None, None, None
     for y in range(len(level)):
-        for x in range(len(level[y])):
-            if level[y][x] == '@':
-                Tile(level[y][x][0], x, y)
+        line_of_cells = level[y][2:-2].split('], [')
+        for x in range(len(line_of_cells)):
+            cell = line_of_cells[x][1:-1].split("', '")
+            if cell[1] == '@':
+                Tile(cell[0], x, y)
                 new_player = Player(x, y)
             else:
-                Tile(level[y][x][0], x, y)
+                Tile(cell[0], x, y)
     return new_player, x, y
 
 
@@ -115,7 +118,7 @@ tile_images = {'b': load_image('b.png'),
                'c': load_image('c.png'),
                'c12': load_image('c12.png'),
                'c45': load_image('c45.png'),
-               'c78': load_image('c78.png'),
+               'c78': load_image('c78.bmp'),
                'c1011': load_image('c1011.png'),
                'road_v': load_image('road_v.png'),
                'road_g': load_image('road_g.png'),
@@ -135,15 +138,16 @@ tile_images = {'b': load_image('b.png'),
                'brown_house_floor': load_image('brown_house_floor.png'),
                'sh': load_image('sh.png'),
                'passage': load_image('passage.png'),
+               'start_passage': load_image('passage.png'),
                'start_floor': load_image('start_floor.png')}
 player_image = load_image('mario.png')
 tile_width = tile_height = STEP = 50
 
 if __name__ == '__main__':
-    start_screen()
+    # start_screen()
     camera = Camera()
     running = True
-    level = load_level('level1.txt')
+    level = load_level('Test_map.txt')
     player, level_x, level_y = generate_level(level)
     y, x = player.pos[0] - 1, player.pos[1] + 1
     while running:
