@@ -221,13 +221,13 @@ class Map_generation:
                 for yy in range(5):
                     for xx in range(5):
                         if yy == 0 and xx == 0:
-                            self.map_city[y + yy][x + xx] = ['c10/11', '.']
+                            self.map_city[y + yy][x + xx] = ['c1011', '.']
                         elif yy == 0 and xx == 4:
-                            self.map_city[y + yy][x + xx] = ['c1/2', '.']
+                            self.map_city[y + yy][x + xx] = ['c12', '.']
                         elif yy == 4 and xx == 4:
-                            self.map_city[y + yy][x + xx] = ['c4/5', '.']
+                            self.map_city[y + yy][x + xx] = ['c45', '.']
                         elif yy == 4 and xx == 0:
-                            self.map_city[y + yy][x + xx] = ['c7/8', '.']
+                            self.map_city[y + yy][x + xx] = ['c78', '.']
                         else:
                             self.map_city[y + yy][x + xx] = ['c', '.']
                 x += 55
@@ -356,13 +356,13 @@ class Map_generation:
                     r, g, b = 190, 65, 0
                 elif self.map_city[y][x][0] == 'c':
                     r, g, b = 63, 89, 141
-                elif self.map_city[y][x][0] == 'c1/2':
+                elif self.map_city[y][x][0] == 'c12':
                     r, g, b = 63, 89, 191
-                elif self.map_city[y][x][0] == 'c4/5':
+                elif self.map_city[y][x][0] == 'c45':
                     r, g, b = 63, 89, 191
-                elif self.map_city[y][x][0] == 'c7/8':
+                elif self.map_city[y][x][0] == 'c78':
                     r, g, b = 63, 89, 191
-                elif self.map_city[y][x][0] == 'c10/11':
+                elif self.map_city[y][x][0] == 'c1011':
                     r, g, b = 63, 89, 191
                 elif self.map_city[y][x][0] == 'road_v':
                     r, g, b = 43, 88, 101
