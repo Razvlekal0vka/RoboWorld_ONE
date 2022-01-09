@@ -260,7 +260,7 @@ class Map_generation:
                             if yy == 0 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
                             if yy == 25 and xx == 25:
-                                self.map_city[y + yy][x + xx] = ['player', '@']
+                                self.map_city[y + yy][x + xx] = ['start_floor', '@']
                             elif yy == 49 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
                             elif xx == 0 and (yy < 24 or yy > 27):
