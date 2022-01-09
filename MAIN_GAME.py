@@ -3,6 +3,7 @@ import random
 import sys
 from enum import Enum
 from random import randint
+
 import pygame
 from PIL import Image
 
@@ -425,7 +426,8 @@ class Map_generation:
                     r, g, b = 198, 141, 177
                 elif self.map_city[y][x][0] == 'maze_house':
                     r, g, b = 141, 99, 63
-                elif self.map_city[y][x][0] == 'maze_floor_1' or self.map_city[y][x][0] == 'maze_floor_2' or self.map_city[y][x][0] == 'maze_floor_3' or self.map_city[y][x][0] == 'maze_floor_4':
+                elif self.map_city[y][x][0] == 'maze_floor_1' or self.map_city[y][x][0] == 'maze_floor_2' or \
+                        self.map_city[y][x][0] == 'maze_floor_3' or self.map_city[y][x][0] == 'maze_floor_4':
                     r, g, b = 201, 159, 123
                 elif self.map_city[y][x][0] == 'sh':
                     r, g, b = 79, 79, 79
@@ -518,7 +520,7 @@ def generate_level(level):
             if level[y][x][1] == '@':
                 Tile(level[y][x][0], x, y)
                 new_player = Player(x, y)
-                print(x,  y)
+                print(x, y)
             else:
                 Tile(level[y][x][0], x, y)
     return new_player, len(level[0]), len(level)
@@ -587,7 +589,6 @@ tile_images = {'b': load_image('b.png'),
                'start_passage': load_image('passage.png'),
                'start_floor': load_image('start_floor.png')}
 player_image = load_image('mario.png')
-
 tile_width = tile_height = STEP = 50
 
 if __name__ == '__main__':
