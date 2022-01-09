@@ -862,4 +862,3 @@ if __name__ == '__main__':
         clock.tick(FPS)
 
     terminate()
-# xyi
