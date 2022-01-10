@@ -4,7 +4,7 @@ import sys
 from enum import Enum
 from random import randint
 import pygame
-# from PIL import Image
+from PIL import Image
 
 pygame.init()
 size = WIDTH, HEIGHT = 1000, 640
@@ -725,7 +725,7 @@ tile_width = tile_height = STEP = 50
 
 if __name__ == '__main__':
     lev = Map_generation()
-    # lev.rendering()  # Сохраняем изображение карты
+    lev.rendering()  # Сохраняем изображение карты
     lev.write_in_txt()
     level = lev.map_level()  # Считываем список
     start_screen()
