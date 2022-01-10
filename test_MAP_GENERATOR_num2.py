@@ -580,4 +580,4 @@ class Map_generation:
 level = Map_generation()
 level.rendering()  # Сохраняем изображение карты
 level.write_in_txt()  # Сохраняем список в текстовый файл
-map_lev = level.map_level()  # Считываем данные
+map_lev = level.map_level()  # Считываем карту
