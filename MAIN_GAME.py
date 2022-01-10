@@ -166,6 +166,7 @@ class Map_generation:
         self.filling()
 
     def filling(self):
+        global maze, maze
         print('Генерация границ карты')
         for x in range(self.size_of_the_city):
             n = random.randint(1, 2)
@@ -514,13 +515,13 @@ class Map_generation:
                     r, g, b = 190, 55, 0
                 elif self.map_city[y][x][0] == 'wall_2':
                     r, g, b = 190, 75, 0
-                elif self.map_city[y][x][0] == 'foor_1':
+                elif self.map_city[y][x][0] == 'floor_1':
                     r, g, b = 96, 130, 90
-                elif self.map_city[y][x][0] == 'foor_2':
+                elif self.map_city[y][x][0] == 'floor_2':
                     r, g, b = 96, 140, 90
-                elif self.map_city[y][x][0] == 'foor_3':
+                elif self.map_city[y][x][0] == 'floor_3':
                     r, g, b = 96, 150, 90
-                elif self.map_city[y][x][0] == 'foor_4':
+                elif self.map_city[y][x][0] == 'floor_4':
                     r, g, b = 96, 160, 90
                 elif self.map_city[y][x][0] == 'yellow_house':
                     r, g, b = 141, 76, 63
@@ -557,24 +558,24 @@ class Map_generation:
     def summer_floor_genesis(self, x, xx, y, yy):
         n = random.randint(1, 4)
         if n == 1:
-            self.map_city[y + yy][x + xx] = ['foor_1', '.']
+            self.map_city[y + yy][x + xx] = ['floor_1', '.']
         elif n == 2:
-            self.map_city[y + yy][x + xx] = ['foor_2', '.']
+            self.map_city[y + yy][x + xx] = ['floor_2', '.']
         elif n == 3:
-            self.map_city[y + yy][x + xx] = ['foor_3', '.']
+            self.map_city[y + yy][x + xx] = ['floor_3', '.']
         elif n == 4:
-            self.map_city[y + yy][x + xx] = ['foor_4', '.']
+            self.map_city[y + yy][x + xx] = ['floor_4', '.']
 
     def summer_floor_genesis_2(self, x, xx, y, yy):
         n = random.randint(1, 4)
         if n == 1:
-            self.map_city[y + yy][x + xx] = ['foor_1', 'd']
+            self.map_city[y + yy][x + xx] = ['floor_1', 'd']
         elif n == 2:
-            self.map_city[y + yy][x + xx] = ['foor_2', 'd']
+            self.map_city[y + yy][x + xx] = ['floor_2', 'd']
         elif n == 3:
-            self.map_city[y + yy][x + xx] = ['foor_3', 'd']
+            self.map_city[y + yy][x + xx] = ['floor_3', 'd']
         elif n == 4:
-            self.map_city[y + yy][x + xx] = ['foor_4', 'd']
+            self.map_city[y + yy][x + xx] = ['floor_4', 'd']
 
     def write_in_txt(self):
         print('Сохранение карты')
