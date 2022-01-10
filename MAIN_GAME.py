@@ -3,9 +3,8 @@ import random
 import sys
 from enum import Enum
 from random import randint
-
 import pygame
-from PIL import Image
+# from PIL import Image
 
 pygame.init()
 size = WIDTH, HEIGHT = 1000, 640
@@ -653,6 +652,9 @@ def generate_level(level):
                 Tile(level[y][x][0], x, y)
                 new_player = Player(x, y)
                 print(x, y)
+            elif level[y][x][1] == 'd':
+                Tile(level[y][x][0], x, y)
+                Tile(str(level[y][x][1] + str(random.randint(1, 2))), x, y)
             else:
                 Tile(level[y][x][0], x, y)
     return new_player, len(level[0]), len(level)
@@ -714,13 +716,16 @@ tile_images = {'wall_1': load_image('wall_1.png'),
                'sh': load_image('sh.png'),
                'passage': load_image('passage.png'),
                'start_passage': load_image('passage.png'),
-               'start_floor': load_image('start_floor.png')}
+               'start_floor': load_image('start_floor.png'),
+               'd1': load_image('d1.png'),
+               'd2': load_image('d2.png')}
+
 player_image = load_image('mario.png')
 tile_width = tile_height = STEP = 50
 
 if __name__ == '__main__':
     lev = Map_generation()
-    lev.rendering()  # Сохраняем изображение карты
+    # lev.rendering()  # Сохраняем изображение карты
     lev.write_in_txt()
     level = lev.map_level()  # Считываем список
     start_screen()
@@ -799,4 +804,3 @@ if __name__ == '__main__':
         clock.tick(FPS)
 
     terminate()
-# xyilo
