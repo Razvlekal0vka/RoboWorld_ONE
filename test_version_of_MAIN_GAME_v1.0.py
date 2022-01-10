@@ -127,7 +127,6 @@ if __name__ == '__main__':
     while running:
 
         keys = pygame.key.get_pressed()
-        print(y, x)
 
         if keys[pygame.K_d]:
             if x < level_x - 1 and level[y][x + 1] == '.':
