@@ -631,24 +631,20 @@ if __name__ == '__main__':
 
             weight_map[y][x] = 4
 
-            '''weight_map[y - 1][x - 1], weight_map[y - 1][x], weight_map[y - 1][x + 1],\
-            weight_map[y][x - 1], weight_map[y][x + 1], weight_map[y + 1][x - 1], \
-            weight_map[y + 1][x], weight_map[y + 1][x + 1] = 3, 3, 3, 3, 3, 3, 3, 3
+            for b in range(-1, 2):
+                for a in range(-1, 2):
+                    if b != 0 or a != 0:
+                        weight_map[y + a][x + b] = 1
 
-            weight_map[y - 2][x - 2], weight_map[y - 2][x - 1], weight_map[y - 2][x],\
-            weight_map[y - 2][x + 1], weight_map[y - 2][x + 2], weight_map[y + 2][x - 2],\
-            weight_map[y + 2][x - 1], weight_map[y + 2][x], weight_map[y + 2][x + 1],\
-            weight_map[y + 2][x + 2], weight_map[y - 1][x - 2], weight_map[y][x - 2],\
-            weight_map[y + 1][x - 2], weight_map[y - 1][x + 2], weight_map[y][x + 2],\
-            weight_map[y + 1][x + 2] = 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+            for b in range(-2, 3):
+                for a in range(-2, 3):
+                    if (b != 0 or a != 0) and (abs(a) != 1 or abs(b) != 1):
+                        weight_map[y + a][x + b] = 2
 
-            weight_map[y - 3][x - 3], weight_map[y - 3][x - 2], weight_map[y - 3][x - 1], weight_map[y - 3][x], \
-            weight_map[y - 3][x + 1], weight_map[y - 3][x + 2], weight_map[y - 3][x + 3], weight_map[y + 3][x - 3],\
-            weight_map[y + 3][x - 2], weight_map[y + 3][x - 1], weight_map[y + 3][x], weight_map[y + 3][x + 1],\
-            weight_map[y + 3][x + 2], weight_map[y + 3][x + 3], weight_map[y - 2][x - 3], weight_map[y - 1][x - 3],\
-            weight_map[y][x - 3], weight_map[y + 1][x - 3], weight_map[y + 2][x - 3], weight_map[y - 2][x + 3],\
-            weight_map[y - 1][x + 3], weight_map[y][x + 3], weight_map[y + 1][x + 3], \
-            weight_map[y + 2][x + 3] = 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1'''
+            for b in range(-3, 4):
+                for a in range(-3, 4):
+                    if (b != 0 or a != 0) and (abs(a) != 1 or abs(b) != 1) and (abs(a) != 2 or abs(b) != 2):
+                        weight_map[y + a][x + b] = 1
 
         pprint(weight_map)
 

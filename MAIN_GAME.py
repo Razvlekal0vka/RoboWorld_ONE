@@ -168,6 +168,7 @@ class Map_generation:
         self.filling()
 
     def filling(self):
+        global maze, maze
         print('Генерация границ карты')
         for x in range(self.size_of_the_city):
             n = random.randint(1, 2)
@@ -516,13 +517,13 @@ class Map_generation:
                     r, g, b = 190, 55, 0
                 elif self.map_city[y][x][0] == 'wall_2':
                     r, g, b = 190, 75, 0
-                elif self.map_city[y][x][0] == 'foor_1':
+                elif self.map_city[y][x][0] == 'floor_1':
                     r, g, b = 96, 130, 90
-                elif self.map_city[y][x][0] == 'foor_2':
+                elif self.map_city[y][x][0] == 'floor_2':
                     r, g, b = 96, 140, 90
-                elif self.map_city[y][x][0] == 'foor_3':
+                elif self.map_city[y][x][0] == 'floor_3':
                     r, g, b = 96, 150, 90
-                elif self.map_city[y][x][0] == 'foor_4':
+                elif self.map_city[y][x][0] == 'floor_4':
                     r, g, b = 96, 160, 90
                 elif self.map_city[y][x][0] == 'yellow_house':
                     r, g, b = 141, 76, 63
@@ -559,24 +560,24 @@ class Map_generation:
     def summer_floor_genesis(self, x, xx, y, yy):
         n = random.randint(1, 4)
         if n == 1:
-            self.map_city[y + yy][x + xx] = ['foor_1', '.']
+            self.map_city[y + yy][x + xx] = ['floor_1', '.']
         elif n == 2:
-            self.map_city[y + yy][x + xx] = ['foor_2', '.']
+            self.map_city[y + yy][x + xx] = ['floor_2', '.']
         elif n == 3:
-            self.map_city[y + yy][x + xx] = ['foor_3', '.']
+            self.map_city[y + yy][x + xx] = ['floor_3', '.']
         elif n == 4:
-            self.map_city[y + yy][x + xx] = ['foor_4', '.']
+            self.map_city[y + yy][x + xx] = ['floor_4', '.']
 
     def summer_floor_genesis_2(self, x, xx, y, yy):
         n = random.randint(1, 4)
         if n == 1:
-            self.map_city[y + yy][x + xx] = ['foor_1', 'd']
+            self.map_city[y + yy][x + xx] = ['floor_1', 'd']
         elif n == 2:
-            self.map_city[y + yy][x + xx] = ['foor_2', 'd']
+            self.map_city[y + yy][x + xx] = ['floor_2', 'd']
         elif n == 3:
-            self.map_city[y + yy][x + xx] = ['foor_3', 'd']
+            self.map_city[y + yy][x + xx] = ['floor_3', 'd']
         elif n == 4:
-            self.map_city[y + yy][x + xx] = ['foor_4', 'd']
+            self.map_city[y + yy][x + xx] = ['floor_4', 'd']
 
     def write_in_txt(self):
         print('Сохранение карты')
@@ -701,10 +702,10 @@ player_group = pygame.sprite.Group()
 
 tile_images = {'wall_1': load_image('wall_1.png'),
                'wall_2': load_image('wall_2.png'),
-               'foor_1': load_image('foor_1.png'),
-               'foor_2': load_image('foor_2.png'),
-               'foor_3': load_image('foor_3.png'),
-               'foor_4': load_image('foor_4.png'),
+               'floor_1': load_image('floor_1.png'),
+               'floor_2': load_image('floor_2.png'),
+               'floor_3': load_image('floor_3.png'),
+               'floor_4': load_image('floor_4.png'),
                'yellow_house': load_image('yellow_house.png'),
                'yellow_house_floor': load_image('yellow_house_floor.png'),
                'green_house': load_image('green_house.png'),
@@ -731,7 +732,7 @@ tile_width = tile_height = STEP = 50
 
 if __name__ == '__main__':
     lev = Map_generation()
-    # lev.rendering()  # Сохраняем изображение карты
+    lev.rendering()  # Сохраняем изображение карты
     lev.write_in_txt()
     level = lev.map_level()  # Считываем список
     start_screen()
