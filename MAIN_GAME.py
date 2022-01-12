@@ -3,8 +3,10 @@ import random
 import sys
 from enum import Enum
 from random import randint
+from tkinter import Image
+
 import pygame
-# from PIL import Image
+from PIL import Image
 
 pygame.init()
 size = WIDTH, HEIGHT = 1000, 640
@@ -290,8 +292,8 @@ class Map_generation:
                                 else:
                                     self.summer_floor_genesis(x, xx, y, yy)
                             else:
-                                n = random.randint(1, 15)
-                                if n == 15:
+                                n = random.randint(1, 5)
+                                if n == 1:
                                     self.summer_floor_genesis_2(x, xx, y, yy)
                                 else:
                                     self.summer_floor_genesis(x, xx, y, yy)
@@ -654,7 +656,11 @@ def generate_level(level):
                 print(x, y)
             elif level[y][x][1] == 'd':
                 Tile(level[y][x][0], x, y)
-                Tile(str(level[y][x][1] + str(random.randint(1, 2))), x, y)
+                n = random.randint(1, 5)
+                if n == 5:
+                    Tile(str(level[y][x][1]) + str(1), x, y)
+                else:
+                    Tile(str(level[y][x][1]) + str(2), x, y)
             else:
                 Tile(level[y][x][0], x, y)
     return new_player, len(level[0]), len(level)

@@ -281,8 +281,8 @@ class Map_generation:
                                 else:
                                     self.summer_floor_genesis(x, xx, y, yy)
                             else:
-                                n = random.randint(1, 15)
-                                if n == 15:
+                                n = random.randint(1, 5)
+                                if n == 1:
                                     self.summer_floor_genesis_2(x, xx, y, yy)
                                 else:
                                     self.summer_floor_genesis(x, xx, y, yy)
