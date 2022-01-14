@@ -596,9 +596,9 @@ def terminate():
 
 def start_screen():
     # intro_text = []
-    fon = pygame.transform.scale(load_image('boot.png'), (WIDTH, HEIGHT))
-    name_of_the_game = pygame.transform.scale(load_image('RBWOF.png'), (WIDTH, HEIGHT))
-    start_text = pygame.transform.scale(load_image('CIYWETG2.png'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('else/boot.png'), (WIDTH, HEIGHT))
+    name_of_the_game = pygame.transform.scale(load_image('else/RBWOF.png'), (WIDTH, HEIGHT))
+    start_text = pygame.transform.scale(load_image('else/CIYWETG2.png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
     screen.blit(name_of_the_game, (0, 0))
     screen.blit(start_text, (0, 0))
@@ -701,34 +701,34 @@ all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 
-tile_images = {'wall_1': load_image('wall_1.png'),
-               'wall_2': load_image('wall_2.png'),
-               'floor_1': load_image('floor_1.png'),
-               'floor_2': load_image('floor_2.png'),
-               'floor_3': load_image('floor_3.png'),
-               'floor_4': load_image('floor_4.png'),
-               'yellow_house': load_image('yellow_house.png'),
-               'yellow_house_floor': load_image('yellow_house_floor.png'),
-               'green_house': load_image('green_house.png'),
-               'maze_house': load_image('maze_house.png'),
-               'maze_floor_1': load_image('maze_floor_1.png'),
-               'maze_floor_2': load_image('maze_floor_2.png'),
-               'maze_floor_3': load_image('maze_floor_3.png'),
-               'maze_floor_4': load_image('maze_floor_4.png'),
-               'dark_maze_house_1': load_image('dark_maze_house_1.png'),
-               'dark_maze_house_2': load_image('dark_maze_house_2.png'),
-               'dark_maze_floor_1': load_image('dark_maze_floor_1.png'),
-               'dark_maze_floor_2': load_image('dark_maze_floor_2.png'),
-               'dark_maze_floor_3': load_image('dark_maze_floor_3.png'),
-               'dark_maze_floor_4': load_image('dark_maze_floor_4.png'),
-               'sh': load_image('sh.png'),
-               'passage': load_image('passage.png'),
-               'start_passage': load_image('passage.png'),
-               'start_floor': load_image('start_floor.png'),
-               'd1': load_image('d1.png'),
-               'd2': load_image('d2.png')}
+tile_images = {'wall_1': load_image('world/wall_1.png'),
+               'wall_2': load_image('world/wall_2.png'),
+               'floor_1': load_image('world/floor_1.png'),
+               'floor_2': load_image('world/floor_2.png'),
+               'floor_3': load_image('world/floor_3.png'),
+               'floor_4': load_image('world/floor_4.png'),
+               'yellow_house': load_image('houses/yellow_house/yellow_house.png'),
+               'yellow_house_floor': load_image('houses/yellow_house/yellow_house_floor.png'),
+               'maze_house': load_image('houses/fire_maze/maze_house.png'),
+               'maze_floor_1': load_image('houses/fire_maze/maze_floor_1.png'),
+               'maze_floor_2': load_image('houses/fire_maze/maze_floor_2.png'),
+               'maze_floor_3': load_image('houses/fire_maze/maze_floor_3.png'),
+               'maze_floor_4': load_image('houses/fire_maze/maze_floor_4.png'),
+               'dark_maze_house_1': load_image('houses/dark_maze/dark_maze_house_1.png'),
+               'dark_maze_house_2': load_image('houses/dark_maze/dark_maze_house_2.png'),
+               'dark_maze_floor_1': load_image('houses/dark_maze/dark_maze_floor_1.png'),
+               'dark_maze_floor_2': load_image('houses/dark_maze/dark_maze_floor_2.png'),
+               'dark_maze_floor_3': load_image('houses/dark_maze/dark_maze_floor_3.png'),
+               'dark_maze_floor_4': load_image('houses/dark_maze/dark_maze_floor_4.png'),
+               'sh': load_image('houses/start_house/sh.png'),
+               'passage': load_image('houses/else/passage.png'),
+               'start_passage': load_image('houses/else/passage.png'),
+               'start_floor': load_image('houses/start_house/start_floor.png'),
+               'd1': load_image('world/d1.png'),
+               'd2': load_image('world/d2.png')}
 
-player_image_lr = load_image('mario.png')
+player_image_lr = load_image('pers/mario.png')
+enemy_image = load_image('pers/mario.png')
 tile_width = tile_height = STEP = 50
 
 if __name__ == '__main__':

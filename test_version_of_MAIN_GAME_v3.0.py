@@ -2,7 +2,6 @@ import os
 import random
 import sys
 from enum import Enum
-from pprint import pprint
 from random import randint
 from tkinter import Image
 
@@ -650,7 +649,7 @@ def load_level(filename):
 
 
 def generate_level(level):
-    new_player, new_enemies, x, y = None, [], None, None,
+    new_player, x, y = None, None, None
     for y in range(len(level)):
         for x in range(len(level[y])):
             if level[y][x][1] == '@':
@@ -664,13 +663,9 @@ def generate_level(level):
                     Tile(str(level[y][x][1]) + str(1), x, y)
                 else:
                     Tile(str(level[y][x][1]) + str(2), x, y)
-            elif level[y][x][1] == '!':
-                Tile(level[y][x][0], x, y)
-                new_enemies.append(Enemy(x, y))
-                print(x, y)
             else:
                 Tile(level[y][x][0], x, y)
-    return new_player, new_enemies, len(level[0]), len(level)
+    return new_player, len(level[0]), len(level)
 
 
 class Tile(pygame.sprite.Sprite):
@@ -684,14 +679,6 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
         self.image = player_image_lr
-        self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
-        self.pos = pos_x, pos_y
-
-
-class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(enemies_group, all_sprites)
-        self.image = enemy_image
         self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
         self.pos = pos_x, pos_y
 
@@ -713,7 +700,6 @@ class Camera:
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
-enemies_group = pygame.sprite.Group()
 
 tile_images = {'wall_1': load_image('world/wall_1.png'),
                'wall_2': load_image('world/wall_2.png'),
@@ -723,7 +709,6 @@ tile_images = {'wall_1': load_image('world/wall_1.png'),
                'floor_4': load_image('world/floor_4.png'),
                'yellow_house': load_image('houses/yellow_house/yellow_house.png'),
                'yellow_house_floor': load_image('houses/yellow_house/yellow_house_floor.png'),
-               'green_house': load_image('houses/green_house.png'),
                'maze_house': load_image('houses/fire_maze/maze_house.png'),
                'maze_floor_1': load_image('houses/fire_maze/maze_floor_1.png'),
                'maze_floor_2': load_image('houses/fire_maze/maze_floor_2.png'),
@@ -735,10 +720,10 @@ tile_images = {'wall_1': load_image('world/wall_1.png'),
                'dark_maze_floor_2': load_image('houses/dark_maze/dark_maze_floor_2.png'),
                'dark_maze_floor_3': load_image('houses/dark_maze/dark_maze_floor_3.png'),
                'dark_maze_floor_4': load_image('houses/dark_maze/dark_maze_floor_4.png'),
-               'sh': load_image('start_house/sh.png'),
+               'sh': load_image('houses/start_house/sh.png'),
                'passage': load_image('houses/else/passage.png'),
                'start_passage': load_image('houses/else/passage.png'),
-               'start_floor': load_image('start_house/start_floor.png'),
+               'start_floor': load_image('houses/start_house/start_floor.png'),
                'd1': load_image('world/d1.png'),
                'd2': load_image('world/d2.png')}
 
@@ -750,11 +735,8 @@ if __name__ == '__main__':
 
     def upd_camera():
         camera.update(player)
-        for enemy in enemies:
-            camera.update(enemy)
         for sprite in all_sprites:
             camera.apply(sprite)
-
 
     def draw():
         screen.fill(pygame.Color(0, 0, 0))
@@ -771,37 +753,13 @@ if __name__ == '__main__':
     start_screen()
     camera = Camera()
     running = True
-    player, enemies, level_x, level_y = generate_level(level)
+    player, level_x, level_y = generate_level(level)
     y, x = player.pos[1], player.pos[0]
     upd_camera()
     while running:
 
         keys = pygame.key.get_pressed()
-        with open('test_data/new_mini_map.txt') as level:
-            level = [[i[1:-1].split("', '") for i in line.strip()[2:-2].split('], [')] for line in level.readlines()]
 
-        while running:
-
-            with open('test_data/Test_weight_map.txt', 'w') as weight_map:
-                weight_map = [[0 for j in range(level_x)] for i in range(level_y)]
-
-                for b in range(-3, 4):
-                    for a in range(-3, 4):
-                        weight_map[y + a][x + b] = 1
-
-                for b in range(-2, 3):
-                    for a in range(-2, 3):
-                        weight_map[y + a][x + b] = 2
-
-                for b in range(-1, 2):
-                    for a in range(-1, 2):
-                        weight_map[y + a][x + b] = 3
-
-                weight_map[y][x] = 4
-
-            pprint(weight_map)
-
-        # Окружение игрока
         '''
         print(y, x)
         print(level[y - 1][x - 1][1], level[y - 1][x][1], level[y - 1][x + 1][1])
