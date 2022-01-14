@@ -139,7 +139,7 @@ class Map_generation:
 
     def __init__(self):
         print('Инициализация')
-        self.number_of_buildings = 5
+        self.number_of_buildings = 3
         self.number_of_streets = self.number_of_buildings + 1
         self.house = 50
         self.street = 5
@@ -677,7 +677,7 @@ class Tile(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
-        self.image = player_image
+        self.image = player_image_lr
         self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
         self.pos = pos_x, pos_y
 
@@ -727,10 +727,24 @@ tile_images = {'wall_1': load_image('wall_1.png'),
                'd1': load_image('d1.png'),
                'd2': load_image('d2.png')}
 
-player_image = load_image('mario.png')
+player_image_lr = load_image('mario.png')
 tile_width = tile_height = STEP = 50
 
 if __name__ == '__main__':
+
+    def upd_camera():
+        camera.update(player)
+        for sprite in all_sprites:
+            camera.apply(sprite)
+
+    def draw():
+        screen.fill(pygame.Color(0, 0, 0))
+        tiles_group.draw(screen)
+        player_group.draw(screen)
+        pygame.display.flip()
+        clock.tick(FPS * 4)
+
+
     lev = Map_generation()
     lev.rendering()  # Сохраняем изображение карты
     lev.write_in_txt()
@@ -740,74 +754,159 @@ if __name__ == '__main__':
     running = True
     player, level_x, level_y = generate_level(level)
     y, x = player.pos[1], player.pos[0]
-    last_x, last_y = x, y
-    camera.update(player)
-    for sprite in all_sprites:
-        camera.apply(sprite)
+    upd_camera()
     while running:
 
         keys = pygame.key.get_pressed()
 
+        '''
         print(y, x)
         print(level[y - 1][x - 1][1], level[y - 1][x][1], level[y - 1][x + 1][1])
         print(level[y][x - 1][1], level[y][x][1], level[y][x + 1][1])
         print(level[y + 1][x - 1][1], level[y + 1][x][1], level[y + 1][x + 1][1])
+        '''
 
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] and keys[pygame.K_w]:
+            if level[y][x + 1][1] != '.' and level[y - 1][x][1] == '.':
+                y -= 1
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.y -= step
+                    upd_camera()
+                    draw()
+
+            elif level[y - 1][x][1] != '.' and level[y][x + 1][1] == '.':
+                x += 1
+                player.image = pygame.transform.flip(player_image_lr, True, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x += step
+                    upd_camera()
+                    draw()
+
+            elif level[y - 1][x + 1][1] == '.':
+                x += 1
+                y -= 1
+                player.image = pygame.transform.flip(player_image_lr, True, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x += step
+                    player.rect.y -= step
+                    upd_camera()
+                    draw()
+
+        elif keys[pygame.K_d] and keys[pygame.K_s]:
+            if level[y][x + 1][1] != '.' and level[y + 1][x][1] == '.':
+                y += 1
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.y += step
+                    upd_camera()
+                    draw()
+
+            elif level[y + 1][x][1] != '.' and level[y][x + 1][1] == '.':
+                x += 1
+                player.image = pygame.transform.flip(player_image_lr, True, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x += step
+                    upd_camera()
+                    draw()
+
+            elif level[y + 1][x + 1][1] == '.':
+                x += 1
+                y += 1
+                player.image = pygame.transform.flip(player_image_lr, True, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x += step
+                    player.rect.y += step
+                    upd_camera()
+                    draw()
+
+        elif keys[pygame.K_a] and keys[pygame.K_s]:
+            if level[y + 1][x][1] != '.' and level[y][x - 1][1] == '.':
+                x -= 1
+                player.image = pygame.transform.flip(player_image_lr, False, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x -= step
+                    upd_camera()
+                    draw()
+
+            elif level[y][x - 1][1] != '.' and level[y + 1][x][1] == '.':
+                y += 1
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.y += step
+                    upd_camera()
+                    draw()
+
+            elif level[y + 1][x - 1][1] == '.':
+                x -= 1
+                y += 1
+                player.image = pygame.transform.flip(player_image_lr, False, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x -= step
+                    player.rect.y += step
+                    upd_camera()
+                    draw()
+
+        elif keys[pygame.K_a] and keys[pygame.K_w]:
+            if level[y - 1][x][1] != '.' and level[y][x - 1][1] == '.':
+                x -= 1
+                player.image = pygame.transform.flip(player_image_lr, False, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x -= step
+                    upd_camera()
+                    draw()
+
+            elif level[y][x - 1][1] != '.' and level[y - 1][x][1] == '.':
+                y -= 1
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.y -= step
+                    upd_camera()
+                    draw()
+
+            elif level[y - 1][x - 1][1] == '.':
+                x -= 1
+                y -= 1
+                player.image = pygame.transform.flip(player_image_lr, False, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x -= step
+                    player.rect.y -= step
+                    upd_camera()
+                    draw()
+
+        elif keys[pygame.K_d]:
             if level[y][x + 1][1] == '.':
                 x += 1
-                for step in [15, 20, 15]:
+                player.image = pygame.transform.flip(player_image_lr, True, False)
+                for step in [10, 10, 10, 10, 10]:
                     player.rect.x += step
-            clock.tick(FPS // 6)
+                    upd_camera()
+                    draw()
+
         elif keys[pygame.K_a]:
             if level[y][x - 1][1] == '.':
                 x -= 1
-                for step in [15, 20, 15]:
+                player.image = pygame.transform.flip(player_image_lr, False, False)
+                for step in [10, 10, 10, 10, 10]:
                     player.rect.x -= step
-            clock.tick(FPS // 6)
+                    upd_camera()
+                    draw()
 
-        if keys[pygame.K_w]:
+        elif keys[pygame.K_w]:
             if level[y - 1][x][1] == '.':
                 y -= 1
-                for step in [15, 20, 15]:
+                for step in [10, 10, 10, 10, 10]:
                     player.rect.y -= step
-            clock.tick(FPS // 6)
+                    upd_camera()
+                    draw()
+
         elif keys[pygame.K_s]:
             if level[y + 1][x][1] == '.':
                 y += 1
-                for step in [15, 20, 15]:
+                for step in [10, 10, 10, 10, 10]:
                     player.rect.y += step
-            clock.tick(FPS // 6)
+                    upd_camera()
+                    draw()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if abs(x - last_x) < 5 and abs(y - last_y) < 5:
-                pass
-            else:
-                camera.update(player)
-                for sprite in all_sprites:
-                    camera.apply(sprite)
-                last_x, last_y = x, y
-            screen.fill(pygame.Color(0, 0, 0))
-
-            tiles_group.draw(screen)
-            player_group.draw(screen)
-            clock.tick(FPS)
-            pygame.display.flip()
-
-        if abs(x - last_x) < 5 and abs(y - last_y) < 5:
-            pass
-        else:
-            camera.update(player)
-            for sprite in all_sprites:
-                camera.apply(sprite)
-            last_x, last_y = x, y
-
-        screen.fill(pygame.Color(0, 0, 0))
-        tiles_group.draw(screen)
-        player_group.draw(screen)
-        pygame.display.flip()
-        clock.tick(FPS)
-
-    terminate()
+            upd_camera()
+        draw()
+terminate()
