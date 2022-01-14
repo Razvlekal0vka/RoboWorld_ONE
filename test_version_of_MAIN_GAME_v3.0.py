@@ -2,6 +2,7 @@ import os
 import random
 import sys
 from enum import Enum
+from pprint import pprint
 from random import randint
 from tkinter import Image
 
@@ -683,6 +684,14 @@ class Player(pygame.sprite.Sprite):
         self.pos = pos_x, pos_y
 
 
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(enemies_group, all_sprites)
+        self.image = enemy_image
+        self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
+        self.pos = pos_x, pos_y
+
+
 class Camera:
     def __init__(self):
         self.dx = 0
@@ -700,6 +709,7 @@ class Camera:
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
+enemies_group = pygame.sprite.Group()
 
 tile_images = {'wall_1': load_image('world/wall_1.png'),
                'wall_2': load_image('world/wall_2.png'),
@@ -758,6 +768,8 @@ if __name__ == '__main__':
     upd_camera()
     while running:
 
+
+        '''             <Игрок>              '''
         keys = pygame.key.get_pressed()
 
         '''
@@ -905,6 +917,23 @@ if __name__ == '__main__':
                     upd_camera()
                     draw()
 
+        '''_____________________________'''
+        weight_map = [[level[a][b][1] for b in range(x - 4, x + 5)] for a in range(y - 4, y + 5)]
+        print(weight_map)
+        for b in range(-3, 4):
+            for a in range(-3, 4):
+                weight_map[a][b] = 1
+        for b in range(-2, 3):
+            for a in range(-2, 3):
+                weight_map[a][b] = 2
+        for b in range(-1, 2):
+            for a in range(-1, 2):
+                if b != 0 or a != 0:
+                    weight_map[a][b] = 3
+        weight_map[y][x] = 4
+        pprint(weight_map)
+
+        '''          <Враги>            '''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
