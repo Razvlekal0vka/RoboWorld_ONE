@@ -2,8 +2,10 @@ import os
 import random
 import sys
 from enum import Enum
-from random import randint
 from pprint import pprint
+from random import randint
+from tkinter import Image
+
 import pygame
 from PIL import Image
 
@@ -167,16 +169,38 @@ class Map_generation:
         self.filling()
 
     def filling(self):
+        global maze, maze
         print('Генерация границ карты')
         for x in range(self.size_of_the_city):
-            self.map_city[0][x], self.map_city[self.size_of_the_city - 1][x] = ['b', '#'], ['b', '#']
+            n = random.randint(1, 2)
+            if n == 1:
+                self.map_city[0][x] = ['wall_1', '#']
+            elif n == 2:
+                self.map_city[0][x] = ['wall_2', '#']
+
+            n = random.randint(1, 2)
+            if n == 1:
+                self.map_city[self.size_of_the_city - 1][x] = ['wall_1', '#']
+            elif n == 2:
+                self.map_city[self.size_of_the_city - 1][x] = ['wall_2', '#']
+
         for y in range(self.size_of_the_city):
-            self.map_city[y][0], self.map_city[y][self.size_of_the_city - 1] = ['b', '#'], ['b', '#']
+            n = random.randint(1, 2)
+            if n == 1:
+                self.map_city[y][0] = ['wall_1', '#']
+            elif n == 2:
+                self.map_city[y][0] = ['wall_2', '#']
+
+            n = random.randint(1, 2)
+            if n == 1:
+                self.map_city[y][self.size_of_the_city - 1] = ['wall_1', '#']
+            if n == 2:
+                self.map_city[y][self.size_of_the_city - 1] = ['wall_2', '#']
 
         print('Создание ген. плана застройки и его согласование')
         facades = []
         start_house = 0
-        colors = ['brown', 'purple', 'green', 'yellow']
+        colors = ['brown_maze', 'purple_maze', 'green', 'yellow']
         for _ in range(self.number_of_buildings):
             street = []
             for __ in range(self.number_of_buildings):
@@ -204,13 +228,13 @@ class Map_generation:
                 for yy in range(5):
                     for xx in range(50):
                         if yy == 0:
-                            self.map_city[y + yy][x + xx] = ['border12', '.']
+                            self.summer_floor_genesis(x, xx, y, yy)
                         elif yy == 4:
-                            self.map_city[y + yy][x + xx] = ['border6', '.']
+                            self.summer_floor_genesis(x, xx, y, yy)
                         elif (0 < yy < 4 and 0 <= xx <= 2) or (0 < yy < 4 and 47 <= xx <= 49):
-                            self.map_city[y + yy][x + xx] = ['transition_g', '.']
+                            self.summer_floor_genesis(x, xx, y, yy)
                         else:
-                            self.map_city[y + yy][x + xx] = ['road_g', '.']
+                            self.summer_floor_genesis(x, xx, y, yy)
                 x += 55
             y += 55
             x = 6
@@ -221,13 +245,13 @@ class Map_generation:
                 for yy in range(5):
                     for xx in range(50):
                         if yy == 0:
-                            self.map_city[x + xx][y + yy] = ['border9', '.']
+                            self.summer_floor_genesis(y, yy, x, xx)
                         elif yy == 4:
-                            self.map_city[x + xx][y + yy] = ['border3', '.']
+                            self.summer_floor_genesis(y, yy, x, xx)
                         elif (0 < yy < 4 and 0 <= xx <= 2) or (0 < yy < 4 and 47 <= xx <= 49):
-                            self.map_city[x + xx][y + yy] = ['transition_v', '.']
+                            self.summer_floor_genesis(y, yy, x, xx)
                         else:
-                            self.map_city[x + xx][y + yy] = ['road_v', '.']
+                            self.summer_floor_genesis(y, yy, x, xx)
                 x += 55
             y += 55
             x = 6
@@ -239,15 +263,15 @@ class Map_generation:
                 for yy in range(5):
                     for xx in range(5):
                         if yy == 0 and xx == 0:
-                            self.map_city[y + yy][x + xx] = ['c45', '.']
+                            self.summer_floor_genesis(x, xx, y, yy)
                         elif yy == 0 and xx == 4:
-                            self.map_city[y + yy][x + xx] = ['c78', '.']
+                            self.summer_floor_genesis(x, xx, y, yy)
                         elif yy == 4 and xx == 4:
-                            self.map_city[y + yy][x + xx] = ['c1011', '.']
+                            self.summer_floor_genesis(x, xx, y, yy)
                         elif yy == 4 and xx == 0:
-                            self.map_city[y + yy][x + xx] = ['c12', '.']
+                            self.summer_floor_genesis(x, xx, y, yy)
                         else:
-                            self.map_city[y + yy][x + xx] = ['c', '.']
+                            self.summer_floor_genesis(x, xx, y, yy)
                 x += 55
             y += 55
             x = 1
@@ -258,16 +282,23 @@ class Map_generation:
             for __ in range(self.number_of_buildings):
                 for yy in range(50):
                     for xx in range(50):
-                        if facades[_][__] == 'purple':
-                            if yy == 0 or xx == 0 or yy == 49 or xx == 49:
-                                self.map_city[y + yy][x + xx] = ['purple_house', '#']
+                        if facades[_][__] == 'green':
+                            if yy == 7 or xx == 7 or yy == 42 or xx == 42:
+                                n = random.randint(1, 8)
+                                if n == 8:
+                                    n = random.randint(1, 2)
+                                    if n == 1:
+                                        self.map_city[y + yy][x + xx] = ['wall_1', '#']
+                                    elif n == 2:
+                                        self.map_city[y + yy][x + xx] = ['wall_2', '#']
+                                else:
+                                    self.summer_floor_genesis(x, xx, y, yy)
                             else:
-                                self.map_city[y + yy][x + xx] = ['purple_house_floor', '.']
-                        elif facades[_][__] == 'green':
-                            if yy == 0 or xx == 0 or yy == 49 or xx == 49:
-                                self.map_city[y + yy][x + xx] = ['green_house', '#']
-                            else:
-                                self.map_city[y + yy][x + xx] = ['green_house_floor', '.']
+                                n = random.randint(1, 5)
+                                if n == 1:
+                                    self.summer_floor_genesis_2(x, xx, y, yy)
+                                else:
+                                    self.summer_floor_genesis(x, xx, y, yy)
                         elif facades[_][__] == 'yellow':
                             if yy == 0 or xx == 0 or yy == 49 or xx == 49:
                                 self.map_city[y + yy][x + xx] = ['yellow_house', '#']
@@ -306,51 +337,150 @@ class Map_generation:
                     Error_of_creating_maze()
                 for yy in range(50):
                     for xx in range(50):
-                        if facades[_][__] == 'brown':
-                            if yy <= 1 and xx <= 1:
-                                self.map_city[y + yy][x + xx] = ['maze_house', '#']
-                            else:
-                                if xx <= 49 and yy <= 49:
-                                    if maze[yy // 2][xx // 2] == '#':
-                                        self.map_city[y + yy][x + xx] = ['maze_house', '#']
-                                    else:
-                                        n = random.randint(1, 4)
-                                        if n == 1:
-                                            self.map_city[y + yy][x + xx] = ['maze_floor_1', '.']
-                                        elif n == 2:
-                                            self.map_city[y + yy][x + xx] = ['maze_floor_2', '.']
-                                        elif n == 3:
-                                            self.map_city[y + yy][x + xx] = ['maze_floor_3', '.']
-                                        elif n == 4:
-                                            self.map_city[y + yy][x + xx] = ['maze_floor_4', '.']
-                if facades[_][__] != 'grey':
-                    if facades[_][__] == 'brown':
+                        if facades[_][__] == 'brown_maze':
+                            if True:
+                                if yy == 0 or xx == 0 or yy == 49 or xx == 49:
+                                    n = random.randint(1, 2)
+                                    if n == 1:
+                                        self.map_city[y + yy][x + xx] = ['wall_1', '#']
+                                    elif n == 2:
+                                        self.map_city[y + yy][x + xx] = ['wall_2', '#']
+                                else:
+                                    if xx <= 49 and yy <= 49:
+                                        if maze[yy // 2][xx // 2] == '#':
+                                            self.map_city[y + yy][x + xx] = ['maze_house', '#']
+                                        else:
+                                            n = random.randint(1, 4)
+                                            if n == 1:
+                                                self.map_city[y + yy][x + xx] = ['maze_floor_1', '.']
+                                            elif n == 2:
+                                                self.map_city[y + yy][x + xx] = ['maze_floor_2', '.']
+                                            elif n == 3:
+                                                self.map_city[y + yy][x + xx] = ['maze_floor_3', '.']
+                                            elif n == 4:
+                                                self.map_city[y + yy][x + xx] = ['maze_floor_4', '.']
+                        if facades[_][__] == 'purple_maze':
+                            if True:
+                                if yy == 0 or xx == 0 or yy == 49 or xx == 49:
+                                    n = random.randint(1, 2)
+                                    if n == 1:
+                                        self.map_city[y + yy][x + xx] = ['wall_1', '#']
+                                    elif n == 2:
+                                        self.map_city[y + yy][x + xx] = ['wall_2', '#']
+                                else:
+                                    if xx <= 49 and yy <= 49:
+                                        if maze[yy // 2][xx // 2] == '#':
+                                            ___ = random.randint(1, 2)
+                                            if ___ == 1:
+                                                self.map_city[y + yy][x + xx] = ['dark_maze_house_1', '#']
+                                            elif ___ == 2:
+                                                self.map_city[y + yy][x + xx] = ['dark_maze_house_2', '#']
+                                        else:
+                                            n = random.randint(1, 4)
+                                            if n == 1:
+                                                self.map_city[y + yy][x + xx] = ['dark_maze_floor_1', '.']
+                                            elif n == 2:
+                                                self.map_city[y + yy][x + xx] = ['dark_maze_floor_2', '.']
+                                            elif n == 3:
+                                                self.map_city[y + yy][x + xx] = ['dark_maze_floor_3', '.']
+                                            elif n == 4:
+                                                self.map_city[y + yy][x + xx] = ['dark_maze_floor_4', '.']
+                if facades[_][__] != 'grey' and facades[_][__] != 'green':
+                    if facades[_][__] == 'brown_maze' or facades[_][__] == 'purple_maze':
                         np = random.randint(1, 4)
                         rp = random.randint(2, 43)
                         if np == 1:
                             for i in range(4):
-                                self.map_city[y + rp][x + 46 + i] = ['passage', '.']
-                                self.map_city[y + rp + 1][x + 46 + i] = ['passage', '.']
-                                self.map_city[y + rp + 2][x + 46 + i] = ['passage', '.']
-                                self.map_city[y + rp + 3][x + 46 + i] = ['passage', '.']
+                                for j in range(4):
+                                    if facades[_][__] == 'brown_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['maze_floor_4', '.']
+                                    elif facades[_][__] == 'purple_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['dark_maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['dark_maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['dark_maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + rp + j][x + 46 + i] = ['dark_maze_floor_4', '.']
                         elif np == 2:
                             for i in range(4):
-                                self.map_city[y + 46 + i][x + rp] = ['passage', '.']
-                                self.map_city[y + 46 + i][x + rp + 1] = ['passage', '.']
-                                self.map_city[y + 46 + i][x + rp + 2] = ['passage', '.']
-                                self.map_city[y + 46 + i][x + rp + 3] = ['passage', '.']
+                                for j in range(4):
+                                    if facades[_][__] == 'brown_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['maze_floor_4', '.']
+                                    elif facades[_][__] == 'purple_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['dark_maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['dark_maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['dark_maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + 46 + j][x + rp + i] = ['dark_maze_floor_4', '.']
                         elif np == 3:
                             for i in range(4):
-                                self.map_city[y + rp][x + 0 + i] = ['passage', '.']
-                                self.map_city[y + rp + 1][x + 0 + i] = ['passage', '.']
-                                self.map_city[y + rp + 2][x + 0 + i] = ['passage', '.']
-                                self.map_city[y + rp + 3][x + 0 + i] = ['passage', '.']
+                                for j in range(4):
+                                    if facades[_][__] == 'brown_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['maze_floor_4', '.']
+                                    elif facades[_][__] == 'purple_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['dark_maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['dark_maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['dark_maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + rp + j][x + 0 + i] = ['dark_maze_floor_4', '.']
                         elif np == 4:
                             for i in range(4):
-                                self.map_city[y + 0 + i][x + rp] = ['passage', '.']
-                                self.map_city[y + 0 + i][x + rp + 1] = ['passage', '.']
-                                self.map_city[y + 0 + i][x + rp + 2] = ['passage', '.']
-                                self.map_city[y + 0 + i][x + rp + 3] = ['passage', '.']
+                                for j in range(4):
+                                    if facades[_][__] == 'brown_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['maze_floor_4', '.']
+                                    elif facades[_][__] == 'purple_maze':
+                                        n = random.randint(1, 4)
+                                        if n == 1:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['dark_maze_floor_1', '.']
+                                        elif n == 2:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['dark_maze_floor_2', '.']
+                                        elif n == 3:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['dark_maze_floor_3', '.']
+                                        elif n == 4:
+                                            self.map_city[y + 0 + j][x + rp + i] = ['dark_maze_floor_4', '.']
                     else:
                         np = random.randint(1, 4)
                         rp = random.randint(2, 43)
@@ -384,51 +514,34 @@ class Map_generation:
         for y in range(self.size_of_the_city):
             for x in range(self.size_of_the_city):
                 coords = (x, y)
-                if self.map_city[y][x][0] == 'b':
-                    r, g, b = 190, 65, 0
-                elif self.map_city[y][x][0] == 'c':
-                    r, g, b = 63, 89, 141
-                elif self.map_city[y][x][0] == 'c12':
-                    r, g, b = 63, 89, 191
-                elif self.map_city[y][x][0] == 'c45':
-                    r, g, b = 63, 89, 191
-                elif self.map_city[y][x][0] == 'c78':
-                    r, g, b = 63, 89, 191
-                elif self.map_city[y][x][0] == 'c1011':
-                    r, g, b = 63, 89, 191
-                elif self.map_city[y][x][0] == 'road_v':
-                    r, g, b = 43, 88, 101
-                elif self.map_city[y][x][0] == 'road_g':
-                    r, g, b = 43, 88, 101
-                elif self.map_city[y][x][0] == 'border12':
-                    r, g, b = 93, 108, 141
-                elif self.map_city[y][x][0] == 'border6':
-                    r, g, b = 93, 108, 141
-                elif self.map_city[y][x][0] == 'border9':
-                    r, g, b = 93, 108, 141
-                elif self.map_city[y][x][0] == 'border3':
-                    r, g, b = 93, 108, 141
-                elif self.map_city[y][x][0] == 'transition_g':
-                    r, g, b = 63, 138, 141
-                elif self.map_city[y][x][0] == 'transition_v':
-                    r, g, b = 63, 138, 141
+                if self.map_city[y][x][0] == 'wall_1':
+                    r, g, b = 190, 55, 0
+                elif self.map_city[y][x][0] == 'wall_2':
+                    r, g, b = 190, 75, 0
+                elif self.map_city[y][x][0] == 'floor_1':
+                    r, g, b = 96, 130, 90
+                elif self.map_city[y][x][0] == 'floor_2':
+                    r, g, b = 96, 140, 90
+                elif self.map_city[y][x][0] == 'floor_3':
+                    r, g, b = 96, 150, 90
+                elif self.map_city[y][x][0] == 'floor_4':
+                    r, g, b = 96, 160, 90
                 elif self.map_city[y][x][0] == 'yellow_house':
                     r, g, b = 141, 76, 63
                 elif self.map_city[y][x][0] == 'yellow_house_floor':
                     r, g, b = 201, 136, 123
                 elif self.map_city[y][x][0] == 'green_house':
                     r, g, b = 115, 141, 63
-                elif self.map_city[y][x][0] == 'green_house_floor':
-                    r, g, b = 175, 201, 123
-                elif self.map_city[y][x][0] == 'purple_house':
-                    r, g, b = 138, 81, 117
-                elif self.map_city[y][x][0] == 'purple_house_floor':
-                    r, g, b = 198, 141, 177
                 elif self.map_city[y][x][0] == 'maze_house':
                     r, g, b = 141, 99, 63
                 elif self.map_city[y][x][0] == 'maze_floor_1' or self.map_city[y][x][0] == 'maze_floor_2' or \
                         self.map_city[y][x][0] == 'maze_floor_3' or self.map_city[y][x][0] == 'maze_floor_4':
                     r, g, b = 201, 159, 123
+                elif self.map_city[y][x][0] == 'dark_maze_house_1' or self.map_city[y][x][0] == 'dark_maze_house_2':
+                    r, g, b = 84, 0, 138
+                elif self.map_city[y][x][0] == 'dark_maze_floor_1' or self.map_city[y][x][0] == 'dark_maze_floor_2' or \
+                        self.map_city[y][x][0] == 'dark_maze_floor_3' or self.map_city[y][x][0] == 'dark_maze_floor_4':
+                    r, g, b = 155, 0, 255
                 elif self.map_city[y][x][0] == 'sh':
                     r, g, b = 79, 79, 79
                 elif self.map_city[y][x][0] == 'passage':
@@ -444,6 +557,28 @@ class Map_generation:
                     r, g, b = 0, 0, 0
                 image.putpixel(coords, (r, g, b))
         image.save('test_data/' + 'map.png')
+
+    def summer_floor_genesis(self, x, xx, y, yy):
+        n = random.randint(1, 4)
+        if n == 1:
+            self.map_city[y + yy][x + xx] = ['floor_1', '.']
+        elif n == 2:
+            self.map_city[y + yy][x + xx] = ['floor_2', '.']
+        elif n == 3:
+            self.map_city[y + yy][x + xx] = ['floor_3', '.']
+        elif n == 4:
+            self.map_city[y + yy][x + xx] = ['floor_4', '.']
+
+    def summer_floor_genesis_2(self, x, xx, y, yy):
+        n = random.randint(1, 4)
+        if n == 1:
+            self.map_city[y + yy][x + xx] = ['floor_1', 'd']
+        elif n == 2:
+            self.map_city[y + yy][x + xx] = ['floor_2', 'd']
+        elif n == 3:
+            self.map_city[y + yy][x + xx] = ['floor_3', 'd']
+        elif n == 4:
+            self.map_city[y + yy][x + xx] = ['floor_4', 'd']
 
     def write_in_txt(self):
         print('Сохранение карты')
@@ -462,14 +597,15 @@ def terminate():
 
 def start_screen():
     # intro_text = []
-    fon = pygame.transform.scale(load_image('boot.png'), (WIDTH, HEIGHT))
-    name_of_the_game = pygame.transform.scale(load_image('RBWOF.png'), (WIDTH, HEIGHT))
-    start_text = pygame.transform.scale(load_image('CIYWETG2.png'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('else/boot.png'), (WIDTH, HEIGHT))
+    name_of_the_game = pygame.transform.scale(load_image('else/RBWOF.png'), (WIDTH, HEIGHT))
+    start_text = pygame.transform.scale(load_image('else/CIYWETG2.png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
     screen.blit(name_of_the_game, (0, 0))
     screen.blit(start_text, (0, 0))
     font = pygame.font.Font(None, 30)
     text_coord = 50
+
     '''for line in intro_text:
         string_rendered = font.render(line, True, pygame.Color('black'))
         intro_rect = string_rendered.get_rect()
@@ -514,16 +650,24 @@ def load_level(filename):
 
 
 def generate_level(level):
-    new_player, new_enemies, x, y = None, [], None, None
+    new_player, new_enemies, x, y = None, [], None, None,
     for y in range(len(level)):
         for x in range(len(level[y])):
             if level[y][x][1] == '@':
                 Tile(level[y][x][0], x, y)
                 new_player = Player(x, y)
                 print(x, y)
+            elif level[y][x][1] == 'd':
+                Tile(level[y][x][0], x, y)
+                n = random.randint(1, 5)
+                if n == 5:
+                    Tile(str(level[y][x][1]) + str(1), x, y)
+                else:
+                    Tile(str(level[y][x][1]) + str(2), x, y)
             elif level[y][x][1] == '!':
                 Tile(level[y][x][0], x, y)
                 new_enemies.append(Enemy(x, y))
+                print(x, y)
             else:
                 Tile(level[y][x][0], x, y)
     return new_player, new_enemies, len(level[0]), len(level)
@@ -539,7 +683,7 @@ class Tile(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
-        self.image = player_image
+        self.image = player_image_lr
         self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
         self.pos = pos_x, pos_y
 
@@ -570,161 +714,242 @@ all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 enemies_group = pygame.sprite.Group()
-tile_images = {'b': load_image('b.png'),
-               'c': load_image('c.png'),
-               'c12': load_image('c12.png'),
-               'c45': load_image('c45.png'),
-               'c78': load_image('c78.png'),
-               'c1011': load_image('c1011.png'),
-               'road_v': load_image('road_v.png'),
-               'road_g': load_image('road_g.png'),
-               'border3': load_image('border3.png'),
-               'border6': load_image('border6.png'),
-               'border9': load_image('border9.png'),
-               'border12': load_image('border12.png'),
-               'transition_g': load_image('transition_g.png'),
-               'transition_v': load_image('transition_v.png'),
-               'yellow_house': load_image('yellow_house.png'),
-               'yellow_house_floor': load_image('yellow_house_floor.png'),
-               'green_house': load_image('green_house.png'),
-               'green_house_floor': load_image('green_house_floor.png'),
-               'purple_house': load_image('purple_house.png'),
-               'purple_house_floor': load_image('purple_house_floor.png'),
-               'maze_house': load_image('maze_house.png'),
-               'maze_floor_1': load_image('maze_floor_1.png'),
-               'maze_floor_2': load_image('maze_floor_2.png'),
-               'maze_floor_3': load_image('maze_floor_3.png'),
-               'maze_floor_4': load_image('maze_floor_4.png'),
-               'sh': load_image('sh.png'),
-               'passage': load_image('passage.png'),
-               'start_passage': load_image('passage.png'),
-               'start_floor': load_image('start_floor.png')}
-player_image = load_image('mario.png')
-enemy_image = load_image('enemy_wof.png')
+
+tile_images = {'wall_1': load_image('world/wall_1.png'),
+               'wall_2': load_image('world/wall_2.png'),
+               'floor_1': load_image('world/floor_1.png'),
+               'floor_2': load_image('world/floor_2.png'),
+               'floor_3': load_image('world/floor_3.png'),
+               'floor_4': load_image('world/floor_4.png'),
+               'yellow_house': load_image('houses/yellow_house/yellow_house.png'),
+               'yellow_house_floor': load_image('houses/yellow_house/yellow_house_floor.png'),
+               'green_house': load_image('houses/green_house.png'),
+               'maze_house': load_image('houses/fire_maze/maze_house.png'),
+               'maze_floor_1': load_image('houses/fire_maze/maze_floor_1.png'),
+               'maze_floor_2': load_image('houses/fire_maze/maze_floor_2.png'),
+               'maze_floor_3': load_image('houses/fire_maze/maze_floor_3.png'),
+               'maze_floor_4': load_image('houses/fire_maze/maze_floor_4.png'),
+               'dark_maze_house_1': load_image('houses/dark_maze/dark_maze_house_1.png'),
+               'dark_maze_house_2': load_image('houses/dark_maze/dark_maze_house_2.png'),
+               'dark_maze_floor_1': load_image('houses/dark_maze/dark_maze_floor_1.png'),
+               'dark_maze_floor_2': load_image('houses/dark_maze/dark_maze_floor_2.png'),
+               'dark_maze_floor_3': load_image('houses/dark_maze/dark_maze_floor_3.png'),
+               'dark_maze_floor_4': load_image('houses/dark_maze/dark_maze_floor_4.png'),
+               'sh': load_image('start_house/sh.png'),
+               'passage': load_image('houses/else/passage.png'),
+               'start_passage': load_image('houses/else/passage.png'),
+               'start_floor': load_image('start_house/start_floor.png'),
+               'd1': load_image('world/d1.png'),
+               'd2': load_image('world/d2.png')}
+
+player_image_lr = load_image('pers/mario.png')
+enemy_image = load_image('pers/mario.png')
 tile_width = tile_height = STEP = 50
 
 if __name__ == '__main__':
 
-    '''lev = Map_generation()
+    def upd_camera():
+        camera.update(player)
+        for enemy in enemies:
+            camera.update(enemy)
+        for sprite in all_sprites:
+            camera.apply(sprite)
+
+
+    def draw():
+        screen.fill(pygame.Color(0, 0, 0))
+        tiles_group.draw(screen)
+        player_group.draw(screen)
+        pygame.display.flip()
+        clock.tick(FPS * 4)
+
+
+    lev = Map_generation()
     lev.rendering()  # Сохраняем изображение карты
     lev.write_in_txt()
-    level = lev.map_level()  # Считываем список'''
-
-    with open('test_data/new_mini_map.txt') as level:
-        level = [[i[1:-1].split("', '") for i in line.strip()[2:-2].split('], [')] for line in level.readlines()]
-
+    level = lev.map_level()  # Считываем список
     start_screen()
     camera = Camera()
     running = True
     player, enemies, level_x, level_y = generate_level(level)
     y, x = player.pos[1], player.pos[0]
-    last_x, last_y = x, y
-    camera.update(player)
-    for enemy in enemies:
-        camera.update(enemy)
-    for sprite in all_sprites:
-        camera.apply(sprite)
+    upd_camera()
     while running:
 
-        with open('test_data/Test_weight_map.txt', 'w') as weight_map:
-            weight_map = [[0 for j in range(level_x)] for i in range(level_y)]
+        keys = pygame.key.get_pressed()
+        with open('test_data/new_mini_map.txt') as level:
+            level = [[i[1:-1].split("', '") for i in line.strip()[2:-2].split('], [')] for line in level.readlines()]
 
-            weight_map[y][x] = 4
+        while running:
 
-            for b in range(-1, 2):
-                for a in range(-1, 2):
-                    if b != 0 or a != 0:
+            with open('test_data/Test_weight_map.txt', 'w') as weight_map:
+                weight_map = [[0 for j in range(level_x)] for i in range(level_y)]
+
+                for b in range(-3, 4):
+                    for a in range(-3, 4):
                         weight_map[y + a][x + b] = 1
 
-            for b in range(-2, 3):
-                for a in range(-2, 3):
-                    if (b != 0 or a != 0) and (abs(a) != 1 or abs(b) != 1):
+                for b in range(-2, 3):
+                    for a in range(-2, 3):
                         weight_map[y + a][x + b] = 2
 
-            for b in range(-3, 4):
-                for a in range(-3, 4):
-                    if (b != 0 or a != 0) and (abs(a) != 1 or abs(b) != 1) and (abs(a) != 2 or abs(b) != 2):
-                        weight_map[y + a][x + b] = 1
+                for b in range(-1, 2):
+                    for a in range(-1, 2):
+                        weight_map[y + a][x + b] = 3
 
-        pprint(weight_map)
+                weight_map[y][x] = 4
 
-        keys = pygame.key.get_pressed()
+            pprint(weight_map)
 
-        # Вывод окружения игрока в радиусе 1 клетки
+        # Окружение игрока
+        '''
         print(y, x)
         print(level[y - 1][x - 1][1], level[y - 1][x][1], level[y - 1][x + 1][1])
         print(level[y][x - 1][1], level[y][x][1], level[y][x + 1][1])
         print(level[y + 1][x - 1][1], level[y + 1][x][1], level[y + 1][x + 1][1])
+        '''
 
-        '''Перемещение игрока'''
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] and keys[pygame.K_w]:
+            if level[y][x + 1][1] != '.' and level[y - 1][x][1] == '.':
+                y -= 1
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.y -= step
+                    upd_camera()
+                    draw()
+
+            elif level[y - 1][x][1] != '.' and level[y][x + 1][1] == '.':
+                x += 1
+                player.image = pygame.transform.flip(player_image_lr, True, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x += step
+                    upd_camera()
+                    draw()
+
+            elif level[y - 1][x + 1][1] == '.':
+                x += 1
+                y -= 1
+                player.image = pygame.transform.flip(player_image_lr, True, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x += step
+                    player.rect.y -= step
+                    upd_camera()
+                    draw()
+
+        elif keys[pygame.K_d] and keys[pygame.K_s]:
+            if level[y][x + 1][1] != '.' and level[y + 1][x][1] == '.':
+                y += 1
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.y += step
+                    upd_camera()
+                    draw()
+
+            elif level[y + 1][x][1] != '.' and level[y][x + 1][1] == '.':
+                x += 1
+                player.image = pygame.transform.flip(player_image_lr, True, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x += step
+                    upd_camera()
+                    draw()
+
+            elif level[y + 1][x + 1][1] == '.':
+                x += 1
+                y += 1
+                player.image = pygame.transform.flip(player_image_lr, True, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x += step
+                    player.rect.y += step
+                    upd_camera()
+                    draw()
+
+        elif keys[pygame.K_a] and keys[pygame.K_s]:
+            if level[y + 1][x][1] != '.' and level[y][x - 1][1] == '.':
+                x -= 1
+                player.image = pygame.transform.flip(player_image_lr, False, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x -= step
+                    upd_camera()
+                    draw()
+
+            elif level[y][x - 1][1] != '.' and level[y + 1][x][1] == '.':
+                y += 1
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.y += step
+                    upd_camera()
+                    draw()
+
+            elif level[y + 1][x - 1][1] == '.':
+                x -= 1
+                y += 1
+                player.image = pygame.transform.flip(player_image_lr, False, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x -= step
+                    player.rect.y += step
+                    upd_camera()
+                    draw()
+
+        elif keys[pygame.K_a] and keys[pygame.K_w]:
+            if level[y - 1][x][1] != '.' and level[y][x - 1][1] == '.':
+                x -= 1
+                player.image = pygame.transform.flip(player_image_lr, False, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x -= step
+                    upd_camera()
+                    draw()
+
+            elif level[y][x - 1][1] != '.' and level[y - 1][x][1] == '.':
+                y -= 1
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.y -= step
+                    upd_camera()
+                    draw()
+
+            elif level[y - 1][x - 1][1] == '.':
+                x -= 1
+                y -= 1
+                player.image = pygame.transform.flip(player_image_lr, False, False)
+                for step in [10, 10, 10, 10, 10]:
+                    player.rect.x -= step
+                    player.rect.y -= step
+                    upd_camera()
+                    draw()
+
+        elif keys[pygame.K_d]:
             if level[y][x + 1][1] == '.':
                 x += 1
-                for step in [15, 20, 15]:
+                player.image = pygame.transform.flip(player_image_lr, True, False)
+                for step in [10, 10, 10, 10, 10]:
                     player.rect.x += step
-            clock.tick(FPS // 6)
+                    upd_camera()
+                    draw()
+
         elif keys[pygame.K_a]:
             if level[y][x - 1][1] == '.':
                 x -= 1
-                for step in [15, 20, 15]:
+                player.image = pygame.transform.flip(player_image_lr, False, False)
+                for step in [10, 10, 10, 10, 10]:
                     player.rect.x -= step
-            clock.tick(FPS // 6)
+                    upd_camera()
+                    draw()
 
-        if keys[pygame.K_w]:
+        elif keys[pygame.K_w]:
             if level[y - 1][x][1] == '.':
                 y -= 1
-                for step in [15, 20, 15]:
+                for step in [10, 10, 10, 10, 10]:
                     player.rect.y -= step
-            clock.tick(FPS // 6)
+                    upd_camera()
+                    draw()
+
         elif keys[pygame.K_s]:
             if level[y + 1][x][1] == '.':
                 y += 1
-                for step in [15, 20, 15]:
+                for step in [10, 10, 10, 10, 10]:
                     player.rect.y += step
-            clock.tick(FPS // 6)
-        '''----------------------'''
+                    upd_camera()
+                    draw()
 
-        '''Перемещение врагов'''
-        for enemy in enemies:
-            pass
-
-        '''Обновление камеры'''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if abs(x - last_x) < 5 and abs(y - last_y) < 5:
-                pass
-            else:
-                camera.update(player)
-                for enemy in enemies:
-                    camera.update(enemy)
-                for sprite in all_sprites:
-                    camera.apply(sprite)
-                last_x, last_y = x, y
-            screen.fill(pygame.Color(0, 0, 0))
-
-            tiles_group.draw(screen)
-            player_group.draw(screen)
-            enemies_group.draw(screen)
-            clock.tick(FPS)
-            pygame.display.flip()
-
-        if abs(x - last_x) < 5 and abs(y - last_y) < 5:
-            pass
-        else:
-            camera.update(player)
-            for enemy in enemies:
-                camera.update(enemy)
-            for sprite in all_sprites:
-                camera.apply(sprite)
-            last_x, last_y = x, y
-        '''----------------------'''
-
-        screen.fill(pygame.Color(0, 0, 0))
-        tiles_group.draw(screen)
-        player_group.draw(screen)
-        enemies_group.draw(screen)
-        pygame.display.flip()
-        clock.tick(FPS)
-
-    terminate()
+            upd_camera()
+        draw()
+terminate()

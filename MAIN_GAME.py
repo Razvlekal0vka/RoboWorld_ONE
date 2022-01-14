@@ -604,6 +604,7 @@ def start_screen():
     screen.blit(start_text, (0, 0))
     font = pygame.font.Font(None, 30)
     text_coord = 50
+
     '''for line in intro_text:
         string_rendered = font.render(line, True, pygame.Color('black'))
         intro_rect = string_rendered.get_rect()
