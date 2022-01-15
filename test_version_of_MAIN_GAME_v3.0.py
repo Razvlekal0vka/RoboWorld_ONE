@@ -918,7 +918,8 @@ if __name__ == '__main__':
                     draw()
 
         '''_____________________________'''
-        weight_map = [[level[a][b][1] for b in range(x - 4, x + 5)] for a in range(y - 4, y + 5)]
+
+        '''weight_map = [[level[a][b][1] for b in range(x - 4, x + 5)] for a in range(y - 4, y + 5)]
         print(weight_map)
         for b in range(-3, 4):
             for a in range(-3, 4):
@@ -931,7 +932,7 @@ if __name__ == '__main__':
                 if b != 0 or a != 0:
                     weight_map[a][b] = 3
         weight_map[y][x] = 4
-        pprint(weight_map)
+        pprint(weight_map)'''
 
         '''          <Враги>            '''
         for event in pygame.event.get():
