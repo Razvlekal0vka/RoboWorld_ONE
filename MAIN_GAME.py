@@ -168,7 +168,6 @@ class Map_generation:
         self.filling()
 
     def filling(self):
-        global maze, maze
         print('Генерация границ карты')
         for x in range(self.size_of_the_city):
             n = random.randint(1, 2)
@@ -306,6 +305,8 @@ class Map_generation:
                         elif facades[_][__] == 'grey':
                             if yy == 0 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
+                            elif (xx == 4 and yy == 4) or (xx == 4 and yy == 44) or (xx == 44 and yy == 4) or (xx == 44 and yy == 44):
+                                self.map_city[y + yy][x + xx] = ['start_floor', 'e']
                             elif yy == 25 and xx == 25:
                                 self.map_city[y + yy][x + xx] = ['start_floor', '@']
                             elif yy == 49 and (xx < 24 or xx > 27):
@@ -514,9 +515,9 @@ class Map_generation:
             for x in range(self.size_of_the_city):
                 coords = (x, y)
                 if self.map_city[y][x][0] == 'wall_1':
-                    r, g, b = 190, 55, 0
+                    r, g, b = 0, 55, 190
                 elif self.map_city[y][x][0] == 'wall_2':
-                    r, g, b = 190, 75, 0
+                    r, g, b = 0, 75, 190
                 elif self.map_city[y][x][0] == 'floor_1':
                     r, g, b = 96, 130, 90
                 elif self.map_city[y][x][0] == 'floor_2':
@@ -548,6 +549,8 @@ class Map_generation:
                 elif self.map_city[y][x][0] == 'start_floor':
                     if self.map_city[y][x][1] == '@':
                         r, g, b = 250, 150, 150
+                    elif self.map_city[y][x][1] == 'e':
+                        r, g, b = 250, 50, 50
                     else:
                         r, g, b = 200, 200, 200
                 elif self.map_city[y][x][0] == 'player':
