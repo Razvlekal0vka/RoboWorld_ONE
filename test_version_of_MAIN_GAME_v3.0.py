@@ -669,12 +669,9 @@ def generate_level(level):
                     Tile(str(level[y][x][1]) + str(2), x, y)
                 else:
                     Tile(str(level[y][x][1]) + str(2), x, y)
-            elif level[y][x][1] == 'e':
-                Tile(level[y][x][0], x, y)
-                Enemy()
             else:
                 Tile(level[y][x][0], x, y)
-    return new_player, enemies len(level[0]), len(level)
+    return new_player, len(level[0]), len(level)
 
 
 class Tile(pygame.sprite.Sprite):
@@ -699,14 +696,6 @@ class Player(pygame.sprite.Sprite):
         self.pos = pos_x, pos_y
 
 
-class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(enemies_group, all_sprites)
-        self.image = enemy_image
-        self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
-        self.pos = pos_x, pos_y
-
-
 class Camera:
     def __init__(self):
         self.dx = 0
@@ -724,8 +713,8 @@ class Camera:
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
-enemies_group = pygame.sprite.Group()
 object_group = pygame.sprite.Group()
+enemies_group = pygame.sprite.Group()
 
 tile_images = {'wall_1': load_image('world/wall_1.png'),
                'wall_2': load_image('world/wall_2.png'),
@@ -755,7 +744,6 @@ tile_images = {'wall_1': load_image('world/wall_1.png'),
                'd3': load_image('world/d3.png')}
 
 player_image_lr = load_image('pers/stand_1.png')
-
 standing_player = {'stand_1': load_image('pers/stand_1.png'),
                    'stand_2': load_image('pers/stand_2.png'),
                    'stand_3': load_image('pers/stand_3.png'),
@@ -772,6 +760,7 @@ running_player = {'run_1': load_image('pers/run_1.png'),
                   'run_7': load_image('pers/run_7.png'),
                   'run_8': load_image('pers/run_8.png'),
                   'run_9': load_image('pers/run_9.png')}
+
 
 enemy_image = load_image('enemies/base_enemy.png')
 tile_width = tile_height = STEP = 50
@@ -799,9 +788,9 @@ if __name__ == '__main__':
     level = lev.map_level()  # Считываем список
     start_screen()
     camera = Camera()
-    running, stand_flag, num = True, 0, 0
-    stand_list = ['stand_1', 'stand_2', 'stand_3', 'stand_4', 'stand_5', 'stand_6']
+    running = True
     player, level_x, level_y = generate_level(level)
+
     y, x = player.pos[1], player.pos[0]
     upd_camera()
     while running:
@@ -825,7 +814,7 @@ if __name__ == '__main__':
 
             elif level[y - 1][x][1] != '.' and level[y][x + 1][1] == '.':
                 x += 1
-                player.image = pygame.transform.flip(player_image_lr, True, False)
+                player.image = pygame.transform.flip(player_image_lr, False, False)
                 for step in [10, 10, 10, 10, 10]:
                     player.rect.x += step
                     upd_camera()
@@ -834,7 +823,7 @@ if __name__ == '__main__':
             elif level[y - 1][x + 1][1] == '.':
                 x += 1
                 y -= 1
-                player.image = pygame.transform.flip(player_image_lr, True, False)
+                player.image = pygame.transform.flip(player_image_lr, False, False)
                 for step in [10, 10, 10, 10, 10]:
                     player.rect.x += step
                     player.rect.y -= step
@@ -851,7 +840,7 @@ if __name__ == '__main__':
 
             elif level[y + 1][x][1] != '.' and level[y][x + 1][1] == '.':
                 x += 1
-                player.image = pygame.transform.flip(player_image_lr, True, False)
+                player.image = pygame.transform.flip(player_image_lr, False, False)
                 for step in [10, 10, 10, 10, 10]:
                     player.rect.x += step
                     upd_camera()
@@ -860,7 +849,7 @@ if __name__ == '__main__':
             elif level[y + 1][x + 1][1] == '.':
                 x += 1
                 y += 1
-                player.image = pygame.transform.flip(player_image_lr, True, False)
+                player.image = pygame.transform.flip(player_image_lr, False, False)
                 for step in [10, 10, 10, 10, 10]:
                     player.rect.x += step
                     player.rect.y += step
@@ -870,7 +859,7 @@ if __name__ == '__main__':
         elif keys[pygame.K_a] and keys[pygame.K_s]:
             if level[y + 1][x][1] != '.' and level[y][x - 1][1] == '.':
                 x -= 1
-                player.image = pygame.transform.flip(player_image_lr, False, False)
+                player.image = pygame.transform.flip(player_image_lr, True, False)
                 for step in [10, 10, 10, 10, 10]:
                     player.rect.x -= step
                     upd_camera()
@@ -886,7 +875,7 @@ if __name__ == '__main__':
             elif level[y + 1][x - 1][1] == '.':
                 x -= 1
                 y += 1
-                player.image = pygame.transform.flip(player_image_lr, False, False)
+                player.image = pygame.transform.flip(player_image_lr, True, False)
                 for step in [10, 10, 10, 10, 10]:
                     player.rect.x -= step
                     player.rect.y += step
@@ -896,7 +885,7 @@ if __name__ == '__main__':
         elif keys[pygame.K_a] and keys[pygame.K_w]:
             if level[y - 1][x][1] != '.' and level[y][x - 1][1] == '.':
                 x -= 1
-                player.image = pygame.transform.flip(player_image_lr, False, False)
+                player.image = pygame.transform.flip(player_image_lr, True, False)
                 for step in [10, 10, 10, 10, 10]:
                     player.rect.x -= step
                     upd_camera()
@@ -912,7 +901,7 @@ if __name__ == '__main__':
             elif level[y - 1][x - 1][1] == '.':
                 x -= 1
                 y -= 1
-                player.image = pygame.transform.flip(player_image_lr, False, False)
+                player.image = pygame.transform.flip(player_image_lr, True, False)
                 for step in [10, 10, 10, 10, 10]:
                     player.rect.x -= step
                     player.rect.y -= step
@@ -922,7 +911,7 @@ if __name__ == '__main__':
         elif keys[pygame.K_d]:
             if level[y][x + 1][1] == '.':
                 x += 1
-                player.image = pygame.transform.flip(player_image_lr, True, False)
+                player.image = pygame.transform.flip(player_image_lr, False, False)
                 for step in [10, 10, 10, 10, 10]:
                     player.rect.x += step
                     upd_camera()
@@ -931,7 +920,7 @@ if __name__ == '__main__':
         elif keys[pygame.K_a]:
             if level[y][x - 1][1] == '.':
                 x -= 1
-                player.image = pygame.transform.flip(player_image_lr, False, False)
+                player.image = pygame.transform.flip(player_image_lr, True, False)
                 for step in [10, 10, 10, 10, 10]:
                     player.rect.x -= step
                     upd_camera()
@@ -953,9 +942,9 @@ if __name__ == '__main__':
                     upd_camera()
                     draw()
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        upd_camera()
-    draw()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            upd_camera()
+        draw()
 terminate()
