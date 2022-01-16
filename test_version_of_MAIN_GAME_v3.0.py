@@ -982,8 +982,8 @@ if __name__ == '__main__':
                     upd_camera()
                     draw()
 
-        elif keys[pygame.K_s] == False and keys[pygame.K_w] == False and keys[pygame.K_a] == False and keys[
-            pygame.K_d] == False:
+        elif keys[pygame.K_s] == False and keys[pygame.K_w] == False \
+                and keys[pygame.K_a] == False and keys[pygame.K_d] == False:
             standing_flag %= 5
             if lr == 2:
                 player.image = pygame.transform.flip(standing_player[standing_list[standing_flag]], False, False)
