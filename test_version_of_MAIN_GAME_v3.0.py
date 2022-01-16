@@ -2,7 +2,6 @@ import os
 import random
 import sys
 from enum import Enum
-from pprint import pprint
 from random import randint
 from tkinter import Image
 
@@ -169,7 +168,6 @@ class Map_generation:
         self.filling()
 
     def filling(self):
-        global maze, maze
         print('Генерация границ карты')
         for x in range(self.size_of_the_city):
             n = random.randint(1, 2)
@@ -307,6 +305,9 @@ class Map_generation:
                         elif facades[_][__] == 'grey':
                             if yy == 0 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
+                            elif (xx == 4 and yy == 4) or (xx == 4 and yy == 44) or (xx == 44 and yy == 4) or (
+                                    xx == 44 and yy == 44):
+                                self.map_city[y + yy][x + xx] = ['start_floor', 'e']
                             elif yy == 25 and xx == 25:
                                 self.map_city[y + yy][x + xx] = ['start_floor', '@']
                             elif yy == 49 and (xx < 24 or xx > 27):
@@ -515,9 +516,9 @@ class Map_generation:
             for x in range(self.size_of_the_city):
                 coords = (x, y)
                 if self.map_city[y][x][0] == 'wall_1':
-                    r, g, b = 190, 55, 0
+                    r, g, b = 0, 55, 190
                 elif self.map_city[y][x][0] == 'wall_2':
-                    r, g, b = 190, 75, 0
+                    r, g, b = 0, 75, 190
                 elif self.map_city[y][x][0] == 'floor_1':
                     r, g, b = 96, 130, 90
                 elif self.map_city[y][x][0] == 'floor_2':
@@ -549,6 +550,8 @@ class Map_generation:
                 elif self.map_city[y][x][0] == 'start_floor':
                     if self.map_city[y][x][1] == '@':
                         r, g, b = 250, 150, 150
+                    elif self.map_city[y][x][1] == 'e':
+                        r, g, b = 250, 50, 50
                     else:
                         r, g, b = 200, 200, 200
                 elif self.map_city[y][x][0] == 'player':
@@ -662,6 +665,8 @@ def generate_level(level):
                 n = random.randint(1, 5)
                 if n == 5:
                     Tile(str(level[y][x][1]) + str(1), x, y)
+                elif 2 <= n <= 4:
+                    Tile(str(level[y][x][1]) + str(2), x, y)
                 else:
                     Tile(str(level[y][x][1]) + str(2), x, y)
             else:
@@ -676,19 +681,18 @@ class Tile(pygame.sprite.Sprite):
         self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
 
 
+class Object(pygame.sprite.Sprite):
+    def __init__(self, tile_type, pos_x, pos_y):
+        super().__init__(object_group, all_sprites)
+        self.image = tile_images[tile_type]
+        self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
         self.image = player_image_lr
-        self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
-        self.pos = pos_x, pos_y
-
-
-class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(enemies_group, all_sprites)
-        self.image = enemy_image
-        self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
+        self.rect = self.image.get_rect().move(tile_width * pos_x + 5, tile_height * pos_y)
         self.pos = pos_x, pos_y
 
 
@@ -709,7 +713,7 @@ class Camera:
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
-enemies_group = pygame.sprite.Group()
+object_group = pygame.sprite.Group()
 
 tile_images = {'wall_1': load_image('world/wall_1.png'),
                'wall_2': load_image('world/wall_2.png'),
@@ -735,9 +739,28 @@ tile_images = {'wall_1': load_image('world/wall_1.png'),
                'start_passage': load_image('houses/else/passage.png'),
                'start_floor': load_image('houses/start_house/start_floor.png'),
                'd1': load_image('world/d1.png'),
-               'd2': load_image('world/d2.png')}
+               'd2': load_image('world/d2.png'),
+               'd3': load_image('world/d3.png')}
 
-player_image_lr = load_image('pers/mario.png')
+player_image_lr = load_image('pers/stand_1.png')
+
+standing_player = {'stand_1': load_image('pers/stand_1.png'),
+                   'stand_2': load_image('pers/stand_2.png'),
+                   'stand_3': load_image('pers/stand_3.png'),
+                   'stand_4': load_image('pers/stand_4.png'),
+                   'stand_5': load_image('pers/stand_5.png'),
+                   'stand_6': load_image('pers/stand_6.png')}
+
+running_player = {'run_1': load_image('pers/run_1.png'),
+                  'run_2': load_image('pers/run_2.png'),
+                  'run_3': load_image('pers/run_3.png'),
+                  'run_4': load_image('pers/run_4.png'),
+                  'run_5': load_image('pers/run_5.png'),
+                  'run_6': load_image('pers/run_6.png'),
+                  'run_7': load_image('pers/run_7.png'),
+                  'run_8': load_image('pers/run_8.png'),
+                  'run_9': load_image('pers/run_9.png')}
+
 enemy_image = load_image('pers/mario.png')
 tile_width = tile_height = STEP = 50
 
@@ -748,10 +771,12 @@ if __name__ == '__main__':
         for sprite in all_sprites:
             camera.apply(sprite)
 
+
     def draw():
         screen.fill(pygame.Color(0, 0, 0))
         tiles_group.draw(screen)
         player_group.draw(screen)
+        object_group.draw(screen)
         pygame.display.flip()
         clock.tick(FPS * 4)
 
@@ -764,12 +789,11 @@ if __name__ == '__main__':
     camera = Camera()
     running = True
     player, level_x, level_y = generate_level(level)
+
     y, x = player.pos[1], player.pos[0]
     upd_camera()
     while running:
 
-
-        '''             <Игрок>              '''
         keys = pygame.key.get_pressed()
 
         '''
@@ -917,24 +941,9 @@ if __name__ == '__main__':
                     upd_camera()
                     draw()
 
-        '''_____________________________'''
+        else:
+            player
 
-        '''weight_map = [[level[a][b][1] for b in range(x - 4, x + 5)] for a in range(y - 4, y + 5)]
-        print(weight_map)
-        for b in range(-3, 4):
-            for a in range(-3, 4):
-                weight_map[a][b] = 1
-        for b in range(-2, 3):
-            for a in range(-2, 3):
-                weight_map[a][b] = 2
-        for b in range(-1, 2):
-            for a in range(-1, 2):
-                if b != 0 or a != 0:
-                    weight_map[a][b] = 3
-        weight_map[y][x] = 4
-        pprint(weight_map)'''
-
-        '''          <Враги>            '''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False

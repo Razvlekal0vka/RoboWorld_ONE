@@ -305,7 +305,8 @@ class Map_generation:
                         elif facades[_][__] == 'grey':
                             if yy == 0 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
-                            elif (xx == 4 and yy == 4) or (xx == 4 and yy == 44) or (xx == 44 and yy == 4) or (xx == 44 and yy == 44):
+                            elif (xx == 4 and yy == 4) or (xx == 4 and yy == 44) or (xx == 44 and yy == 4) or (
+                                    xx == 44 and yy == 44):
                                 self.map_city[y + yy][x + xx] = ['start_floor', 'e']
                             elif yy == 25 and xx == 25:
                                 self.map_city[y + yy][x + xx] = ['start_floor', '@']
@@ -665,7 +666,7 @@ def generate_level(level):
                 if n == 5:
                     Tile(str(level[y][x][1]) + str(1), x, y)
                 elif 2 <= n <= 4:
-                    Tile(str(level[y][x][1]) + str(3), x, y)
+                    Tile(str(level[y][x][1]) + str(2), x, y - 1)
                 else:
                     Tile(str(level[y][x][1]) + str(2), x, y)
             else:
@@ -676,6 +677,13 @@ def generate_level(level):
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y):
         super().__init__(tiles_group, all_sprites)
+        self.image = tile_images[tile_type]
+        self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
+
+
+class Object(pygame.sprite.Sprite):
+    def __init__(self, tile_type, pos_x, pos_y):
+        super().__init__(object_group, all_sprites)
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
 
@@ -705,6 +713,7 @@ class Camera:
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
+object_group = pygame.sprite.Group()
 
 tile_images = {'wall_1': load_image('world/wall_1.png'),
                'wall_2': load_image('world/wall_2.png'),
@@ -744,10 +753,12 @@ if __name__ == '__main__':
         for sprite in all_sprites:
             camera.apply(sprite)
 
+
     def draw():
         screen.fill(pygame.Color(0, 0, 0))
         tiles_group.draw(screen)
         player_group.draw(screen)
+        object_group.draw(screen)
         pygame.display.flip()
         clock.tick(FPS * 4)
 
@@ -760,6 +771,7 @@ if __name__ == '__main__':
     camera = Camera()
     running = True
     player, level_x, level_y = generate_level(level)
+
     y, x = player.pos[1], player.pos[0]
     upd_camera()
     while running:
