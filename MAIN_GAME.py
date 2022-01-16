@@ -664,6 +664,8 @@ def generate_level(level):
                 n = random.randint(1, 5)
                 if n == 5:
                     Tile(str(level[y][x][1]) + str(1), x, y)
+                elif 2 <= n <= 4:
+                    Tile(str(level[y][x][1]) + str(3), x, y)
                 else:
                     Tile(str(level[y][x][1]) + str(2), x, y)
             else:
@@ -728,7 +730,8 @@ tile_images = {'wall_1': load_image('world/wall_1.png'),
                'start_passage': load_image('houses/else/passage.png'),
                'start_floor': load_image('houses/start_house/start_floor.png'),
                'd1': load_image('world/d1.png'),
-               'd2': load_image('world/d2.png')}
+               'd2': load_image('world/d2.png'),
+               'd3': load_image('world/d3.png')}
 
 player_image_lr = load_image('pers/mario.png')
 enemy_image = load_image('pers/mario.png')
