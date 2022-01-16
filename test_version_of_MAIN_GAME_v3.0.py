@@ -653,13 +653,12 @@ def load_level(filename):
 
 
 def generate_level(level):
-    new_player, x, y = None, None, None
+    new_player, enemies, x, y = None, [], None, None
     for y in range(len(level)):
         for x in range(len(level[y])):
             if level[y][x][1] == '@':
                 Tile(level[y][x][0], x, y)
                 new_player = Player(x, y)
-                print(x, y)
             elif level[y][x][1] == 'd':
                 Tile(level[y][x][0], x, y)
                 n = random.randint(1, 5)
@@ -669,9 +668,12 @@ def generate_level(level):
                     Tile(str(level[y][x][1]) + str(2), x, y)
                 else:
                     Tile(str(level[y][x][1]) + str(2), x, y)
+            elif level[y][x][1] == 'e':
+                Tile(level[y][x][0], x, y)
+                enemies.append(Enemy(x, y))
             else:
                 Tile(level[y][x][0], x, y)
-    return new_player, len(level[0]), len(level)
+    return new_player, enemies, len(level[0]), len(level)
 
 
 class Tile(pygame.sprite.Sprite):
@@ -694,6 +696,13 @@ class Player(pygame.sprite.Sprite):
         self.image = player_image_lr
         self.rect = self.image.get_rect().move(tile_width * pos_x + 5, tile_height * pos_y)
         self.pos = pos_x, pos_y
+
+
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(enemies_group, all_sprites)
+        self.image = enemy_image
+        self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
 
 
 class Camera:
@@ -777,6 +786,7 @@ if __name__ == '__main__':
         tiles_group.draw(screen)
         player_group.draw(screen)
         object_group.draw(screen)
+        enemies_group.draw(screen)
         pygame.display.flip()
         clock.tick(FPS * 4)
 
@@ -798,7 +808,7 @@ if __name__ == '__main__':
     start_screen()
     camera = Camera()
     running = True
-    player, level_x, level_y = generate_level(level)
+    player, enemies, level_x, level_y = generate_level(level)
     standing_flag, running_flag, lr = 0, 0, 2
     standing_list = ['stand_1', 'stand_2', 'stand_3', 'stand_4', 'stand_5', 'stand_6']
     running_list = ['run_1', 'run_2', 'run_3', 'run_4', 'run_5', 'run_6', 'run_7', 'run_8', 'run_9']
@@ -807,16 +817,12 @@ if __name__ == '__main__':
     while running:
 
         keys = pygame.key.get_pressed()
+        allowed_cells = ['.', 'e']
 
-        '''
-        print(y, x)
-        print(level[y - 1][x - 1][1], level[y - 1][x][1], level[y - 1][x + 1][1])
-        print(level[y][x - 1][1], level[y][x][1], level[y][x + 1][1])
-        print(level[y + 1][x - 1][1], level[y + 1][x][1], level[y + 1][x + 1][1])
-        '''
+        '''ДВИЖЕНИЕ ИГРОКА'''
 
         if keys[pygame.K_d] and keys[pygame.K_w]:
-            if level[y][x + 1][1] != '.' and level[y - 1][x][1] == '.':
+            if level[y][x + 1][1] not in allowed_cells and level[y - 1][x][1] in allowed_cells:
                 y -= 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.y -= step
@@ -825,7 +831,7 @@ if __name__ == '__main__':
                     upd_camera()
                     draw()
 
-            elif level[y - 1][x][1] != '.' and level[y][x + 1][1] == '.':
+            elif level[y - 1][x][1] not in allowed_cells and level[y][x + 1][1] in allowed_cells:
                 x += 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.x += step
@@ -834,7 +840,7 @@ if __name__ == '__main__':
                     upd_camera()
                     draw()
 
-            elif level[y - 1][x + 1][1] == '.':
+            elif level[y - 1][x + 1][1] in allowed_cells:
                 x += 1
                 y -= 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
@@ -846,25 +852,25 @@ if __name__ == '__main__':
                     draw()
 
         elif keys[pygame.K_d] and keys[pygame.K_s]:
-            if level[y][x + 1][1] != '.' and level[y + 1][x][1] == '.':
+            if level[y][x + 1][1] not in allowed_cells and level[y + 1][x][1] in allowed_cells:
                 y += 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.y += step
-                    change_running_pose(1)
+                    change_running_pose(2)
                     lr = 1
                     upd_camera()
                     draw()
 
-            elif level[y + 1][x][1] != '.' and level[y][x + 1][1] == '.':
+            elif level[y + 1][x][1] not in allowed_cells and level[y][x + 1][1] in allowed_cells:
                 x += 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.x += step
-                    change_running_pose(1)
+                    change_running_pose(2)
                     lr = 1
                     upd_camera()
                     draw()
 
-            elif level[y + 1][x + 1][1] == '.':
+            elif level[y + 1][x + 1][1] in allowed_cells:
                 x += 1
                 y += 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
@@ -876,25 +882,25 @@ if __name__ == '__main__':
                     draw()
 
         elif keys[pygame.K_a] and keys[pygame.K_s]:
-            if level[y + 1][x][1] != '.' and level[y][x - 1][1] == '.':
+            if level[y + 1][x][1] not in allowed_cells and level[y][x - 1][1] in allowed_cells:
                 x -= 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.x -= step
-                    change_running_pose(2)
+                    change_running_pose(1)
                     lr = 2
                     upd_camera()
                     draw()
 
-            elif level[y][x - 1][1] != '.' and level[y + 1][x][1] == '.':
+            elif level[y][x - 1][1] not in allowed_cells and level[y + 1][x][1] in allowed_cells:
                 y += 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.y += step
-                    change_running_pose(2)
+                    change_running_pose(1)
                     lr = 2
                     upd_camera()
                     draw()
 
-            elif level[y + 1][x - 1][1] == '.':
+            elif level[y + 1][x - 1][1] in allowed_cells:
                 x -= 1
                 y += 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
@@ -906,25 +912,25 @@ if __name__ == '__main__':
                     draw()
 
         elif keys[pygame.K_a] and keys[pygame.K_w]:
-            if level[y - 1][x][1] != '.' and level[y][x - 1][1] == '.':
+            if level[y - 1][x][1] not in allowed_cells and level[y][x - 1][1] in allowed_cells:
                 x -= 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.x -= step
-                    change_running_pose(2)
+                    change_running_pose(1)
                     lr = 2
                     upd_camera()
                     draw()
 
-            elif level[y][x - 1][1] != '.' and level[y - 1][x][1] == '.':
+            elif level[y][x - 1][1] not in allowed_cells and level[y - 1][x][1] in allowed_cells:
                 y -= 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.y -= step
-                    change_running_pose(2)
+                    change_running_pose(1)
                     lr = 2
                     upd_camera()
                     draw()
 
-            elif level[y - 1][x - 1][1] == '.':
+            elif level[y - 1][x - 1][1] in allowed_cells:
                 x -= 1
                 y -= 1
                 player.image = pygame.transform.flip(player_image_lr, True, False)
@@ -937,7 +943,7 @@ if __name__ == '__main__':
                     draw()
 
         elif keys[pygame.K_d]:
-            if level[y][x + 1][1] == '.':
+            if level[y][x + 1][1] in allowed_cells:
                 x += 1
                 player.image = pygame.transform.flip(player_image_lr, False, False)
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
@@ -948,7 +954,7 @@ if __name__ == '__main__':
                     draw()
 
         elif keys[pygame.K_a]:
-            if level[y][x - 1][1] == '.':
+            if level[y][x - 1][1] in allowed_cells:
                 x -= 1
                 player.image = pygame.transform.flip(player_image_lr, True, False)
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
@@ -959,7 +965,7 @@ if __name__ == '__main__':
                     draw()
 
         elif keys[pygame.K_w]:
-            if level[y - 1][x][1] == '.':
+            if level[y - 1][x][1] in allowed_cells:
                 y -= 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.y -= step
@@ -971,7 +977,7 @@ if __name__ == '__main__':
                     draw()
 
         elif keys[pygame.K_s]:
-            if level[y + 1][x][1] == '.':
+            if level[y + 1][x][1] in allowed_cells:
                 y += 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.y += step
@@ -991,6 +997,9 @@ if __name__ == '__main__':
                 player.image = pygame.transform.flip(standing_player[standing_list[standing_flag]], True, False)
             standing_flag += 1
             clock.tick(FPS // 8)
+
+
+        '''ДВИЖЕНИЕ БОТОВ'''
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
