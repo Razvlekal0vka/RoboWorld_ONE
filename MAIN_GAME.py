@@ -300,7 +300,7 @@ class Map_generation:
                                     self.map_city[y + yy][x + xx] = ['floor_3', '#']
                                 elif n == 7 or n == 8:
                                     self.map_city[y + yy][x + xx] = ['floor_4', '#']
-                            elif yy == 22 and xx == 23 :
+                            elif yy == 22 and xx == 23:
                                 n = random.randint(1, 8)
                                 if n == 1 or n == 2:
                                     self.map_city[y + yy][x + xx] = ['floor_1', 'f1']
@@ -324,7 +324,8 @@ class Map_generation:
                         elif facades[_][__] == 'grey':
                             if yy == 0 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
-                            elif (xx == 4 and yy == 4) or (xx == 4 and yy == 44) or (xx == 44 and yy == 4) or (xx == 44 and yy == 44):
+                            elif (xx == 4 and yy == 4) or (xx == 4 and yy == 44) or (xx == 44 and yy == 4) or (
+                                    xx == 44 and yy == 44):
                                 self.map_city[y + yy][x + xx] = ['start_floor', 'e']
                             elif yy == 25 and xx == 25:
                                 self.map_city[y + yy][x + xx] = ['start_floor', '@']
@@ -618,7 +619,11 @@ class Map_generation:
         elif 13 <= n <= 16:
             self.map_city[y + yy][x + xx] = ['floor_4', '.']
         elif n == 17:
-            if self.map_city[y + yy - 1][x + xx - 1] != ['floor_3', '.'] or self.map_city[y + yy - 1][x + xx] != ['floor_3', '.'] or self.map_city[y + yy - 1][x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy][x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx - 1] != ['floor_3', '.'] or self.map_city[y + yy][x + xx - 1] != ['floor_3', '.']:
+            if self.map_city[y + yy - 1][x + xx - 1] != ['floor_3', '.'] or self.map_city[y + yy - 1][x + xx] != [
+                'floor_3', '.'] or self.map_city[y + yy - 1][x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy][
+                x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx + 1] != ['floor_3', '.'] or \
+                    self.map_city[y + yy + 1][x + xx] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx - 1] != [
+                'floor_3', '.'] or self.map_city[y + yy][x + xx - 1] != ['floor_3', '.']:
                 self.summer_floor_genesis_2(x, xx, y, yy)
             else:
                 n = random.randint(1, 8)
@@ -668,7 +673,9 @@ def terminate():
 
 
 def start_screen():
-    # intro_text = []
+    text = ['Незнакомец: "Нет времени обьяснять, найди фонтаны."',
+            'Незнакомец: "Следующие указания поступят позже, возможно..."',
+            'Вы: "Ну, ок."']
     fon = pygame.transform.scale(load_image('else/boot.png'), (WIDTH, HEIGHT))
     name_of_the_game = pygame.transform.scale(load_image('else/RBWOF.png'), (WIDTH, HEIGHT))
     start_text = pygame.transform.scale(load_image('else/CIYWETG2.png'), (WIDTH, HEIGHT))
@@ -676,25 +683,31 @@ def start_screen():
     screen.blit(name_of_the_game, (0, 0))
     screen.blit(start_text, (0, 0))
     font = pygame.font.Font(None, 30)
-    text_coord = 50
-
-    '''for line in intro_text:
-        string_rendered = font.render(line, True, pygame.Color('black'))
-        intro_rect = string_rendered.get_rect()
-        text_coord += 10
-        intro_rect.top = text_coord
-        intro_rect.x = 10
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)'''
+    text_coord = 500
+    t = 0
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
             elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                return
+                if t != 1:
+                    for line in text:
+                        string_rendered = font.render(line, True, pygame.Color('orange'))
+                        intro_rect = string_rendered.get_rect()
+                        text_coord += 10
+                        intro_rect.top = text_coord
+                        intro_rect.x = 10
+                        text_coord += intro_rect.height
+                        screen.blit(string_rendered, intro_rect)
+                        pygame.display.flip()
+                        clock.tick(0.5)
+                        t = 1
+                elif t == 1:
+                    return
         pygame.display.flip()
         clock.tick(FPS)
+
 
 
 def load_image(name, color_key=None):
@@ -928,7 +941,7 @@ if __name__ == '__main__':
             if level[y][x + 1][1] not in allowed_cells and level[y + 1][x][1] in allowed_cells:
                 y += 1
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
-                    player.rect.y += step
+                    player.rect.y += stepввв
                     change_running_pose(2)
                     lr = 2
                     upd_camera()
@@ -1074,4 +1087,3 @@ if __name__ == '__main__':
             upd_camera()
         draw()
     terminate()
-# -----
