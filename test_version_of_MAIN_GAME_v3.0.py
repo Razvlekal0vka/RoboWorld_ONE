@@ -851,7 +851,7 @@ if __name__ == '__main__':
     while running:
 
         keys = pygame.key.get_pressed()
-        allowed_cells = ['.', 'e']
+        allowed_cells = ['.', 'e', '@']
 
         '''ДВИЖЕНИЕ ИГРОКА'''
 
@@ -891,7 +891,7 @@ if __name__ == '__main__':
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.y += step
                     change_running_pose(2)
-                    lr = 1
+                    lr = 2
                     upd_camera()
                     draw()
 
@@ -900,7 +900,7 @@ if __name__ == '__main__':
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.x += step
                     change_running_pose(2)
-                    lr = 1
+                    lr = 2
                     upd_camera()
                     draw()
 
@@ -921,7 +921,7 @@ if __name__ == '__main__':
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.x -= step
                     change_running_pose(1)
-                    lr = 2
+                    lr = 1
                     upd_camera()
                     draw()
 
@@ -930,7 +930,7 @@ if __name__ == '__main__':
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.y += step
                     change_running_pose(1)
-                    lr = 2
+                    lr = 1
                     upd_camera()
                     draw()
 
@@ -951,7 +951,7 @@ if __name__ == '__main__':
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.x -= step
                     change_running_pose(1)
-                    lr = 2
+                    lr = 1
                     upd_camera()
                     draw()
 
@@ -960,14 +960,13 @@ if __name__ == '__main__':
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.y -= step
                     change_running_pose(1)
-                    lr = 2
+                    lr = 1
                     upd_camera()
                     draw()
 
             elif level[y - 1][x - 1][1] in allowed_cells:
                 x -= 1
                 y -= 1
-                player.image = pygame.transform.flip(player_image_lr, True, False)
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.x -= step
                     player.rect.y -= step
@@ -979,7 +978,6 @@ if __name__ == '__main__':
         elif keys[pygame.K_d]:
             if level[y][x + 1][1] in allowed_cells:
                 x += 1
-                player.image = pygame.transform.flip(player_image_lr, False, False)
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.x += step
                     change_running_pose(2)
@@ -990,7 +988,6 @@ if __name__ == '__main__':
         elif keys[pygame.K_a]:
             if level[y][x - 1][1] in allowed_cells:
                 x -= 1
-                player.image = pygame.transform.flip(player_image_lr, True, False)
                 for step in [5, 5, 6, 6, 6, 6, 6, 5, 5]:
                     player.rect.x -= step
                     change_running_pose(1)
