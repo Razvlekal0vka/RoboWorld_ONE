@@ -305,7 +305,8 @@ class Map_generation:
                         elif facades[_][__] == 'grey':
                             if yy == 0 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
-                            elif (xx == 4 and yy == 4) or (xx == 4 and yy == 44) or (xx == 44 and yy == 4) or (xx == 44 and yy == 44):
+                            elif (xx == 4 and yy == 4) or (xx == 4 and yy == 44) or (xx == 44 and yy == 4) or (
+                                    xx == 44 and yy == 44):
                                 self.map_city[y + yy][x + xx] = ['start_floor', 'e']
                             elif yy == 25 and xx == 25:
                                 self.map_city[y + yy][x + xx] = ['start_floor', '@']
@@ -583,7 +584,11 @@ class Map_generation:
         elif 13 <= n <= 16:
             self.map_city[y + yy][x + xx] = ['floor_4', '.']
         elif n == 17:
-            if self.map_city[y + yy - 1][x + xx - 1] != ['floor_3', '.'] or self.map_city[y + yy - 1][x + xx] != ['floor_3', '.'] or self.map_city[y + yy - 1][x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy][x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx - 1] != ['floor_3', '.'] or self.map_city[y + yy][x + xx - 1] != ['floor_3', '.']:
+            if self.map_city[y + yy - 1][x + xx - 1] != ['floor_3', '.'] or self.map_city[y + yy - 1][x + xx] != [
+                'floor_3', '.'] or self.map_city[y + yy - 1][x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy][
+                x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx + 1] != ['floor_3', '.'] or \
+                    self.map_city[y + yy + 1][x + xx] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx - 1] != [
+                'floor_3', '.'] or self.map_city[y + yy][x + xx - 1] != ['floor_3', '.']:
                 self.summer_floor_genesis_2(x, xx, y, yy)
             else:
                 n = random.randint(1, 8)
@@ -661,6 +666,19 @@ def start_screen():
         pygame.display.flip()
         clock.tick(FPS)
 
+    text = ['Незнакомец: Нет времени обьяснять, найди фонтаны.',
+            'Следующие указания поступят позже, возможно',
+            'Вы: Ну, ок.']
+
+    for line in text:
+        string_rendered = font.render(line, True, pygame.Color('yellow'))
+        rect = string_rendered.get_rect()
+        text_coord += 10
+        rect.top = text_coord
+        rect.x = 10
+        text_coord += rect.height
+        screen.blit(string_rendered, intro_rect)
+        pygame.display.flip()
 
 def load_image(name, color_key=None):
     fullname = os.path.join('test_data/', name)
@@ -699,7 +717,7 @@ def generate_level(level):
                 if n == 5:
                     Tile(str(level[y][x][1]) + str(1), x, y)
                 elif 2 <= n <= 4:
-                    Tile(str(level[y][x][1]) + str(2), x, y)
+                    Object(str(level[y][x][1]) + str(3), x, y - 1)
                 else:
                     Tile(str(level[y][x][1]) + str(2), x, y)
             elif level[y][x][1] == 'e':
@@ -848,10 +866,11 @@ if __name__ == '__main__':
     running_list = ['run_1', 'run_2', 'run_3', 'run_4', 'run_5', 'run_6', 'run_7', 'run_8', 'run_9']
     y, x = player.pos[1], player.pos[0]
     upd_camera()
+    draw()
     while running:
 
         keys = pygame.key.get_pressed()
-        allowed_cells = ['.', 'e', '@']
+        allowed_cells = ['.', 'e', '@', 'f1']
 
         '''ДВИЖЕНИЕ ИГРОКА'''
 
@@ -1028,7 +1047,6 @@ if __name__ == '__main__':
                 player.image = pygame.transform.flip(standing_player[standing_list[standing_flag]], True, False)
             standing_flag += 1
             clock.tick(FPS // 8)
-
 
         '''ДВИЖЕНИЕ БОТОВ'''
 
