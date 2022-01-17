@@ -742,7 +742,7 @@ def generate_level(level):
                 enemies.append(Enemy(x, y))
             elif level[y][x][1] == 'f1':
                 Tile(level[y][x][0], x, y)
-                Object('fountain', x + 1, y + 1)
+                Object('fountain', x, y)
             else:
                 Tile(level[y][x][0], x, y)
     return new_player, enemies, len(level[0]), len(level)
@@ -890,7 +890,7 @@ if __name__ == '__main__':
     while running:
 
         keys = pygame.key.get_pressed()
-        allowed_cells = ['.', 'e', '@']
+        allowed_cells = ['.', 'e', '@', 'f1']
 
         '''ДВИЖЕНИЕ ИГРОКА'''
 
