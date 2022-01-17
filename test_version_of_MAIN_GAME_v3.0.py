@@ -671,11 +671,12 @@ class Dialog:
     def __init__(self):
         self.step = 0
         self.text_counter = 0
-        self.text = ["Привет"]
+        self.text = ["Незнакомец: Нет времени объяснять, найди все фонтаны.",
+                     'Следующие указания поступят позже, возможно']
 
     def update(self, key):
 
-        if step and self.player.colliderect(self.npc):  # if pressed key and if player hits npc
+        if step:
             self.step += 1  # skip to next text
         if self.step > len(self.text) - 1:
             self.step = 0
