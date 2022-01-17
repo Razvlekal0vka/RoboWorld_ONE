@@ -740,6 +740,9 @@ def generate_level(level):
             elif level[y][x][1] == 'e':
                 Tile(level[y][x][0], x, y)
                 enemies.append(Enemy(x, y))
+            elif level[y][x][1] == 'f1':
+                Tile(level[y][x][0], x, y)
+                Object('fountain', x, y)
             else:
                 Tile(level[y][x][0], x, y)
     return new_player, enemies, len(level[0]), len(level)
@@ -819,7 +822,8 @@ tile_images = {'wall_1': load_image('world/wall_1.png'),
                'start_floor': load_image('houses/start_house/start_floor.png'),
                'd1': load_image('world/d1.png'),
                'd2': load_image('world/d2.png'),
-               'd3': load_image('world/d3.png')}
+               'd3': load_image('world/d3.png'),
+               'fountain': load_image('world/fountain.png')}
 
 player_image_lr = load_image('pers/stand_1.png')
 standing_player = {'stand_1': load_image('pers/stand_1.png'),
@@ -886,7 +890,7 @@ if __name__ == '__main__':
     while running:
 
         keys = pygame.key.get_pressed()
-        allowed_cells = ['.', 'e', '@']
+        allowed_cells = ['.', 'e', '@', 'f1']
 
         '''ДВИЖЕНИЕ ИГРОКА'''
 
