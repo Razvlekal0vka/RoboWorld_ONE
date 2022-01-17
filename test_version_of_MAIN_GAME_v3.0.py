@@ -666,41 +666,19 @@ def start_screen():
         pygame.display.flip()
         clock.tick(FPS)
 
+    text = ['Незнакомец: Нет времени обьяснять, найди фонтаны.',
+            'Следующие указания поступят позже, возможно',
+            'Вы: Ну, ок.']
 
-class Dialog:
-    def __init__(self):
-        self.step = 0
-        self.text_counter = 0
-        self.text = ["Незнакомец: Нет времени объяснять, найди все фонтаны.",
-                     'Следующие указания поступят позже, возможно']
-
-    def update(self, key):
-
-        if step:
-            self.step += 1  # skip to next text
-        if self.step > len(self.text) - 1:
-            self.step = 0
-
-    def draw(self, screen):
-        draw_text( screen,self.text[self.step], 50,Color('yellow'),50,50)
-    merchant = Dialog(merchant, player)
-
-    while True:
-        merchant.update(space_key)
-        merchant.draw(screen)
-
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                terminate()
-            elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                click += 1
-            elif click == level(intro_text) - 1:
-                return
+    for line in text:
+        string_rendered = font.render(line, True, pygame.Color('yellow'))
+        rect = string_rendered.get_rect()
+        text_coord += 10
+        rect.top = text_coord
+        rect.x = 10
+        text_coord += rect.height
+        screen.blit(string_rendered, intro_rect)
         pygame.display.flip()
-        clock.tick(FPS)
-
 
 def load_image(name, color_key=None):
     fullname = os.path.join('test_data/', name)
@@ -888,7 +866,7 @@ if __name__ == '__main__':
     running_list = ['run_1', 'run_2', 'run_3', 'run_4', 'run_5', 'run_6', 'run_7', 'run_8', 'run_9']
     y, x = player.pos[1], player.pos[0]
     upd_camera()
-    dialogs()
+    draw()
     while running:
 
         keys = pygame.key.get_pressed()
