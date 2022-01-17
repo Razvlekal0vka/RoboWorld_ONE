@@ -4,7 +4,6 @@ import sys
 from enum import Enum
 from random import randint
 from tkinter import Image
-
 import pygame
 from PIL import Image
 
@@ -1028,9 +1027,6 @@ if __name__ == '__main__':
                 player.image = pygame.transform.flip(standing_player[standing_list[standing_flag]], True, False)
             standing_flag += 1
             clock.tick(FPS // 8)
-
-
-        '''ДВИЖЕНИЕ БОТОВ - ОТСУТСВУЕТ'''
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
