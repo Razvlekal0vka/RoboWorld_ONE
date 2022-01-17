@@ -280,7 +280,7 @@ class Map_generation:
                                         self.map_city[y + yy][x + xx] = ['wall_2', '#']
                                 else:
                                     self.summer_floor_genesis(x, xx, y, yy, 0)
-                            elif 23 <= yy <= 26 and 23 <= xx <= 26 :
+                            elif 23 <= yy <= 25 and 23 <= xx <= 25:
                                 n = random.randint(1, 8)
                                 if n == 1 or n == 2:
                                     self.map_city[y + yy][x + xx] = ['floor_1', '#']

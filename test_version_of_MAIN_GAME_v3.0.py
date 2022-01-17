@@ -291,6 +291,26 @@ class Map_generation:
                                         self.map_city[y + yy][x + xx] = ['wall_2', '#']
                                 else:
                                     self.summer_floor_genesis(x, xx, y, yy, 0)
+                            elif 23 <= yy <= 25 and 23 <= xx <= 25:
+                                n = random.randint(1, 8)
+                                if n == 1 or n == 2:
+                                    self.map_city[y + yy][x + xx] = ['floor_1', '#']
+                                elif n == 3 or n == 4:
+                                    self.map_city[y + yy][x + xx] = ['floor_2', '#']
+                                elif n == 5 or n == 6:
+                                    self.map_city[y + yy][x + xx] = ['floor_3', '#']
+                                elif n == 7 or n == 8:
+                                    self.map_city[y + yy][x + xx] = ['floor_4', '#']
+                            elif yy == 22 and xx == 23 :
+                                n = random.randint(1, 8)
+                                if n == 1 or n == 2:
+                                    self.map_city[y + yy][x + xx] = ['floor_1', 'f1']
+                                elif n == 3 or n == 4:
+                                    self.map_city[y + yy][x + xx] = ['floor_2', 'f1']
+                                elif n == 5 or n == 6:
+                                    self.map_city[y + yy][x + xx] = ['floor_3', 'f1']
+                                elif n == 7 or n == 8:
+                                    self.map_city[y + yy][x + xx] = ['floor_4', 'f1']
                             else:
                                 n = random.randint(1, 5)
                                 if n == 1:
@@ -305,8 +325,7 @@ class Map_generation:
                         elif facades[_][__] == 'grey':
                             if yy == 0 and (xx < 24 or xx > 27):
                                 self.map_city[y + yy][x + xx] = ['sh', '#']
-                            elif (xx == 4 and yy == 4) or (xx == 4 and yy == 44) or (xx == 44 and yy == 4) or (
-                                    xx == 44 and yy == 44):
+                            elif (xx == 4 and yy == 4) or (xx == 4 and yy == 44) or (xx == 44 and yy == 4) or (xx == 44 and yy == 44):
                                 self.map_city[y + yy][x + xx] = ['start_floor', 'e']
                             elif yy == 25 and xx == 25:
                                 self.map_city[y + yy][x + xx] = ['start_floor', '@']
@@ -522,21 +541,37 @@ class Map_generation:
                 elif self.map_city[y][x][0] == 'floor_1':
                     if self.map_city[y][x][1] == 'd':
                         r, g, b = 46, 130, 40
+                    elif self.map_city[y][x][1] == 'f1':
+                        r, g, b = 46, 170, 240
+                    elif self.map_city[y][x][1] == '#':
+                        r, g, b = 46, 240, 240
                     else:
                         r, g, b = 96, 130, 90
                 elif self.map_city[y][x][0] == 'floor_2':
                     if self.map_city[y][x][1] == 'd':
                         r, g, b = 46, 130, 40
+                    elif self.map_city[y][x][1] == 'f1':
+                        r, g, b = 46, 170, 240
+                    elif self.map_city[y][x][1] == '#':
+                        r, g, b = 46, 240, 240
                     else:
                         r, g, b = 96, 130, 90
                 elif self.map_city[y][x][0] == 'floor_3':
                     if self.map_city[y][x][1] == 'd':
                         r, g, b = 46, 130, 40
+                    elif self.map_city[y][x][1] == 'f1':
+                        r, g, b = 46, 170, 240
+                    elif self.map_city[y][x][1] == '#':
+                        r, g, b = 46, 240, 240
                     else:
                         r, g, b = 96, 130, 90
                 elif self.map_city[y][x][0] == 'floor_4':
                     if self.map_city[y][x][1] == 'd':
                         r, g, b = 46, 130, 40
+                    elif self.map_city[y][x][1] == 'f1':
+                        r, g, b = 46, 170, 240
+                    elif self.map_city[y][x][1] == '#':
+                        r, g, b = 46, 240, 240
                     else:
                         r, g, b = 96, 130, 90
                 elif self.map_city[y][x][0] == 'yellow_house':
@@ -584,11 +619,7 @@ class Map_generation:
         elif 13 <= n <= 16:
             self.map_city[y + yy][x + xx] = ['floor_4', '.']
         elif n == 17:
-            if self.map_city[y + yy - 1][x + xx - 1] != ['floor_3', '.'] or self.map_city[y + yy - 1][x + xx] != [
-                'floor_3', '.'] or self.map_city[y + yy - 1][x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy][
-                x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx + 1] != ['floor_3', '.'] or \
-                    self.map_city[y + yy + 1][x + xx] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx - 1] != [
-                'floor_3', '.'] or self.map_city[y + yy][x + xx - 1] != ['floor_3', '.']:
+            if self.map_city[y + yy - 1][x + xx - 1] != ['floor_3', '.'] or self.map_city[y + yy - 1][x + xx] != ['floor_3', '.'] or self.map_city[y + yy - 1][x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy][x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx + 1] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx] != ['floor_3', '.'] or self.map_city[y + yy + 1][x + xx - 1] != ['floor_3', '.'] or self.map_city[y + yy][x + xx - 1] != ['floor_3', '.']:
                 self.summer_floor_genesis_2(x, xx, y, yy)
             else:
                 n = random.randint(1, 8)
